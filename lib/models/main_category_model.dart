@@ -14,17 +14,17 @@ class MainCategoryModel {
   static List<SubCategoryDetail> getAccSubCategory() {
     List<SubCategoryDetail> list = [];
     SubCategoryDetail model_1 =
-        SubCategoryDetail(SubCategoryData.FREE_RUN, Assets.CAR);
+        SubCategoryDetail(SubCategoryData.FREE_RUN, Assets.FREE_RUN);
     SubCategoryDetail model_2 =
-        SubCategoryDetail(SubCategoryData.THOR_HAMMER, Assets.CAR);
+        SubCategoryDetail(SubCategoryData.THOR_HAMMER, Assets.THOR_HAMMER);
     SubCategoryDetail model_3 =
-        SubCategoryDetail(SubCategoryData.SOCCER, Assets.CAR);
-    SubCategoryDetail model_4 =
-        SubCategoryDetail(SubCategoryData.OBSTACLE_AVOIDER, Assets.CAR);
-    SubCategoryDetail model_5 =
-        SubCategoryDetail(SubCategoryData.EDGE_DETECTOR, Assets.CAR);
+        SubCategoryDetail(SubCategoryData.SOCCER, Assets.SOCCER);
+    SubCategoryDetail model_4 = SubCategoryDetail(
+        SubCategoryData.OBSTACLE_AVOIDER, Assets.OBSTACLE_PROVIDER);
+    SubCategoryDetail model_5 = SubCategoryDetail(
+        SubCategoryData.EDGE_DETECTOR, Assets.EDGE_DETECTOR_ACC);
     SubCategoryDetail model_6 =
-        SubCategoryDetail(SubCategoryData.LINE_FOLLOWER, Assets.CAR);
+        SubCategoryDetail(SubCategoryData.LINE_FOLLOWER, Assets.LINE_FOLLOWER);
 
     list.add(model_1);
     list.add(model_2);
@@ -36,21 +36,78 @@ class MainCategoryModel {
     return list;
   }
 
+  static List<SubCategoryDetail> getSpaceRoverSubCategory() {
+    List<SubCategoryDetail> list = [];
+    SubCategoryDetail model_1 =
+        SubCategoryDetail(SubCategoryData.FREE_RUN, Assets.FREE_RUN);
+    SubCategoryDetail model_2 =
+        SubCategoryDetail(SubCategoryData.RADAR, Assets.RADAR);
+    SubCategoryDetail model_3 = SubCategoryDetail(
+        SubCategoryData.OBSTACLE_AVOIDER, Assets.OBSTACLE_AVOIDER);
+    SubCategoryDetail model_4 =
+        SubCategoryDetail(SubCategoryData.EDGE_DETECTOR, Assets.EDGE_DETECTOR);
+
+    list.add(model_1);
+    list.add(model_2);
+    list.add(model_3);
+    list.add(model_4);
+
+    return list;
+  }
+
+  static List<SubCategoryDetail> getMachinesSubCategory() {
+    List<SubCategoryDetail> list = [];
+    SubCategoryDetail model_1 =
+        SubCategoryDetail(SubCategoryData.ROLLER, Assets.ROAD_ROLLER);
+    SubCategoryDetail model_2 =
+        SubCategoryDetail(SubCategoryData.DUMPER, Assets.DUMPER);
+    SubCategoryDetail model_3 =
+        SubCategoryDetail(SubCategoryData.FORKLIFT, Assets.FORKLIFT);
+    SubCategoryDetail model_4 =
+        SubCategoryDetail(SubCategoryData.CRANE, Assets.CRANE);
+    SubCategoryDetail model_5 =
+        SubCategoryDetail(SubCategoryData.CATAPULT, Assets.CATAPULT);
+    SubCategoryDetail model_6 =
+        SubCategoryDetail(SubCategoryData.BALL_SHOOTER, Assets.BALL_SHOOTER);
+    SubCategoryDetail model_7 =
+        SubCategoryDetail(SubCategoryData.EXCAVATOR, Assets.EXAVATOR);
+
+    list.add(model_1);
+    list.add(model_2);
+    list.add(model_3);
+    list.add(model_4);
+    list.add(model_5);
+    list.add(model_6);
+    list.add(model_7);
+
+    return list;
+  }
+
+  static List<SubCategoryDetail> getArmyTankkSubCategory() {
+    List<SubCategoryDetail> list = [];
+    SubCategoryDetail model_1 =
+        SubCategoryDetail(CategoryData.ARNY_TANK, Assets.ARMY_TANK);
+
+    list.add(model_1);
+
+    return list;
+  }
+
   void createMainModel() {
     MainCategoryDetail accelero = MainCategoryDetail(CategoryData.ACCELEREO,
         Assets.CAR, MainCategoryModel.getAccSubCategory());
     mainCategoryList.add(accelero);
 
     MainCategoryDetail spaceRover = MainCategoryDetail(CategoryData.SPACE_ROVER,
-        Assets.SPACE_ROVER, MainCategoryModel.getAccSubCategory());
+        Assets.SPACE_ROVER, MainCategoryModel.getSpaceRoverSubCategory());
     mainCategoryList.add(spaceRover);
 
     MainCategoryDetail machines = MainCategoryDetail(CategoryData.MACHINES,
-        Assets.MACHINES, MainCategoryModel.getAccSubCategory());
+        Assets.MACHINES, MainCategoryModel.getMachinesSubCategory());
     mainCategoryList.add(machines);
 
     MainCategoryDetail armyTank = MainCategoryDetail(CategoryData.ARNY_TANK,
-        Assets.ARMY_TANK, MainCategoryModel.getAccSubCategory());
+        Assets.ARMY_TANK, MainCategoryModel.getArmyTankkSubCategory());
     mainCategoryList.add(armyTank);
 
     MainCategoryDetail intellecto = MainCategoryDetail(CategoryData.INTELLECTO,
