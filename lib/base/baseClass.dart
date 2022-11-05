@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -29,19 +30,19 @@ class BaseClass extends State {
   }
 
   static void logout(context) {
-    MySharedPreference.clearAllData();
-    Navigator.pushNamedAndRemoveUntil(
-        context, Classes.splashScreen, (route) => false);
+    // MySharedPreference.clearAllData();
+    // Navigator.pushNamedAndRemoveUntil(
+    //     context, Classes.splashScreen, (route) => false);
   }
 
   void showInfoBar(String title) {
-    scaffoldKey.currentState!.showSnackBar(SnackBar(
-      duration: Duration(seconds: 3),
-      backgroundColor: AppColors.secondaryColor,
-      content: Text(
-        title,
-      ),
-    ));
+    // scaffoldKey.currentState!.showSnackBar(SnackBar(
+    //   duration: Duration(seconds: 3),
+    //   backgroundColor: AppColors.secondaryColor,
+    //   content: Text(
+    //     title,
+    //   ),
+    // ));
   }
 
   void setDrawerVisibility(bool drawerVisibility,
@@ -141,11 +142,15 @@ class BaseClass extends State {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
     return Scaffold(
       key: scaffoldKey,
       body: SafeArea(
           child: Stack(
-        overflow: Overflow.visible,
         children: [
           if (isLoading)
             Container(
