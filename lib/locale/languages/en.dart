@@ -7,6 +7,7 @@ class EN {
             "Something went wrong.Please try again.",
         "please_check_your_internt_connection":
             "Please check your internet connection",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "welcome": "Welcome",
       };
 }

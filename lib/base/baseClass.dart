@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -29,9 +30,9 @@ class BaseClass extends State {
   }
 
   static void logout(context) {
-    MySharedPreference.clearAllData();
-    Navigator.pushNamedAndRemoveUntil(
-        context, Classes.splashScreen, (route) => false);
+    // MySharedPreference.clearAllData();
+    // Navigator.pushNamedAndRemoveUntil(
+    //     context, Classes.splashScreen, (route) => false);
   }
 
   void showInfoBar(String title) {
@@ -141,6 +142,11 @@ class BaseClass extends State {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
     return Scaffold(
       key: scaffoldKey,
       body: SafeArea(
