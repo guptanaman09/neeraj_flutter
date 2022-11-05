@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:neeraj_flutter_app/connectivity/bluettoth_coneectivty.dart';
 
 void main() {
-  runApp(const MyApp());
+    WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+  DeviceOrientation.landscapeLeft,
+  DeviceOrientation.landscapeRight,
+]).then((value)=>runApp(const MyApp()));
+  
 }
 
 class MyApp extends StatelessWidget {
@@ -59,6 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+    BleConnectivity connectivity=BleConnectivity();
+    connectivity.startScanning();
   }
 
   @override
