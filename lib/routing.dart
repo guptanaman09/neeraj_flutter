@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
+import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/ui/login_screen.dart';
 import 'package:neeraj_flutter_app/ui/main_screen.dart';
 import 'package:neeraj_flutter_app/ui/splash_screen.dart';
+import 'package:neeraj_flutter_app/ui/sub_category_screen.dart';
 
 ///Created by Naman Gupta on 19/4/21.
 class Routing {
@@ -14,10 +16,11 @@ class Routing {
               builder: (_) => MainScreen(),
               settings: RouteSettings(name: settings.name));
         }
-      case Classes.loginScreen:
+      case Classes.subCategory:
         {
           return MaterialPageRoute(
-              builder: (_) => LoginScreen(),
+              builder: (_) =>
+                  SubCategoryScreen(settings.arguments as MainCategoryDetail),
               settings: RouteSettings(name: settings.name));
         }
       default:

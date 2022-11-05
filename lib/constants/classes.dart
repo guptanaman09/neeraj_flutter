@@ -4,7 +4,7 @@ class Classes {
   Classes._();
 
   static const String mainScreen = "/";
-  static const String loginScreen = "/login_screen";
+  static const String subCategory = "/sub_category";
   static const String signUpScreen = "/sign_up_screen";
   static const String demoList = "/demo_list";
 }

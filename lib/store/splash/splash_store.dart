@@ -31,6 +31,6 @@ abstract class _SplashStore with Store {
 
   @action
   changedScreen(BuildContext context) {
-    Navigator.pushNamed(context, Classes.loginScreen);
+    // Navigator.pushNamed(context, Classes.loginScreen);
   }
 }

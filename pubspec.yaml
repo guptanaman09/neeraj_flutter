@@ -40,6 +40,11 @@ flutter:
 
   assets:
     - assets/image/demo.png
+    - assets/image/car.png
+    - assets/image/SR.png
+    - assets/image/excavator.png
+    - assets/image/Armytank.95.png
+    - assets/image/Homeautomationfinal(2).png
 
   fonts:
     - family: Inter
