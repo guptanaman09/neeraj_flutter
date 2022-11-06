@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/gen/flutterblue.pbserver.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
@@ -22,9 +23,9 @@ class MainScreen extends StatefulWidget {
 
 void askRuntimePermissions() async {
   Map<Permission, PermissionStatus> statuses = await [
-    Permission.bluetooth,
-    Permission.bluetoothAdvertise,
     Permission.bluetoothConnect,
+    Permission.bluetoothAdvertise,
+    Permission.bluetooth,
     Permission.bluetoothScan,
   ].request();
   print(statuses[Permission.bluetooth]);
@@ -53,7 +54,7 @@ class MainScreenState extends BaseClass {
             onPressed: startScan,
             child: Text("Scan"),
             color: Colors.greenAccent,
-          )
+          ),
         ],
       ),
     );

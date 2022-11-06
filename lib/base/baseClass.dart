@@ -73,7 +73,7 @@ class BaseClass extends State {
   }
 
   Widget? setBody() {}
-
+  void showBottomSheet(BuildContext context, Widget wg) {}
   void makeFavourite(String msg) {
     //setAppBarIcon(Assets.redStar);
   }
