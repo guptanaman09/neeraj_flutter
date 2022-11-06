@@ -43,10 +43,13 @@ class SubCategoryCardWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                child: Image.asset(
-              detailModel.image,
-              fit: BoxFit.contain,
-              alignment: Alignment.center,
+                child: Container(
+              padding: EdgeInsets.all(Dimensions.size_16),
+              child: Image.asset(
+                detailModel.image,
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+              ),
             )),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(

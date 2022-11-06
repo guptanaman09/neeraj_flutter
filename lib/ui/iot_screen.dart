@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/constants/assets.dart';
+import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
@@ -8,6 +10,7 @@ import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
+import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
 
 ///Created by Naman Gupta on 6/11/22.
 
@@ -45,13 +48,13 @@ class IOTScreenState extends BaseClass {
               ),
             ),
           ),
-          HorizontalGap(Dimensions.size_16),
+          VerticalGap(Dimensions.size_16),
           CustomText(
             "Select the connection medium",
             MyTextStyles.titleTextStyle(AppColors.black),
             textAlign: TextAlign.center,
           ),
-          HorizontalGap(Dimensions.size_16),
+          VerticalGap(Dimensions.size_16),
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -59,17 +62,71 @@ class IOTScreenState extends BaseClass {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
-                child: CustomText(
-                  "Welcome to IOT cloud",
-                  MyTextStyles.titleTextStyle(AppColors.white),
-                  textAlign: TextAlign.center,
+                child: GestureDetector(
+                  onTap: () => onSelectOption(IOTOption.OFFLINE),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryColorDark,
+                        AppColors.primaryColorLight
+                      ],
+                    )),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          CustomText(
+                            "OFFLINE",
+                            MyTextStyles.titleTextStyle(AppColors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          VerticalGap(Dimensions.size_16),
+                          Image.asset(
+                            Assets.OFFLINE,
+                            height: DeviceUtils.getScreenHeight(context) * 0.30,
+                            width: DeviceUtils.getScreenWidtht(context) * 0.30,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Expanded(
-                  child: CustomText(
-                "Welcome to IOT cloud",
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
+                  child: GestureDetector(
+                onTap: () => onSelectOption(IOTOption.ONLINE),
+                child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    colors: [
+                      AppColors.secondaryColor,
+                      AppColors.secondaryColorLight
+                    ],
+                  )),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        CustomText(
+                          "ONLINE",
+                          MyTextStyles.titleTextStyle(AppColors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        VerticalGap(Dimensions.size_16),
+                        Image.asset(
+                          Assets.ONLINE,
+                          height: DeviceUtils.getScreenHeight(context) * 0.30,
+                          width: DeviceUtils.getScreenWidtht(context) * 0.30,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ))
             ],
           ))
@@ -77,4 +134,13 @@ class IOTScreenState extends BaseClass {
       ),
     );
   }
+
+  void onSelectOption(IOTOption option) {
+    if (option == IOTOption.ONLINE) {
+      Navigator.of(context).pushNamed(Classes.onlineIOTScreen);
+    } else
+      Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen);
+  }
 }
+
+enum IOTOption { ONLINE, OFFLINE }

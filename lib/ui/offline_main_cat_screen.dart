@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
 import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
-import 'package:neeraj_flutter_app/models/main_category_model.dart';
+import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
-import 'package:neeraj_flutter_app/widgets/card_widget.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
-import 'package:neeraj_flutter_app/widgets/sub_category_card_widget.dart';
-import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
+import 'package:neeraj_flutter_app/widgets/offline_card_widget.dart';
 
-///Created by Naman Gupta on 5/11/22.
+///Created by Naman Gupta on 6/11/22.
 
-class SubCategoryScreen extends StatefulWidget {
-  late MainCategoryDetail model;
-
-  SubCategoryScreen(this.model);
-
+class OfflineMainCategoryScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return SubCategoryScreenState(model);
+    return OfflineMainCategoryScreenState();
   }
 }
 
-class SubCategoryScreenState extends BaseClass {
-  late MainCategoryDetail model;
-  SubCategoryScreenState(this.model);
+class OfflineMainCategoryScreenState extends BaseClass {
+  late OfflineCategoryModel offlineMainCategoryModel;
 
   @override
   void initState() {
     super.initState();
+
+    offlineMainCategoryModel = OfflineCategoryModel();
   }
 
   @override
@@ -49,32 +45,34 @@ class SubCategoryScreenState extends BaseClass {
             color: AppColors.secondaryColor,
             child: Center(
               child: CustomText(
-                model.title,
+                AppLocalizations.strings.welcome!,
                 MyTextStyles.titleTextStyle(AppColors.white),
                 textAlign: TextAlign.center,
               ),
             ),
           ),
-          VerticalGap(Dimensions.size_8),
+          HorizontalGap(Dimensions.size_16),
           Expanded(
               child: ListView.builder(
             itemBuilder: (context, index) {
-              SubCategoryDetail detailModel =
-                  model.subCategoryDetailList.elementAt(index);
+              OfflineMainCategoryDetail detailModel = offlineMainCategoryModel
+                  .getMainCategoryModel()
+                  .elementAt(index);
+              Color color = getColor(index);
               return Container(
                 width: DeviceUtils.getScreenWidtht(context) * 0.40,
                 height: DeviceUtils.getScreenHeight(context) * 0.50,
                 margin: EdgeInsets.all(Dimensions.size_20),
                 child: InkWell(
-                    onTap: () => onSelectCategory(detailModel),
+                    onTap: () => onSelectCategory(detailModel, index),
                     borderRadius: BorderRadius.circular(Dimensions.size_12),
                     splashColor: AppColors.primaryColor,
                     hoverColor: AppColors.primaryColor,
                     focusColor: AppColors.primaryColor,
-                    child: SubCategoryCardWidget(detailModel)),
+                    child: OfflineCardWidget(detailModel, color)),
               );
             },
-            itemCount: model.subCategoryDetailList.length,
+            itemCount: offlineMainCategoryModel.getMainCategoryModel().length,
             scrollDirection: Axis.horizontal,
           ))
         ],
@@ -82,7 +80,21 @@ class SubCategoryScreenState extends BaseClass {
     );
   }
 
-  void onSelectCategory(SubCategoryDetail model) {
-    print("sub category >>> ${model.title}");
+  void onSelectCategory(OfflineMainCategoryDetail model, int index) {
+    Navigator.of(context)
+        .pushNamed(Classes.offlineSubCategoryScreen, arguments: model);
+  }
+
+  Color getColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.orange;
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.yellow;
+      default:
+        return Colors.green;
+    }
   }
 }
