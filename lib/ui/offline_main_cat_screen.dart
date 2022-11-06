@@ -5,6 +5,7 @@ import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
 import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
+import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
@@ -45,7 +46,7 @@ class OfflineMainCategoryScreenState extends BaseClass {
             color: AppColors.secondaryColor,
             child: Center(
               child: CustomText(
-                AppLocalizations.strings.welcome!,
+                CategoryData.INTELLECTO,
                 MyTextStyles.titleTextStyle(AppColors.white),
                 textAlign: TextAlign.center,
               ),
