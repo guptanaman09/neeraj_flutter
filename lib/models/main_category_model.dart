@@ -13,18 +13,20 @@ class MainCategoryModel {
 
   static List<SubCategoryDetail> getAccSubCategory() {
     List<SubCategoryDetail> list = [];
-    SubCategoryDetail model_1 =
-        SubCategoryDetail(SubCategoryData.FREE_RUN, Assets.FREE_RUN);
-    SubCategoryDetail model_2 =
-        SubCategoryDetail(SubCategoryData.THOR_HAMMER, Assets.THOR_HAMMER);
-    SubCategoryDetail model_3 =
-        SubCategoryDetail(SubCategoryData.SOCCER, Assets.SOCCER);
+    SubCategoryDetail model_1 = SubCategoryDetail(
+        SubCategoryData.FREE_RUN, Assets.FREE_RUN, CategoryData.ACCELEREO);
+    SubCategoryDetail model_2 = SubCategoryDetail(SubCategoryData.THOR_HAMMER,
+        Assets.THOR_HAMMER, CategoryData.ACCELEREO);
+    SubCategoryDetail model_3 = SubCategoryDetail(
+        SubCategoryData.SOCCER, Assets.SOCCER, CategoryData.ACCELEREO);
     SubCategoryDetail model_4 = SubCategoryDetail(
-        SubCategoryData.OBSTACLE_AVOIDER, Assets.OBSTACLE_PROVIDER);
-    SubCategoryDetail model_5 = SubCategoryDetail(
-        SubCategoryData.EDGE_DETECTOR, Assets.EDGE_DETECTOR_ACC);
-    SubCategoryDetail model_6 =
-        SubCategoryDetail(SubCategoryData.LINE_FOLLOWER, Assets.LINE_FOLLOWER);
+        SubCategoryData.OBSTACLE_AVOIDER,
+        Assets.OBSTACLE_PROVIDER,
+        CategoryData.ACCELEREO);
+    SubCategoryDetail model_5 = SubCategoryDetail(SubCategoryData.EDGE_DETECTOR,
+        Assets.EDGE_DETECTOR_ACC, CategoryData.ACCELEREO);
+    SubCategoryDetail model_6 = SubCategoryDetail(SubCategoryData.LINE_FOLLOWER,
+        Assets.LINE_FOLLOWER, CategoryData.ACCELEREO);
 
     list.add(model_1);
     list.add(model_2);
@@ -38,14 +40,16 @@ class MainCategoryModel {
 
   static List<SubCategoryDetail> getSpaceRoverSubCategory() {
     List<SubCategoryDetail> list = [];
-    SubCategoryDetail model_1 =
-        SubCategoryDetail(SubCategoryData.FREE_RUN, Assets.FREE_RUN);
-    SubCategoryDetail model_2 =
-        SubCategoryDetail(SubCategoryData.RADAR, Assets.RADAR);
+    SubCategoryDetail model_1 = SubCategoryDetail(
+        SubCategoryData.FREE_RUN, Assets.FREE_RUN, CategoryData.SPACE_ROVER);
+    SubCategoryDetail model_2 = SubCategoryDetail(
+        SubCategoryData.RADAR, Assets.RADAR, CategoryData.SPACE_ROVER);
     SubCategoryDetail model_3 = SubCategoryDetail(
-        SubCategoryData.OBSTACLE_AVOIDER, Assets.OBSTACLE_AVOIDER);
-    SubCategoryDetail model_4 =
-        SubCategoryDetail(SubCategoryData.EDGE_DETECTOR, Assets.EDGE_DETECTOR);
+        SubCategoryData.OBSTACLE_AVOIDER,
+        Assets.OBSTACLE_AVOIDER,
+        CategoryData.SPACE_ROVER);
+    SubCategoryDetail model_4 = SubCategoryDetail(SubCategoryData.EDGE_DETECTOR,
+        Assets.EDGE_DETECTOR, CategoryData.SPACE_ROVER);
 
     list.add(model_1);
     list.add(model_2);
@@ -57,20 +61,20 @@ class MainCategoryModel {
 
   static List<SubCategoryDetail> getMachinesSubCategory() {
     List<SubCategoryDetail> list = [];
-    SubCategoryDetail model_1 =
-        SubCategoryDetail(SubCategoryData.ROLLER, Assets.ROAD_ROLLER);
-    SubCategoryDetail model_2 =
-        SubCategoryDetail(SubCategoryData.DUMPER, Assets.DUMPER);
-    SubCategoryDetail model_3 =
-        SubCategoryDetail(SubCategoryData.FORKLIFT, Assets.FORKLIFT);
-    SubCategoryDetail model_4 =
-        SubCategoryDetail(SubCategoryData.CRANE, Assets.CRANE);
-    SubCategoryDetail model_5 =
-        SubCategoryDetail(SubCategoryData.CATAPULT, Assets.CATAPULT);
-    SubCategoryDetail model_6 =
-        SubCategoryDetail(SubCategoryData.BALL_SHOOTER, Assets.BALL_SHOOTER);
-    SubCategoryDetail model_7 =
-        SubCategoryDetail(SubCategoryData.EXCAVATOR, Assets.EXAVATOR);
+    SubCategoryDetail model_1 = SubCategoryDetail(
+        SubCategoryData.ROLLER, Assets.ROAD_ROLLER, CategoryData.MACHINES);
+    SubCategoryDetail model_2 = SubCategoryDetail(
+        SubCategoryData.DUMPER, Assets.DUMPER, CategoryData.MACHINES);
+    SubCategoryDetail model_3 = SubCategoryDetail(
+        SubCategoryData.FORKLIFT, Assets.FORKLIFT, CategoryData.MACHINES);
+    SubCategoryDetail model_4 = SubCategoryDetail(
+        SubCategoryData.CRANE, Assets.CRANE, CategoryData.MACHINES);
+    SubCategoryDetail model_5 = SubCategoryDetail(
+        SubCategoryData.CATAPULT, Assets.CATAPULT, CategoryData.MACHINES);
+    SubCategoryDetail model_6 = SubCategoryDetail(SubCategoryData.BALL_SHOOTER,
+        Assets.BALL_SHOOTER, CategoryData.MACHINES);
+    SubCategoryDetail model_7 = SubCategoryDetail(
+        SubCategoryData.EXCAVATOR, Assets.EXAVATOR, CategoryData.MACHINES);
 
     list.add(model_1);
     list.add(model_2);
@@ -85,8 +89,8 @@ class MainCategoryModel {
 
   static List<SubCategoryDetail> getArmyTankkSubCategory() {
     List<SubCategoryDetail> list = [];
-    SubCategoryDetail model_1 =
-        SubCategoryDetail(CategoryData.ARNY_TANK, Assets.ARMY_TANK);
+    SubCategoryDetail model_1 = SubCategoryDetail(
+        CategoryData.ARNY_TANK, Assets.ARMY_TANK, CategoryData.ARNY_TANK);
 
     list.add(model_1);
 
@@ -131,6 +135,7 @@ class MainCategoryDetail {
 class SubCategoryDetail {
   late String title;
   late String image;
+  late String mainCategoryTitle;
 
-  SubCategoryDetail(this.title, this.image);
+  SubCategoryDetail(this.title, this.image, this.mainCategoryTitle);
 }

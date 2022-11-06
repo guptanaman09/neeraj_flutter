@@ -65,7 +65,7 @@ class MainScreenState extends BaseClass {
                 height: DeviceUtils.getScreenHeight(context) * 0.50,
                 margin: EdgeInsets.all(Dimensions.size_20),
                 child: InkWell(
-                    onTap: () => onSelectCategory(detailModel),
+                    onTap: () => onSelectCategory(detailModel, index),
                     borderRadius: BorderRadius.circular(Dimensions.size_12),
                     splashColor: AppColors.primaryColor,
                     hoverColor: AppColors.primaryColor,
@@ -81,7 +81,10 @@ class MainScreenState extends BaseClass {
     );
   }
 
-  void onSelectCategory(MainCategoryDetail model) {
-    Navigator.of(context).pushNamed(Classes.subCategory, arguments: model);
+  void onSelectCategory(MainCategoryDetail model, int index) {
+    if (index != mainCategoryModel.mainCategoryList.length - 1)
+      Navigator.of(context).pushNamed(Classes.subCategory, arguments: model);
+    else
+      Navigator.of(context).pushNamed(Classes.iotScreen);
   }
 }

@@ -128,7 +128,7 @@ class LoginScreenState extends State<LoginScreen> {
   void onLogin(BuildContext context) async {
     bool result = await InternetConnectivity().checkConnection();
     Logger.logd("internet check >>> ${result}");
-    Navigator.popAndPushNamed(context, Classes.signUpScreen);
+    // Navigator.popAndPushNamed(context, Classes.signUpScreen);
   }
 
   @override

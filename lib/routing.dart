@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
+import 'package:neeraj_flutter_app/ui/iot_screen.dart';
 import 'package:neeraj_flutter_app/ui/login_screen.dart';
 import 'package:neeraj_flutter_app/ui/main_screen.dart';
 import 'package:neeraj_flutter_app/ui/splash_screen.dart';
@@ -21,6 +22,12 @@ class Routing {
           return MaterialPageRoute(
               builder: (_) =>
                   SubCategoryScreen(settings.arguments as MainCategoryDetail),
+              settings: RouteSettings(name: settings.name));
+        }
+      case Classes.iotScreen:
+        {
+          return MaterialPageRoute(
+              builder: (_) => IOTScreen(),
               settings: RouteSettings(name: settings.name));
         }
       default:

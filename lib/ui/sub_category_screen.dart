@@ -48,7 +48,7 @@ class SubCategoryScreenState extends BaseClass {
             color: AppColors.secondaryColor,
             child: Center(
               child: CustomText(
-                AppLocalizations.strings.welcome!,
+                model.title,
                 MyTextStyles.titleTextStyle(AppColors.white),
                 textAlign: TextAlign.center,
               ),
