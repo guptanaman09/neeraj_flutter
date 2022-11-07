@@ -59,6 +59,7 @@ class Assets {
       "assets/image/SoilMoistureSensor.png";
   static const String LIGHT_SENSOR = "assets/image/LightSensor.png";
   static const String PUSH_SWITCH = "assets/image/PushSwitch.png";
+  static const String BACKGROUND_BLUE = "assets/image/abstract-luxury.jpg";
   static const String SENSOR_INPUT_BLOCKS =
       "assets/image/ultrasonic_sensor.png";
   static const String STRUCTURED_BASED_ACTIVITY =

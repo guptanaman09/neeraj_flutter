@@ -25,20 +25,26 @@ class SubCategoryCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimensions.size_12)),
       elevation: Dimensions.size_4,
       child: Container(
-        margin: EdgeInsets.all(Dimensions.size_12),
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [
+          AppColors.secondaryColorLight,
+          AppColors.simmer_base_color
+        ])),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              color: AppColors.primaryColor,
-              padding: EdgeInsets.all(Dimensions.size_8),
-              child: Center(
-                child: CustomText(
-                  detailModel.title,
-                  CardTitleTextStyle.getStyle(),
-                  textAlign: TextAlign.center,
+            Center(
+              child: Container(
+                color: AppColors.secondaryColor,
+                padding: EdgeInsets.all(Dimensions.size_8),
+                child: Center(
+                  child: CustomText(
+                    detailModel.title,
+                    CardTitleTextStyle.getStyle(),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
@@ -51,23 +57,27 @@ class SubCategoryCardWidget extends StatelessWidget {
                 alignment: Alignment.center,
               ),
             )),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(Dimensions.size_8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(Dimensions.size_10),
+            Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: Dimensions.size_32, vertical: Dimensions.size_8),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(Dimensions.size_8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(Dimensions.size_10),
+                      ),
                     ),
                   ),
-                ),
-                onPressed: onSubCatPress,
-                child: Container(
-                    width: DeviceUtils.getScreenWidtht(context),
-                    child: CustomText(
-                      "Play",
-                      ButtonStyles.getButtonTextStyle(),
-                      textAlign: TextAlign.center,
-                    )))
+                  onPressed: onSubCatPress,
+                  child: Container(
+                      width: DeviceUtils.getScreenWidtht(context),
+                      child: CustomText(
+                        "Play",
+                        ButtonStyles.getButtonTextStyle(),
+                        textAlign: TextAlign.center,
+                      ))),
+            )
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
@@ -38,23 +39,41 @@ class SubCategoryScreenState extends BaseClass {
   Widget? setBody() {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
+      decoration: const BoxDecoration(
+          image: DecorationImage(image: AssetImage(Assets.BACKGROUND_BLUE))),
       margin: EdgeInsets.only(top: Dimensions.size_16),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: DeviceUtils.getScreenWidtht(context),
-            height: Dimensions.size_50,
-            color: AppColors.secondaryColor,
-            child: Center(
-              child: CustomText(
-                model.title,
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
+          Stack(alignment: Alignment.center, children: [
+            Container(
+              width: DeviceUtils.getScreenWidtht(context),
+              height: Dimensions.size_50,
+              color: AppColors.secondaryColor,
+              child: Center(
+                child: CustomText(
+                  model.title,
+                  MyTextStyles.titleTextStyle(AppColors.white),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-          ),
+            GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: Container(
+                margin: EdgeInsets.only(left: Dimensions.size_8),
+                child: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: AppColors.white,
+                    size: Dimensions.size_30,
+                  ),
+                ),
+              ),
+            )
+          ]),
           VerticalGap(Dimensions.size_8),
           Expanded(
               child: ListView.builder(

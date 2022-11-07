@@ -95,6 +95,7 @@ flutter:
     - assets/image/SoilMoistureSensor.png
     - assets/image/LightSensor.png
     - assets/image/PushSwitch.png
+    - assets/image/abstract-luxury.jpg
 
   fonts:
     - family: Inter

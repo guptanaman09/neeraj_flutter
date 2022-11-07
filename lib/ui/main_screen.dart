@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -37,23 +38,26 @@ class MainScreenState extends BaseClass {
   Widget setBody() {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
-      margin: EdgeInsets.only(top: Dimensions.size_16),
+      decoration: const BoxDecoration(
+          image: DecorationImage(image: AssetImage(Assets.BACKGROUND_BLUE))),
+      margin: const EdgeInsets.only(top: Dimensions.size_16),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: DeviceUtils.getScreenWidtht(context),
-            height: Dimensions.size_50,
-            color: AppColors.secondaryColor,
-            child: Center(
-              child: CustomText(
-                AppLocalizations.strings.welcome!,
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+          Stack(alignment: Alignment.center, children: [
+            Container(
+                width: DeviceUtils.getScreenWidtht(context),
+                height: Dimensions.size_50,
+                color: AppColors.secondaryColor,
+                child: Center(
+                  child: CustomText(
+                    AppLocalizations.strings.welcome!,
+                    MyTextStyles.titleTextStyle(AppColors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+          ]),
           HorizontalGap(Dimensions.size_16),
           Expanded(
               child: ListView.builder(
