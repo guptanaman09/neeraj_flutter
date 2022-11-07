@@ -84,12 +84,11 @@ class BaseClass extends State {
 
   PreferredSizeWidget getAppBar() {
     return AppBar(
+      primary: true,
       toolbarHeight: 80,
-      title: !backButtonVisibility
-          ? Text(
-              "Flutter",
-            )
-          : Text(""),
+      title: Text(
+        appBarTitle,
+      ),
       centerTitle: true,
       backgroundColor: backgroundColor,
       leading: backButtonVisibility
@@ -105,7 +104,7 @@ class BaseClass extends State {
                   padding: EdgeInsets.all(Dimensions.size_4),
                   child: Icon(
                     Icons.keyboard_backspace,
-                    color: AppColors.secondaryColor,
+                    color: AppColors.white,
                     size: Dimensions.size_28,
                   )),
             )
@@ -147,9 +146,8 @@ class BaseClass extends State {
       DeviceOrientation.landscapeRight,
     ]);
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack, overlays: []);
-
     return Scaffold(
+      primary: false,
       key: scaffoldKey,
       body: SafeArea(
           child: Stack(

@@ -32,6 +32,11 @@ class MainScreenState extends BaseClass {
   void initState() {
     super.initState();
     mainCategoryModel = MainCategoryModel();
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: "Welcome",
+        backButtonVisibility: false);
   }
 
   @override
@@ -39,26 +44,12 @@ class MainScreenState extends BaseClass {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
       decoration: const BoxDecoration(
-          image: DecorationImage(image: AssetImage(Assets.BACKGROUND_BLUE))),
-      margin: const EdgeInsets.only(top: Dimensions.size_16),
+          image: DecorationImage(
+              image: AssetImage(Assets.BACKGROUND_BLUE), fit: BoxFit.fill)),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Stack(alignment: Alignment.center, children: [
-            Container(
-                width: DeviceUtils.getScreenWidtht(context),
-                height: Dimensions.size_50,
-                color: AppColors.secondaryColor,
-                child: Center(
-                  child: CustomText(
-                    AppLocalizations.strings.welcome!,
-                    MyTextStyles.titleTextStyle(AppColors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-          ]),
-          HorizontalGap(Dimensions.size_16),
           Expanded(
               child: ListView.builder(
             itemBuilder: (context, index) {

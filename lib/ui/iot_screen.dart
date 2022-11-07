@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
@@ -25,36 +26,31 @@ class IOTScreenState extends BaseClass {
   @override
   void initState() {
     super.initState();
+
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: "Welcome to IOT cloud",
+        backButtonVisibility: true);
   }
 
   @override
   Widget? setBody() {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
-      margin: EdgeInsets.only(top: Dimensions.size_16),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: DeviceUtils.getScreenWidtht(context),
-            height: Dimensions.size_50,
-            color: AppColors.secondaryColor,
-            child: Center(
-              child: CustomText(
-                "Welcome to IOT cloud",
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
-              ),
+          Align(
+            alignment: Alignment.center,
+            child: CustomText(
+              "Select the connection medium",
+              MyTextStyles.titleTextStyle(AppColors.black),
+              textAlign: TextAlign.center,
             ),
           ),
-          VerticalGap(Dimensions.size_16),
-          CustomText(
-            "Select the connection medium",
-            MyTextStyles.titleTextStyle(AppColors.black),
-            textAlign: TextAlign.center,
-          ),
-          VerticalGap(Dimensions.size_16),
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

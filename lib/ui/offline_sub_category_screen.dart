@@ -31,30 +31,22 @@ class OfflineSubCategoryScreenState extends BaseClass {
   @override
   void initState() {
     super.initState();
+
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: model.title,
+        backButtonVisibility: true);
   }
 
   @override
   Widget? setBody() {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
-      margin: EdgeInsets.only(top: Dimensions.size_16),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: DeviceUtils.getScreenWidtht(context),
-            height: Dimensions.size_50,
-            color: AppColors.secondaryColor,
-            child: Center(
-              child: CustomText(
-                model.title,
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          HorizontalGap(Dimensions.size_16),
           Expanded(
               child: GridView.count(
             crossAxisCount: 2,

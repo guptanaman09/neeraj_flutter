@@ -29,30 +29,22 @@ class OfflineMainCategoryScreenState extends BaseClass {
     super.initState();
 
     offlineMainCategoryModel = OfflineCategoryModel();
+
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: CategoryData.INTELLECTO,
+        backButtonVisibility: true);
   }
 
   @override
   Widget? setBody() {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
-      margin: EdgeInsets.only(top: Dimensions.size_16),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: DeviceUtils.getScreenWidtht(context),
-            height: Dimensions.size_50,
-            color: AppColors.secondaryColor,
-            child: Center(
-              child: CustomText(
-                CategoryData.INTELLECTO,
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          HorizontalGap(Dimensions.size_16),
           Expanded(
               child: ListView.builder(
             itemBuilder: (context, index) {

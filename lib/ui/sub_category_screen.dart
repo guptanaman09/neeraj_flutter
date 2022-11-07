@@ -33,6 +33,12 @@ class SubCategoryScreenState extends BaseClass {
   @override
   void initState() {
     super.initState();
+
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: model.title,
+        backButtonVisibility: true);
   }
 
   @override
@@ -40,41 +46,12 @@ class SubCategoryScreenState extends BaseClass {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
       decoration: const BoxDecoration(
-          image: DecorationImage(image: AssetImage(Assets.BACKGROUND_BLUE))),
-      margin: EdgeInsets.only(top: Dimensions.size_16),
+          image: DecorationImage(
+              image: AssetImage(Assets.BACKGROUND_BLUE), fit: BoxFit.fill)),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Stack(alignment: Alignment.center, children: [
-            Container(
-              width: DeviceUtils.getScreenWidtht(context),
-              height: Dimensions.size_50,
-              color: AppColors.secondaryColor,
-              child: Center(
-                child: CustomText(
-                  model.title,
-                  MyTextStyles.titleTextStyle(AppColors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                margin: EdgeInsets.only(left: Dimensions.size_8),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: AppColors.white,
-                    size: Dimensions.size_30,
-                  ),
-                ),
-              ),
-            )
-          ]),
-          VerticalGap(Dimensions.size_8),
           Expanded(
               child: ListView.builder(
             itemBuilder: (context, index) {
