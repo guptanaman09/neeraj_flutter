@@ -62,6 +62,41 @@ flutter:
     - assets/image/obstacleavoider.png
     - assets/image/edgedetector.png
     - assets/image/linefollower.png
+    - assets/image/cloud-database.png
+    - assets/image/wifi.png
+    - assets/image/form.jpg
+    - assets/image/attachment-1644400222303.png
+    - assets/image/ultrasonic_sensor.png
+    - assets/image/rgb.png
+    - assets/image/ApplianceControl.png
+    - assets/image/SmartDustbin.png
+    - assets/image/IronManHand.png
+    - assets/image/SmartIrrigation.png
+    - assets/image/SmartAlarm.png
+    - assets/image/BurglarAlarm.png
+    - assets/image/MagicDancingDolls.png
+    - assets/image/SoapDispensor.png
+    - assets/image/PetFeeder.png
+    - assets/image/AirGuitar.png
+    - assets/image/SmartLamp.png
+    - assets/image/PersonCounter.png
+    - assets/image/TouchlessDoorbell.png
+    - assets/image/iot_cloud.png
+    - assets/image/Buzzer.png
+    - assets/image/ACRelay.png
+    - assets/image/ServoDriver.png
+    - assets/image/RGBLED.png
+    - assets/image/PumpDriver.png
+    - assets/image/Motordriver.png
+    - assets/image/ProximitySensor.png
+    - assets/image/WeatherSensor.png
+    - assets/image/SoundSensor.png
+    - assets/image/MotionSensor.png
+    - assets/image/UltrasonicSensor.png
+    - assets/image/SoilMoistureSensor.png
+    - assets/image/LightSensor.png
+    - assets/image/PushSwitch.png
+    - assets/image/abstract-luxury.jpg
 
   fonts:
     - family: Inter

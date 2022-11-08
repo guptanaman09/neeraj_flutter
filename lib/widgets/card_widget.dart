@@ -21,15 +21,22 @@ class CardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimensions.size_12)),
       elevation: Dimensions.size_4,
       child: Container(
-        margin: EdgeInsets.all(Dimensions.size_12),
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(Dimensions.size_4),
+                topLeft: Radius.circular(Dimensions.size_4))),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              color: AppColors.primaryColor,
-              padding: EdgeInsets.all(Dimensions.size_8),
+              decoration: const BoxDecoration(
+                  color: AppColors.secondaryColor,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(Dimensions.size_4),
+                      topLeft: Radius.circular(Dimensions.size_4))),
+              padding: const EdgeInsets.all(Dimensions.size_8),
               child: Center(
                 child: CustomText(
                   detailModel.title,
@@ -39,10 +46,17 @@ class CardWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                child: Image.asset(
-              detailModel.image,
-              fit: BoxFit.contain,
-              alignment: Alignment.center,
+                child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                AppColors.secondaryColorLight,
+                AppColors.simmer_base_color
+              ])),
+              child: Image.asset(
+                detailModel.image,
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+              ),
             ))
           ],
         ),

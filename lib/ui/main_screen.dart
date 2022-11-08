@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/gen/flutterblue.pbserver.dart';
 import 'package:flutter/widgets.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -35,30 +36,24 @@ class MainScreenState extends BaseClass {
     BleConnectivity bleConnectivity = BleConnectivity();
     bleConnectivity.askRuntimePermissions(context);
     mainCategoryModel = MainCategoryModel();
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: "Welcome",
+        backButtonVisibility: false);
   }
 
   @override
   Widget setBody() {
     return Container(
       width: DeviceUtils.getScreenWidtht(context),
-      margin: EdgeInsets.only(top: Dimensions.size_16),
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(Assets.BACKGROUND_BLUE), fit: BoxFit.fill)),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: DeviceUtils.getScreenWidtht(context),
-            height: Dimensions.size_50,
-            color: AppColors.secondaryColor,
-            child: Center(
-              child: CustomText(
-                AppLocalizations.strings.welcome!,
-                MyTextStyles.titleTextStyle(AppColors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          HorizontalGap(Dimensions.size_16),
           Expanded(
               child: ListView.builder(
             itemBuilder: (context, index) {

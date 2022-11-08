@@ -26,4 +26,42 @@ class Assets {
   static const String OBSTACLE_PROVIDER = "assets/image/obstacleavoider.png";
   static const String EDGE_DETECTOR_ACC = "assets/image/edgedetector.png";
   static const String LINE_FOLLOWER = "assets/image/linefollower.png";
+  static const String ONLINE = "assets/image/cloud-database.png";
+  static const String OFFLINE = "assets/image/wifi.png";
+  static const String FORM_BACKGROUND = "assets/image/form.jpg";
+  static const String MOTOR_AND_OUTPUT = "assets/image/rgb.png";
+  static const String APPLIANCE_CONTROL = "assets/image/ApplianceControl.png";
+  static const String SMART_DUSTBIN = "assets/image/SmartDustbin.png";
+  static const String IRON_MAN_HAND = "assets/image/IronManHand.png";
+  static const String SMART_IRRIGATION = "assets/image/SmartIrrigation.png";
+  static const String SMART_ALARM = "assets/image/SmartAlarm.png";
+  static const String BURGLAR_ALARM = "assets/image/BurglarAlarm.png";
+  static const String MAGIC_DANCING_DOLL = "assets/image/MagicDancingDolls.png";
+  static const String SOAP_DISPANSOR = "assets/image/SoapDispensor.png";
+  static const String PET_FEEDER = "assets/image/PetFeeder.png";
+  static const String AIR_GUITAR = "assets/image/AirGuitar.png";
+  static const String SMART_LAMP = "assets/image/SmartLamp.png";
+  static const String PERSON_COUNTER = "assets/image/PersonCounter.png";
+  static const String TOUCHLESS_DOORBELL = "assets/image/TouchlessDoorbell.png";
+  static const String IOT_CLOUD = "assets/image/iot_cloud.png";
+  static const String BUZZER = "assets/image/Buzzer.png";
+  static const String AC_RELAY = "assets/image/ACRelay.png";
+  static const String SERVO_DRIVER = "assets/image/ServoDriver.png";
+  static const String RGB_LED = "assets/image/RGBLED.png";
+  static const String PUMP_DRIVER = "assets/image/PumpDriver.png";
+  static const String MOTOR_DRIVER = "assets/image/Motordriver.png";
+  static const String PROXIMITY_SENSOR = "assets/image/ProximitySensor.png";
+  static const String WEATHOR_SENSOR = "assets/image/WeatherSensor.png";
+  static const String SOUND_SENSOR = "assets/image/SoundSensor.png";
+  static const String MOTION_SENSOR = "assets/image/MotionSensor.png";
+  static const String ULTRASONIC_SENSOR = "assets/image/UltrasonicSensor.png";
+  static const String SOIL_MOISTURE_SENSOR =
+      "assets/image/SoilMoistureSensor.png";
+  static const String LIGHT_SENSOR = "assets/image/LightSensor.png";
+  static const String PUSH_SWITCH = "assets/image/PushSwitch.png";
+  static const String BACKGROUND_BLUE = "assets/image/abstract-luxury.jpg";
+  static const String SENSOR_INPUT_BLOCKS =
+      "assets/image/ultrasonic_sensor.png";
+  static const String STRUCTURED_BASED_ACTIVITY =
+      "assets/image/attachment-1644400222303.png";
 }
