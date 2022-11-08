@@ -36,13 +36,13 @@ class BaseClass extends State {
   }
 
   void showInfoBar(String title) {
-    // scaffoldKey.currentState!.showSnackBar(SnackBar(
-    //   duration: Duration(seconds: 3),
-    //   backgroundColor: AppColors.secondaryColor,
-    //   content: Text(
-    //     title,
-    //   ),
-    // ));
+    /*  scaffoldKey.currentState!.showSnackBar(SnackBar(
+      duration: Duration(seconds: 3),
+      backgroundColor: AppColors.secondaryColor,
+      content: Text(
+        title,
+      ),
+    ));*/
   }
 
   void setDrawerVisibility(bool drawerVisibility,
@@ -146,6 +146,8 @@ class BaseClass extends State {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack, overlays: []);
 
     return Scaffold(
       key: scaffoldKey,

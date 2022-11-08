@@ -41,6 +41,27 @@ flutter:
 
   assets:
     - assets/image/demo.png
+    - assets/image/car.png
+    - assets/image/SR.png
+    - assets/image/excavator.png
+    - assets/image/Armytank.95.png
+    - assets/image/Homeautomationfinal(2).png
+    - assets/image/freerun.png
+    - assets/image/radar.png
+    - assets/image/obstacleavoiderr.png
+    - assets/image/edgedetectorr.png
+    - assets/image/Roadroller(2).png
+    - assets/image/Dumper-min.png
+    - assets/image/Forklift(1).png
+    - assets/image/Crane.png
+    - assets/image/Catapult.png
+    - assets/image/Ballshooterpng.png
+    - assets/image/excavator.png
+    - assets/image/hammer.png
+    - assets/image/soccer.png
+    - assets/image/obstacleavoider.png
+    - assets/image/edgedetector.png
+    - assets/image/linefollower.png
 
   fonts:
     - family: Inter
