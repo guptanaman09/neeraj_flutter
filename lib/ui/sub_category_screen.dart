@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
+import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
@@ -12,6 +13,7 @@ import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/sub_category_card_widget.dart';
 import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 ///Created by Naman Gupta on 5/11/22.
 
@@ -67,7 +69,7 @@ class SubCategoryScreenState extends BaseClass {
                     splashColor: AppColors.primaryColor,
                     hoverColor: AppColors.primaryColor,
                     focusColor: AppColors.primaryColor,
-                    child: SubCategoryCardWidget(detailModel)),
+                    child: SubCategoryCardWidget(detailModel, onSubCatPress)),
               );
             },
             itemCount: model.subCategoryDetailList.length,
@@ -76,6 +78,17 @@ class SubCategoryScreenState extends BaseClass {
         ],
       ),
     );
+  }
+
+  void onSubCatPress() async {
+    print("play game clicked");
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+      print(statuses[Permission.bluetoothConnect]);
+      //showBottomDialog(context);
+      Navigator.of(context).pushNamed(Classes.bluetoothBle);
+    }
   }
 
   void onSelectCategory(SubCategoryDetail model) {

@@ -13,9 +13,11 @@ import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 
 class SubCategoryCardWidget extends StatelessWidget {
   final SubCategoryDetail detailModel;
+  Function onPlayClick;
 
   SubCategoryCardWidget(
     this.detailModel,
+    this.onPlayClick,
   );
 
   @override
@@ -53,7 +55,6 @@ class SubCategoryCardWidget extends StatelessWidget {
               padding: EdgeInsets.all(Dimensions.size_16),
               child: Image.asset(
                 detailModel.image,
-                fit: BoxFit.contain,
                 alignment: Alignment.center,
               ),
             )),
@@ -69,7 +70,7 @@ class SubCategoryCardWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onPressed: onSubCatPress,
+                  onPressed: () => onPlayClick(),
                   child: Container(
                       width: DeviceUtils.getScreenWidtht(context),
                       child: CustomText(
@@ -82,9 +83,5 @@ class SubCategoryCardWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void onSubCatPress() {
-    print("play game clicked");
   }
 }

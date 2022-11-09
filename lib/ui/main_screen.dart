@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/gen/flutterblue.pbserver.dart';
 import 'package:flutter/widgets.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/bluetooth_serial_connectivty.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
@@ -21,6 +22,7 @@ import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return MainScreenState();
@@ -33,8 +35,8 @@ class MainScreenState extends BaseClass {
   @override
   void initState() {
     super.initState();
-    BleConnectivity bleConnectivity = BleConnectivity();
-    bleConnectivity.askRuntimePermissions(context);
+    ArduinoSerialConnectivity connectivity = ArduinoSerialConnectivity();
+    connectivity.start(context);
     mainCategoryModel = MainCategoryModel();
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,

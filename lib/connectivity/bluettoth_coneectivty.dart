@@ -7,31 +7,55 @@ import 'package:permission_handler/permission_handler.dart';
 class BleConnectivity {
   FlutterBlue flutterBlue = FlutterBlue.instance;
   List<ScanResult> list = [];
-  var writeCharacterstics;
-  late PersistentBottomSheetController _controller; // <------ Instance variable
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late BluetoothCharacteristic writeCharacterstics;
+  late BluetoothDeviceState _deviceState;
+
   FlutterBlue getInstance() {
     flutterBlue ??= FlutterBlue.instance;
     return flutterBlue;
   }
 
-  void connectToBluetooth(ScanResult r) async {
-    await r.device.connect(autoConnect: true);
-    r.device.state.listen((event) {
-      print("device connection state=$event");
-    });
+  void connectToBluetooth(ScanResult r) {
+    r.device.connect().then((value) => r.device.state.listen((event) {
+          print("device connection state=$event");
+          _deviceState = event;
+          if (event == BluetoothDeviceState.connected) {
+            listenForServices(r);
+          }
+        }));
+  }
 
+  void writeToBle(List<int> value) {
+    if (_deviceState == BluetoothDeviceState.connected) {
+      if (writeCharacterstics != null) {
+        writeCharacterstics.write(value);
+      }
+    }
+  }
+
+  void listenForServices(ScanResult r) async {
     List<BluetoothService> services = await r.device.discoverServices();
     for (BluetoothService service in services) {
       var characteristics = service.characteristics;
       for (BluetoothCharacteristic c in characteristics) {
-        List<int> value = await c.read();
-        print("read data from char=" + String.fromCharCodes(value));
+        var descriptors = c.descriptors;
+        for (BluetoothDescriptor d in descriptors) {
+          List<int> value = await d.read();
+          print("read data from descriptors=" + String.fromCharCodes(value));
+        }
+        if (c.properties.read) {
+          List<int> value = await c.read();
+          if (value.isNotEmpty) {
+            print("read data from char=" + String.fromCharCodes(value));
+          }
+        }
         if (c.properties.write) {
           writeCharacterstics = c;
         }
       }
     }
+
+    writeToBle([0x12, 0x34]);
   }
 
   void disconnectToBluetooth(ScanResult r) async {
@@ -160,22 +184,21 @@ class BleConnectivity {
   }
 
   void startScanning(BuildContext context) {
-    flutterBlue.startScan(timeout: Duration(seconds: 20));
+    flutterBlue.startScan(timeout: Duration(seconds: 5));
     list.clear();
 // Listen to scan results
+
     var subscription = flutterBlue.scanResults.listen((results) {
       // do something with scan results
       for (ScanResult r in results) {
-        // _controller.setState!(() {
-        //   list.add(r);
-        // });
-        if (list.length > 0) {
-          showBottomDialog(context);
-        }
-
+        list.add(r);
         print('${r.device.name} found! rssi: ${r.rssi}');
       }
+      if (list.length > 0) {
+        showBottomDialog(context);
+      }
     });
+
 // Stop scanning
     flutterBlue.stopScan();
   }
