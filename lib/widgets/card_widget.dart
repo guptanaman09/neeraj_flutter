@@ -50,7 +50,7 @@ class CardWidget extends StatelessWidget {
               decoration: const BoxDecoration(
                   gradient: LinearGradient(colors: [
                 AppColors.secondaryColorLight,
-                AppColors.simmer_base_color
+                AppColors.secondaryColorLight
               ])),
               child: Image.asset(
                 detailModel.image,

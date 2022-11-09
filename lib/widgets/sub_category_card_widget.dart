@@ -30,7 +30,7 @@ class SubCategoryCardWidget extends StatelessWidget {
         decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
           AppColors.secondaryColorLight,
-          AppColors.simmer_base_color
+          AppColors.secondaryColorLight
         ])),
         child: Column(
           mainAxisSize: MainAxisSize.max,
