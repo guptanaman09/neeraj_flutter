@@ -30,8 +30,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   double redSliderValue = 0;
   double greenSliderValue = 0;
   double blueSliderValue = 0;
+  double ultrasonicValue = 0;
 
   late AnimationController _animationController;
+  bool ultrasonicSwitchValue = false;
 
   @override
   void initState() {
@@ -99,7 +101,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             alignment: Alignment.center,
             child: Container(
               height: DeviceUtils.getScreenHeight(context),
-              margin: EdgeInsets.all(16),
+              margin: EdgeInsets.all(8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -153,6 +155,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             ),
             top: 32,
             right: 150,
+          ),
+          Positioned(
+            left: 80,
+            top: 10,
+            child: getSwitchForObstacleAvoider(),
           )
         ],
       ),
@@ -236,7 +243,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         ],
       );
     else if (gameName == SubCategoryData.THOR_HAMMER ||
-        gameName == SubCategoryData.SOCCER)
+        gameName == SubCategoryData.SOCCER) {
       return Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -254,7 +261,86 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    else
+    } else if (gameName == SubCategoryData.OBSTACLE_AVOIDER) {
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CustomText(
+                "OUTPUT:- ",
+                const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700)),
+            VerticalGap(8),
+            CustomText(
+                "Distance:- ",
+                const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700)),
+            VerticalGap(8),
+            CustomText(
+                "Set Ultrasonic value:- ",
+                const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700)),
+            VerticalGap(16),
+            Container(
+              width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              child: Slider(
+                value: ultrasonicValue,
+                onChanged: onUltrasonicValueChange,
+                max: 255,
+                label: ultrasonicValue.round().toString(),
+                divisions: 255,
+                thumbColor: Colors.grey,
+                activeColor: Colors.yellow,
+                inactiveColor: Colors.grey,
+              ),
+            ),
+            VerticalGap(8),
+            Container(
+                width: 100,
+                child: ElevatedButton(
+                    onPressed: () {}, child: Center(child: Text("Set"))))
+          ],
+        ),
+      );
+    } else {
       return Container();
+    }
+  }
+
+  void onUltrasonicValueChange(double val) {
+    setState(() {
+      ultrasonicValue = val;
+    });
+  }
+
+  Widget getSwitchForObstacleAvoider() {
+    return Container(
+      child: Row(
+        children: [
+          CustomText("Manual", TextStyle(color: Colors.black, fontSize: 12)),
+          HorizontalGap(4),
+          Switch(
+              value: ultrasonicSwitchValue,
+              onChanged: switchForObstacleAvoiderChange,
+              activeColor: Colors.white70,
+              activeTrackColor: Colors.green),
+          HorizontalGap(4),
+          CustomText("Automatic", TextStyle(color: Colors.black, fontSize: 12))
+        ],
+      ),
+    );
+  }
+
+  void switchForObstacleAvoiderChange(bool val) {
+    setState(() {
+      ultrasonicSwitchValue = val;
+    });
   }
 }
