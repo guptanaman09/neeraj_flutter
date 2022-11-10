@@ -1,10 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
-import 'package:neeraj_flutter_app/constants/colors.dart';
+import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
@@ -139,56 +137,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     ),
                   ),
                   VerticalGap(12),
-                  CustomText("RED:- ${redSliderValue.round()}",
-                      TextStyle(color: Colors.black, fontSize: 14)),
-                  Container(
-                    width: DeviceUtils.getScreenWidtht(context) * 0.30,
-                    child: Slider(
-                      value: redSliderValue,
-                      onChanged: onRedSliderChange,
-                      max: 255,
-                      label: redSliderValue.round().toString(),
-                      divisions: 255,
-                      thumbColor: Colors.grey,
-                      activeColor: Colors.red,
-                      inactiveColor: Colors.grey,
-                    ),
-                  ),
-                  CustomText("GREEN:- ${greenSliderValue.round()}",
-                      TextStyle(color: Colors.black, fontSize: 14)),
-                  Container(
-                    width: DeviceUtils.getScreenWidtht(context) * 0.30,
-                    child: Slider(
-                      value: greenSliderValue,
-                      onChanged: onGreenSliderChange,
-                      max: 255,
-                      label: greenSliderValue.round().toString(),
-                      divisions: 255,
-                      thumbColor: Colors.grey,
-                      activeColor: Colors.green,
-                      inactiveColor: Colors.grey,
-                    ),
-                  ),
-                  CustomText("BLUE:- ${blueSliderValue.round()}",
-                      TextStyle(color: Colors.black, fontSize: 14)),
-                  Container(
-                    width: DeviceUtils.getScreenWidtht(context) * 0.30,
-                    child: Slider(
-                      value: blueSliderValue,
-                      onChanged: onBlueSliderChange,
-                      max: 255,
-                      label: blueSliderValue.round().toString(),
-                      divisions: 255,
-                      thumbColor: Colors.grey,
-                      activeColor: Colors.blue,
-                      inactiveColor: Colors.grey,
-                    ),
-                  ),
-                  Image.asset(
-                    Assets.CAR_HORN_OFF,
-                    height: 80,
-                    width: 110,
-                  )
+                  getCenterLayout(subCategoryDetail.title),
                 ],
               ),
             ),
@@ -228,7 +177,84 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     });
   }
 
-  Widget getCenterLayout(){
-    return
+  Widget getCenterLayout(String gameName) {
+    if (gameName == SubCategoryData.FREE_RUN)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomText("RED:- ${redSliderValue.round()}",
+              TextStyle(color: Colors.black, fontSize: 14)),
+          Container(
+            width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            child: Slider(
+              value: redSliderValue,
+              onChanged: onRedSliderChange,
+              max: 255,
+              label: redSliderValue.round().toString(),
+              divisions: 255,
+              thumbColor: Colors.grey,
+              activeColor: Colors.red,
+              inactiveColor: Colors.grey,
+            ),
+          ),
+          CustomText("GREEN:- ${greenSliderValue.round()}",
+              TextStyle(color: Colors.black, fontSize: 14)),
+          Container(
+            width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            child: Slider(
+              value: greenSliderValue,
+              onChanged: onGreenSliderChange,
+              max: 255,
+              label: greenSliderValue.round().toString(),
+              divisions: 255,
+              thumbColor: Colors.grey,
+              activeColor: Colors.green,
+              inactiveColor: Colors.grey,
+            ),
+          ),
+          CustomText("BLUE:- ${blueSliderValue.round()}",
+              TextStyle(color: Colors.black, fontSize: 14)),
+          Container(
+            width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            child: Slider(
+              value: blueSliderValue,
+              onChanged: onBlueSliderChange,
+              max: 255,
+              label: blueSliderValue.round().toString(),
+              divisions: 255,
+              thumbColor: Colors.grey,
+              activeColor: Colors.blue,
+              inactiveColor: Colors.grey,
+            ),
+          ),
+          Image.asset(
+            Assets.CAR_HORN_OFF,
+            height: 80,
+            width: 110,
+          )
+        ],
+      );
+    else if (gameName == SubCategoryData.THOR_HAMMER ||
+        gameName == SubCategoryData.SOCCER)
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              Assets.SOCCER,
+              height: 120,
+              width: 120,
+              fit: BoxFit.fill,
+            ),
+            VerticalGap(12),
+            Image.asset(Assets.THOR_HAMMER,
+                height: 120, width: 120, fit: BoxFit.fill),
+          ],
+        ),
+      );
+    else
+      return Container();
   }
 }
