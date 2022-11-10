@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
+import 'package:neeraj_flutter_app/ui/free_run_screen.dart';
 import 'package:neeraj_flutter_app/ui/iot_screen.dart';
 import 'package:neeraj_flutter_app/ui/login_screen.dart';
 import 'package:neeraj_flutter_app/ui/main_screen.dart';
@@ -51,6 +52,13 @@ class Routing {
           return MaterialPageRoute(
               builder: (_) => OfflineSubCategoryScreen(
                   settings.arguments as OfflineMainCategoryDetail),
+              settings: RouteSettings(name: settings.name));
+        }
+      case Classes.freeRunScreen:
+        {
+          return MaterialPageRoute(
+              builder: (_) =>
+                  FreeRunScreen(settings.arguments as SubCategoryDetail),
               settings: RouteSettings(name: settings.name));
         }
       default:
