@@ -7,6 +7,8 @@ import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/sub_category_card_widget.dart';
+import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 ///Created by Naman Gupta on 5/11/22.
 
@@ -72,6 +74,17 @@ class SubCategoryScreenState extends BaseClass {
         ],
       ),
     );
+  }
+
+  void onSubCatPress() async {
+    print("play game clicked");
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+      print(statuses[Permission.bluetoothConnect]);
+      //showBottomDialog(context);
+      Navigator.of(context).pushNamed(Classes.bluetoothBle);
+    }
   }
 
   void onSelectCategory(SubCategoryDetail model) {

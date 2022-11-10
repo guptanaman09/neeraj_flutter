@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
 import 'package:neeraj_flutter_app/routing.dart';
+import 'package:flutter/services.dart';
+import 'package:neeraj_flutter_app/connectivity/bluettoth_coneectivty.dart';
+import 'package:neeraj_flutter_app/test_ble.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   AppLocalizations();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

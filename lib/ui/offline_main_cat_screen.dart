@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/offline_udp_connectivity.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -27,7 +28,8 @@ class OfflineMainCategoryScreenState extends BaseClass {
   @override
   void initState() {
     super.initState();
-
+    UdpConnectivity connectivity = UdpConnectivity();
+    connectivity.start();
     offlineMainCategoryModel = OfflineCategoryModel();
 
     setAppBarVisibility(true,

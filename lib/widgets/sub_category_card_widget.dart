@@ -13,6 +13,7 @@ import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 
 class SubCategoryCardWidget extends StatelessWidget {
   final SubCategoryDetail detailModel;
+
   late final Function onPlayButtonClick;
 
   SubCategoryCardWidget(this.detailModel, this.onPlayButtonClick);
@@ -52,7 +53,6 @@ class SubCategoryCardWidget extends StatelessWidget {
               padding: EdgeInsets.all(Dimensions.size_16),
               child: Image.asset(
                 detailModel.image,
-                fit: BoxFit.contain,
                 alignment: Alignment.center,
               ),
             )),

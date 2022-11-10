@@ -25,7 +25,11 @@ dependencies:
   dio: ^4.0.0 # for APIs calling.
   connectivity: ^3.0.3 # for internet connection check
   shimmer: ^2.0.0 # for shimmer loading
-
+  flutter_blue: ^0.8.0
+  permission_handler: ^10.2.0
+  flutter_bluetooth_serial: ^0.4.0
+  hex: ^0.2.0
+  udp: ^5.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
