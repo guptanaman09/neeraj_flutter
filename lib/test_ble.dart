@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:hex/hex.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/widgets.dart';
 
@@ -161,8 +162,7 @@ class DeviceScreen extends StatelessWidget {
   final BluetoothDevice device;
 
   List<int> _getRandomBytes() {
-    final math = Random();
-    return math.nextInt(255).toRadixString(16).codeUnits;
+    return [0xc2, 0x00];
   }
 
   List<Widget> _buildServiceTiles(List<BluetoothService> services) {

@@ -1,13 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 ///Created by Neeraj Vijayvargiya on 08/11/22.
 class ArduinoSerialConnectivity {
   FlutterBluetoothSerial instance = FlutterBluetoothSerial.instance;
   BluetoothState _state = BluetoothState.UNKNOWN;
   List<BluetoothDevice> list = [];
+  late BluetoothConnection blConnection;
   void start(BuildContext context) async {
     print("inside start");
     if (instance.isEnabled == true) {
@@ -45,14 +49,35 @@ class ArduinoSerialConnectivity {
 
   void showBondedDevices(BuildContext context) async {
     print("inside bonded devices");
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+      print(statuses[Permission.bluetoothConnect]);
+      //showBottomDialog(context);
+      instance.startDiscovery().listen((event) {
+        print("device found in discovery=" + event.device.address);
+        if (event.device.bondState.isBonded) {
+          print(
+              "device found in discovery with bonded=" + event.device.address);
 
-    await instance.getBondedDevices().then((value) => () {
-          for (BluetoothDevice d in value) {
-            list.add(d);
-            print("devices found=" + d.address);
-          }
-          showBottomDialog(context);
-        });
+          list.add(event.device);
+        }
+      }).onDone(() {
+        showBottomDialog(context);
+      });
+      // instance
+      //     .getBondedDevices()
+      //     .then((value) => () {
+      //           for (BluetoothDevice d in value) {
+      //             list.add(d);
+      //             print("devices found=" + d.address);
+      //           }
+      //           showBottomDialog(context);
+      //         })
+      //     .onError((error, stackTrace) => () {
+      //           print("inside the error");
+      //         });
+    }
   }
 
   void showBottomDialog(BuildContext context) {
@@ -106,5 +131,21 @@ class ArduinoSerialConnectivity {
                 topRight: Radius.circular(10.0))));
   }
 
-  void connectToBluetooth(BluetoothDevice d) {}
+  void connectToBluetooth(BluetoothDevice d) async {
+    blConnection = await BluetoothConnection.toAddress(d.address);
+    if (blConnection.isConnected) {
+      blConnection.input!.listen((event) {});
+      Uint8List data = Uint8List(2);
+      data[0] = (0xC2);
+      data[1] = (0x64);
+      writeToConnection(data);
+    }
+  }
+
+  void writeToConnection(Uint8List data) async {
+    if (blConnection!.isConnected) {
+      blConnection.output.add(data);
+      await blConnection.output.allSent;
+    }
+  }
 }

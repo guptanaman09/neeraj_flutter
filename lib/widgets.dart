@@ -132,6 +132,7 @@ class ServiceTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text('Service'),
+            Text(service.uuid.toString()),
             Text('0x${service.uuid.toString().toUpperCase().substring(4, 8)}',
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     color: Theme.of(context).textTheme.caption?.color))
@@ -141,7 +142,7 @@ class ServiceTile extends StatelessWidget {
       );
     } else {
       return ListTile(
-        title: Text('Service'),
+        title: Text('Service' + service.uuid.toString()),
         subtitle:
             Text('0x${service.uuid.toString().toUpperCase().substring(4, 8)}'),
       );
@@ -179,6 +180,7 @@ class CharacteristicTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text('Characteristic'),
+                Text(characteristic.uuid.toString()),
                 Text(
                     '0x${characteristic.uuid.toString().toUpperCase().substring(4, 8)}',
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(

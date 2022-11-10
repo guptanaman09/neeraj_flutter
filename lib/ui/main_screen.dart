@@ -32,11 +32,15 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends BaseClass {
   late MainCategoryModel mainCategoryModel;
 
+  void askPermission() async {
+    // ArduinoSerialConnectivity connectivity = ArduinoSerialConnectivity();
+    // connectivity.start(context);
+  }
+
   @override
   void initState() {
     super.initState();
-    ArduinoSerialConnectivity connectivity = ArduinoSerialConnectivity();
-    connectivity.start(context);
+    askPermission();
     mainCategoryModel = MainCategoryModel();
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,
