@@ -60,6 +60,15 @@ class Assets {
   static const String LIGHT_SENSOR = "assets/image/LightSensor.png";
   static const String PUSH_SWITCH = "assets/image/PushSwitch.png";
   static const String BACKGROUND_BLUE = "assets/image/abstract-luxury.jpg";
+  static const String DOWN_ARROW = "assets/image/down.png";
+  static const String UP_ARROW = "assets/image/up.png";
+  static const String RIGHT_ARROW = "assets/image/right.png";
+  static const String LEFTOW = "assets/image/Left.png";
+  static const String BLUETOOTH_SIGN = "assets/image/connect.png";
+  static const String CAR_HORN_OFF = "assets/image/car_horn-off.png";
+  static const String CAR_HORN_ON = "assets/image/car_horn-on.png";
+  static const String BACK_BUTTON = "assets/image/back.png";
+  static const String RED_DOT = "assets/image/red.png";
   static const String SENSOR_INPUT_BLOCKS =
       "assets/image/ultrasonic_sensor.png";
   static const String STRUCTURED_BASED_ACTIVITY =

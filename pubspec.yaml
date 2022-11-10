@@ -100,6 +100,15 @@ flutter:
     - assets/image/LightSensor.png
     - assets/image/PushSwitch.png
     - assets/image/abstract-luxury.jpg
+    - assets/image/down.png
+    - assets/image/up.png
+    - assets/image/right.png
+    - assets/image/Left.png
+    - assets/image/connect.png
+    - assets/image/car_horn-off.png
+    - assets/image/car_horn-on.png
+    - assets/image/back.png
+    - assets/image/red.png
 
   fonts:
     - family: Inter

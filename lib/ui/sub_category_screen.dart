@@ -4,13 +4,8 @@ import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
-import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
-import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
-import 'package:neeraj_flutter_app/widgets/card_widget.dart';
-import 'package:neeraj_flutter_app/widgets/custom_text.dart';
-import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/sub_category_card_widget.dart';
 import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -69,7 +64,8 @@ class SubCategoryScreenState extends BaseClass {
                     splashColor: AppColors.primaryColor,
                     hoverColor: AppColors.primaryColor,
                     focusColor: AppColors.primaryColor,
-                    child: SubCategoryCardWidget(detailModel, onSubCatPress)),
+                    child:
+                        SubCategoryCardWidget(detailModel, onPlayButtonClick)),
               );
             },
             itemCount: model.subCategoryDetailList.length,
@@ -93,5 +89,10 @@ class SubCategoryScreenState extends BaseClass {
 
   void onSelectCategory(SubCategoryDetail model) {
     print("sub category >>> ${model.title}");
+  }
+
+  void onPlayButtonClick(SubCategoryDetail model) {
+    print("play game clicked  ${model.title}");
+    Navigator.of(context).pushNamed(Classes.freeRunScreen, arguments: model);
   }
 }

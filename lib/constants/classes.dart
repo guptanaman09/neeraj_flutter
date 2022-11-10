@@ -8,6 +8,7 @@ class Classes {
   static const String iotScreen = "/iot_screen";
   static const String onlineIOTScreen = "/online_iot_screen";
   static const String offlineSubCategoryScreen = "/offline_subcategory_screen";
+  static const String freeRunScreen = "/free_run_screen";
   static const String offlineMainCategoryScreen =
       "/offline_main_category_screen";
   static const String bluetoothBle = "/FlutterBlueApp";
