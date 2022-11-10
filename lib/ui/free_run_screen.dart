@@ -1,7 +1,11 @@
+import 'dart:io' as io;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/bluetooth_serial_connectivty.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
+import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
@@ -128,10 +132,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 color: Colors.red,
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600)),
-                        Image.asset(
-                          Assets.BLUETOOTH_SIGN,
-                          height: 50,
-                          width: 50,
+                        InkWell(
+                          onTap: onTapBluetoothIcon,
+                          child: Image.asset(
+                            Assets.BLUETOOTH_SIGN,
+                            height: 50,
+                            width: 50,
+                          ),
                         ),
                       ],
                     ),
@@ -256,5 +263,67 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       );
     else
       return Container();
+  }
+
+  void onTapBluetoothIcon() {
+    //call alert dialog if android device to choose the device bluetooth.
+    if (io.Platform.isAndroid) {
+      //show chooser option
+      showAlertMessage(
+          "select the bluetooth connected with your device?", context);
+    } else {
+      // for ios directly call the ble
+      onSelectBle();
+    }
+  }
+
+  void showAlertMessage(String message, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Alert",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+                onSelectBle();
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "BLE",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+                onSelectNonBle();
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "NON-BLE",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  void onSelectBle() {
+    Navigator.of(context).pushNamed(Classes.bluetoothBle);
+  }
+
+  void onSelectNonBle() {
+    ArduinoSerialConnectivity connectivity = ArduinoSerialConnectivity();
+    connectivity.start(context);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 ///Created by Neeraj Vijayvargiya on 08/11/22.
 class ArduinoSerialConnectivity {
@@ -54,6 +55,8 @@ class ArduinoSerialConnectivity {
     if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
       print(statuses[Permission.bluetoothConnect]);
       //showBottomDialog(context);
+      ProgressDialog pd = ProgressDialog(context: context);
+      pd.show(max: 80, msg: "Loading devices");
       instance.startDiscovery().listen((event) {
         print("device found in discovery=" + event.device.address);
         if (event.device.bondState.isBonded) {
@@ -63,6 +66,7 @@ class ArduinoSerialConnectivity {
           list.add(event.device);
         }
       }).onDone(() {
+        pd.close();
         showBottomDialog(context);
       });
       // instance

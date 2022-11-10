@@ -29,6 +29,7 @@ class FlutterBlueAppState extends BaseClass {
         initialData: BluetoothState.unknown,
         builder: (c, snapshot) {
           final state = snapshot.data;
+          print("Bluettoth State $state");
           if (state == BluetoothState.on) {
             return FindDevicesScreen();
           }
