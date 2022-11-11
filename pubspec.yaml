@@ -110,6 +110,7 @@ flutter:
     - assets/image/car_horn-on.png
     - assets/image/back.png
     - assets/image/red.png
+    - assets/image/GREEN.png
 
   fonts:
     - family: Inter

@@ -2,10 +2,14 @@ import 'dart:io' as io;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/connectivity/bluetooth_serial_connectivty.dart';
+import 'package:neeraj_flutter_app/connectivity/bluettoth_coneectivty.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
+import 'package:neeraj_flutter_app/constants/dimensions.dart';
+import 'package:neeraj_flutter_app/constants/styling/button_style.dart';
 import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
@@ -28,13 +32,18 @@ class FreeRunScreen extends StatefulWidget {
 
 class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   SubCategoryDetail subCategoryDetail;
-
+  bool isAnyBluetoothConnected = false;
+  bool ifBleConnected = false;
+  bool ifSerialConnected = false;
+  ArduinoSerialConnectivity? connectivity = null;
+  BleConnectivity? bleConnect = null;
   FreeRunScreenState(this.subCategoryDetail);
-
+  ScanResult? scanResult;
   double redSliderValue = 0;
   double greenSliderValue = 0;
   double blueSliderValue = 0;
   double ultrasonicValue = 0;
+  List<ScanResult> list = [];
 
   late AnimationController _animationController;
   bool ultrasonicSwitchValue = false;
@@ -44,6 +53,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     _animationController = new AnimationController(
         vsync: this, duration: Duration(milliseconds: 150));
     _animationController.repeat(reverse: true);
+
     super.initState();
   }
 
@@ -129,9 +139,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           ),
                         ),
                         CustomText(
-                            "Not Connected",
+                            isAnyBluetoothConnected
+                                ? "Connected"
+                                : "Not Connected",
                             TextStyle(
-                                color: Colors.red,
+                                color: isAnyBluetoothConnected
+                                    ? Colors.green
+                                    : Colors.red,
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600)),
                         InkWell(
@@ -155,7 +169,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             child: FadeTransition(
               opacity: _animationController,
               child: Image.asset(
-                Assets.RED_DOT,
+                isAnyBluetoothConnected ? Assets.GREEN_DOT : Assets.RED_DOT,
                 height: 25,
                 width: 25,
               ),
@@ -364,6 +378,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   void showAlertMessage(String message, BuildContext context) {
+    if (isAnyBluetoothConnected) {
+      showAlertOkayMessage(
+          "You want to connect new device previous connection will lost? ",
+          onOkayPressed);
+      return;
+    }
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -405,11 +425,139 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   void onSelectBle() {
-    Navigator.of(context).pushNamed(Classes.bluetoothBle);
+    bleConnect = BleConnectivity();
+    bleConnect!.askRuntimePermissions(
+        context, pushScanResult, showBottomDialog, connectBleDevice);
   }
 
   void onSelectNonBle() {
-    ArduinoSerialConnectivity connectivity = ArduinoSerialConnectivity();
-    connectivity.start(context);
+    connectivity = ArduinoSerialConnectivity(onNondBleConnectvity);
+    connectivity!.start(context);
+  }
+
+  void onNondBleConnectvity(bool value) {
+    setState(() {
+      isAnyBluetoothConnected = value;
+      ifSerialConnected = value;
+    });
+  }
+
+  void onOkayPressed() {
+    print("inside on okeypressed");
+    if (isAnyBluetoothConnected) {
+      if (ifSerialConnected) {
+        connectivity!.disconnecToBluetooth();
+      }
+    }
+  }
+
+  void showBottomDialog() {
+    showModalBottomSheet(
+        constraints: BoxConstraints(maxWidth: 300, minHeight: 100),
+        context: context,
+        builder: (context) {
+          return Container(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          HorizontalGap(10),
+                          Icon(
+                            Icons.bluetooth,
+                            color: Colors.blue,
+                            size: 20,
+                          ),
+                          HorizontalGap(10),
+                          Text(
+                            list[index].device.name,
+                            style: TextStyle(
+                                fontSize: 15, color: Colors.lightGreen),
+                          ),
+                          HorizontalGap(10),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(Dimensions.size_8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(Dimensions.size_10),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                if (getButtonText(list[index]) ==
+                                    "Disconnect") {
+                                  bleConnect!
+                                      .disconnectToBluetooth(list[index]);
+                                } else {
+                                  bleConnect!.connectToBluetooth(list[index]);
+                                }
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  width: 100,
+                                  child: CustomText(
+                                    getButtonText(list[index]),
+                                    ButtonStyles.getButtonTextStyle(),
+                                    textAlign: TextAlign.center,
+                                  ))),
+                          HorizontalGap(10),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+          );
+        },
+        isDismissible: true,
+        useRootNavigator: false,
+        isScrollControlled: false,
+        backgroundColor: Colors.white,
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0))));
+  }
+
+  void pushScanResult(ScanResult r) {
+    print("inside push result");
+
+    setState(() {
+      list.add(r);
+    });
+  }
+
+  String getButtonText(ScanResult r) {
+    String st = "Connect";
+    if (scanResult != null) {
+      if (scanResult!.device.id.id == r.device.id.id) {
+        if (ifBleConnected) {
+          return "Disconnect";
+        }
+      }
+    }
+    return st;
+  }
+
+  void connectBleDevice(BluetoothDeviceState state, ScanResult result) {
+    this.scanResult = result;
+    if (state == BluetoothDeviceState.connected) {
+      setState(() {
+        isAnyBluetoothConnected = true;
+        ifBleConnected = true;
+      });
+    } else if (state == BluetoothDeviceState.disconnected) {
+      setState(() {
+        isAnyBluetoothConnected = false;
+        ifBleConnected = false;
+      });
+    }
   }
 }

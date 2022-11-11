@@ -69,6 +69,7 @@ class Assets {
   static const String CAR_HORN_ON = "assets/image/car_horn-on.png";
   static const String BACK_BUTTON = "assets/image/back.png";
   static const String RED_DOT = "assets/image/red.png";
+  static const String GREEN_DOT = "assets/image/GREEN.png";
   static const String SENSOR_INPUT_BLOCKS =
       "assets/image/ultrasonic_sensor.png";
   static const String STRUCTURED_BASED_ACTIVITY =

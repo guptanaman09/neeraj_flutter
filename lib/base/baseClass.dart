@@ -113,6 +113,34 @@ class BaseClass extends State {
     );
   }
 
+  void showAlertOkayMessage(String message, Function onOkayPressed) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Alert",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+                onOkayPressed();
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "okay",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
   void showAlert(String title, String subTitle,
       {showIcon = true, showContactAdmin = true}) {
     showDialog(
