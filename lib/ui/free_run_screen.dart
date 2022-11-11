@@ -191,7 +191,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomText("RED:- ${redSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 14)),
+              TextStyle(color: Colors.black, fontSize: 12)),
           Container(
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             child: Slider(
@@ -206,7 +206,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             ),
           ),
           CustomText("GREEN:- ${greenSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 14)),
+              TextStyle(color: Colors.black, fontSize: 12)),
           Container(
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             child: Slider(
@@ -221,7 +221,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             ),
           ),
           CustomText("BLUE:- ${blueSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 14)),
+              TextStyle(color: Colors.black, fontSize: 12)),
           Container(
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             child: Slider(
@@ -237,7 +237,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ),
           Image.asset(
             Assets.CAR_HORN_OFF,
-            height: 80,
+            height: 60,
             width: 110,
           )
         ],
@@ -325,13 +325,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       child: Row(
         children: [
           CustomText("Manual", TextStyle(color: Colors.black, fontSize: 12)),
-          HorizontalGap(4),
+          HorizontalGap(2),
           Switch(
               value: ultrasonicSwitchValue,
               onChanged: switchForObstacleAvoiderChange,
               activeColor: Colors.white70,
               activeTrackColor: Colors.green),
-          HorizontalGap(4),
+          HorizontalGap(2),
           CustomText("Automatic", TextStyle(color: Colors.black, fontSize: 12))
         ],
       ),
