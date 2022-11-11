@@ -156,11 +156,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             top: 32,
             right: 150,
           ),
-          Positioned(
-            left: 80,
-            top: 10,
-            child: getSwitchForObstacleAvoider(),
-          )
+          (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER)
+              ? Positioned(
+                  left: 80,
+                  top: 10,
+                  child: getSwitchForObstacleAvoider(),
+                )
+              : Container()
         ],
       ),
     );
@@ -261,7 +263,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    } else if (gameName == SubCategoryData.OBSTACLE_AVOIDER) {
+    } else if (gameName == SubCategoryData.OBSTACLE_AVOIDER ||
+        gameName == SubCategoryData.EDGE_DETECTOR) {
       return Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

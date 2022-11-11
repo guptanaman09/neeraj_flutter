@@ -8,6 +8,7 @@ import 'package:neeraj_flutter_app/test_ble.dart';
 import 'package:neeraj_flutter_app/ui/free_run_screen.dart';
 
 import 'package:neeraj_flutter_app/ui/iot_screen.dart';
+import 'package:neeraj_flutter_app/ui/line_follower_game_screen.dart';
 import 'package:neeraj_flutter_app/ui/login_screen.dart';
 import 'package:neeraj_flutter_app/ui/main_screen.dart';
 import 'package:neeraj_flutter_app/ui/offline_main_cat_screen.dart';
@@ -69,6 +70,14 @@ class Routing {
           return MaterialPageRoute(
               builder: (_) =>
                   FreeRunScreen(settings.arguments as SubCategoryDetail),
+              settings: RouteSettings(name: settings.name));
+        }
+
+      case Classes.lineFollowerGameScreen:
+        {
+          return MaterialPageRoute(
+              builder: (_) => LineFollowerGameScreen(
+                  settings.arguments as SubCategoryDetail),
               settings: RouteSettings(name: settings.name));
         }
 
