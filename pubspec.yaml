@@ -116,6 +116,10 @@ flutter:
     - assets/image/swingright.png
     - assets/image/throw.png
     - assets/image/reload1.png
+    - assets/image/shooot.png
+    - assets/image/shootermdpi.png
+    - assets/image/swingmdpi.png
+    - assets/image/swingmdpi2.png
 
   fonts:
     - family: Inter

@@ -33,12 +33,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   double ultrasonicValue = 0;
   double dumpValue = 0;
 
+  double exacavtorSwingValue = 0;
+  double exacavtorBucketValue = 0;
+  double exacavtorBoomValue = 0;
+  double exacavtorArmValue = 0;
+
   late AnimationController _animationController;
   bool ultrasonicSwitchValue = false;
   bool forkLiftSwap = false;
   bool craneLiftSwap = false;
   bool craneSwingSwap = false;
   bool catapultSwap = false;
+  bool ballShooterSwap = false;
+
+  bool armyTankShootSwap = false;
+  bool armyTankSwingSwap = false;
 
   @override
   void initState() {
@@ -50,11 +59,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   @override
   Widget? setBody() {
-    return SingleChildScrollView(
-      child: Container(
-        height: DeviceUtils.getScreenHeight(context),
-        width: DeviceUtils.getScreenWidtht(context),
-        decoration: BoxDecoration(color: Colors.lightBlueAccent),
+    return Container(
+      height: DeviceUtils.getScreenHeight(context),
+      width: DeviceUtils.getScreenWidtht(context),
+      decoration: BoxDecoration(color: Colors.lightBlueAccent),
+      child: SingleChildScrollView(
         child: Stack(
           children: [
             Positioned(
@@ -513,6 +522,210 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             ),
           ],
         )),
+      );
+    } else if (gameName == SubCategoryData.BALL_SHOOTER) {
+      return Container(
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: ballShooterSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        ballShooterSwap = val;
+                      });
+                    })
+              ],
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.SHOOOT,
+              height: 80,
+              width: 80,
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.RELOAD,
+              height: 80,
+              width: 80,
+            ),
+          ],
+        )),
+      );
+    } else if (gameName == SubCategoryData.EXCAVATOR) {
+      return Container(
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Swing",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            Container(
+              width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              child: Slider(
+                value: exacavtorSwingValue,
+                onChanged: (val) {
+                  setState(() {
+                    exacavtorSwingValue = val;
+                  });
+                },
+                max: 255,
+                divisions: 255,
+                thumbColor: Colors.grey,
+                activeColor: Colors.yellow,
+                inactiveColor: Colors.grey,
+              ),
+            ),
+            Text("Bucket",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            Container(
+              width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              child: Slider(
+                value: exacavtorBucketValue,
+                onChanged: (val) {
+                  setState(() {
+                    exacavtorBucketValue = val;
+                  });
+                },
+                max: 255,
+                divisions: 255,
+                thumbColor: Colors.grey,
+                activeColor: Colors.yellow,
+                inactiveColor: Colors.grey,
+              ),
+            ),
+            Text("Boon",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            Container(
+              width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              child: Slider(
+                value: exacavtorBoomValue,
+                onChanged: (val) {
+                  setState(() {
+                    exacavtorBoomValue = val;
+                  });
+                },
+                max: 255,
+                divisions: 255,
+                thumbColor: Colors.grey,
+                activeColor: Colors.yellow,
+                inactiveColor: Colors.grey,
+              ),
+            ),
+            Text("Arm",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            Container(
+              width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              child: Slider(
+                value: exacavtorArmValue,
+                onChanged: (val) {
+                  setState(() {
+                    exacavtorArmValue = val;
+                  });
+                },
+                max: 255,
+                divisions: 255,
+                thumbColor: Colors.grey,
+                activeColor: Colors.yellow,
+                inactiveColor: Colors.grey,
+              ),
+            )
+          ],
+        )),
+      );
+    } else if (gameName == CategoryData.ARNY_TANK) {
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap(Shoot)",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: armyTankShootSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        armyTankShootSwap = val;
+                      });
+                    })
+              ],
+            ),
+            VerticalGap(4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap(Swing)",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: armyTankSwingSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        armyTankSwingSwap = val;
+                      });
+                    })
+              ],
+            ),
+            VerticalGap(4),
+            Image.asset(
+              Assets.SHOOOTER_MDPI,
+              height: 80,
+              width: 80,
+            ),
+            VerticalGap(4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  Assets.SWING_MDPI,
+                  height: 80,
+                  width: 80,
+                ),
+                HorizontalGap(16),
+                Image.asset(
+                  Assets.SWING_MDPI_2,
+                  height: 80,
+                  width: 80,
+                ),
+              ],
+            ),
+            VerticalGap(4),
+            Image.asset(
+              Assets.RELOAD,
+              height: 80,
+              width: 80,
+            ),
+          ],
+        ),
       );
     } else {
       return Container();
