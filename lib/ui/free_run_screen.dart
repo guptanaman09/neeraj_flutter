@@ -31,9 +31,14 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   double greenSliderValue = 0;
   double blueSliderValue = 0;
   double ultrasonicValue = 0;
+  double dumpValue = 0;
 
   late AnimationController _animationController;
   bool ultrasonicSwitchValue = false;
+  bool forkLiftSwap = false;
+  bool craneLiftSwap = false;
+  bool craneSwingSwap = false;
+  bool catapultSwap = false;
 
   @override
   void initState() {
@@ -45,125 +50,127 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   @override
   Widget? setBody() {
-    return Container(
-      height: DeviceUtils.getScreenHeight(context),
-      width: DeviceUtils.getScreenWidtht(context),
-      decoration: BoxDecoration(color: Colors.lightBlueAccent),
-      child: Stack(
-        children: [
-          Positioned(
-              left: 50,
+    return SingleChildScrollView(
+      child: Container(
+        height: DeviceUtils.getScreenHeight(context),
+        width: DeviceUtils.getScreenWidtht(context),
+        decoration: BoxDecoration(color: Colors.lightBlueAccent),
+        child: Stack(
+          children: [
+            Positioned(
+                left: 50,
+                child: Container(
+                  height: DeviceUtils.getScreenHeight(context),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Image.asset(
+                        Assets.UP_ARROW,
+                        width: 100,
+                        height: 100,
+                      ),
+                      VerticalGap(32),
+                      Image.asset(
+                        Assets.DOWN_ARROW,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ],
+                  ),
+                )),
+            Positioned(
+                right: 50,
+                child: Container(
+                  height: DeviceUtils.getScreenHeight(context),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Image.asset(
+                        Assets.LEFTOW,
+                        width: 100,
+                        height: 100,
+                      ),
+                      HorizontalGap(8),
+                      Image.asset(
+                        Assets.RIGHT_ARROW,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ],
+                  ),
+                )),
+            Align(
+              alignment: Alignment.center,
               child: Container(
                 height: DeviceUtils.getScreenHeight(context),
+                margin: EdgeInsets.all(8),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    Image.asset(
-                      Assets.UP_ARROW,
-                      width: 100,
-                      height: 100,
-                    ),
-                    VerticalGap(32),
-                    Image.asset(
-                      Assets.DOWN_ARROW,
-                      width: 100,
-                      height: 100,
-                    ),
-                  ],
-                ),
-              )),
-          Positioned(
-              right: 50,
-              child: Container(
-                height: DeviceUtils.getScreenHeight(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Image.asset(
-                      Assets.LEFTOW,
-                      width: 100,
-                      height: 100,
-                    ),
-                    HorizontalGap(8),
-                    Image.asset(
-                      Assets.RIGHT_ARROW,
-                      width: 100,
-                      height: 100,
-                    ),
-                  ],
-                ),
-              )),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: DeviceUtils.getScreenHeight(context),
-              margin: EdgeInsets.all(8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: DeviceUtils.getScreenWidtht(context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            child: Image.asset(
-                              Assets.BACK_BUTTON,
-                              height: 50,
-                              width: 50,
+                    Container(
+                      width: DeviceUtils.getScreenWidtht(context),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              child: Image.asset(
+                                Assets.BACK_BUTTON,
+                                height: 50,
+                                width: 50,
+                              ),
                             ),
                           ),
-                        ),
-                        CustomText(
-                            "Not Connected",
-                            TextStyle(
-                                color: Colors.red,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600)),
-                        Image.asset(
-                          Assets.BLUETOOTH_SIGN,
-                          height: 50,
-                          width: 50,
-                        ),
-                      ],
+                          CustomText(
+                              "Not Connected",
+                              TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600)),
+                          Image.asset(
+                            Assets.BLUETOOTH_SIGN,
+                            height: 50,
+                            width: 50,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  VerticalGap(12),
-                  getCenterLayout(subCategoryDetail.title),
-                ],
+                    VerticalGap(12),
+                    getCenterLayout(subCategoryDetail.title),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            child: FadeTransition(
-              opacity: _animationController,
-              child: Image.asset(
-                Assets.RED_DOT,
-                height: 25,
-                width: 25,
+            Positioned(
+              child: FadeTransition(
+                opacity: _animationController,
+                child: Image.asset(
+                  Assets.RED_DOT,
+                  height: 25,
+                  width: 25,
+                ),
               ),
+              top: 32,
+              right: 150,
             ),
-            top: 32,
-            right: 150,
-          ),
-          (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER)
-              ? Positioned(
-                  left: 80,
-                  top: 10,
-                  child: getSwitchForObstacleAvoider(),
-                )
-              : Container()
-        ],
+            (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER)
+                ? Positioned(
+                    left: 80,
+                    top: 10,
+                    child: getSwitchForObstacleAvoider(),
+                  )
+                : Container()
+          ],
+        ),
       ),
     );
   }
@@ -187,7 +194,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   Widget getCenterLayout(String gameName) {
-    if (gameName == SubCategoryData.FREE_RUN)
+    if (gameName == SubCategoryData.FREE_RUN &&
+        subCategoryDetail.mainCategoryTitle == CategoryData.ACCELEREO)
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -264,7 +272,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         ),
       );
     } else if (gameName == SubCategoryData.OBSTACLE_AVOIDER ||
-        gameName == SubCategoryData.EDGE_DETECTOR) {
+        gameName == SubCategoryData.EDGE_DETECTOR ||
+        gameName == SubCategoryData.OBSTACLE_AVOIDER) {
       return Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -312,6 +321,199 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
+    } else if (gameName == SubCategoryData.DUMPER) {
+      return Align(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CustomText(
+                "Dump",
+                TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic)),
+            VerticalGap(8),
+            Container(
+              width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              child: Slider(
+                value: dumpValue,
+                onChanged: onDumpValueChange,
+                max: 255,
+                divisions: 255,
+                thumbColor: Colors.grey,
+                activeColor: Colors.yellow,
+                inactiveColor: Colors.grey,
+              ),
+            )
+          ],
+        ),
+      );
+    } else if (gameName == SubCategoryData.FORKLIFT) {
+      return Container(
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: forkLiftSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        forkLiftSwap = val;
+                      });
+                    })
+              ],
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.LIFT,
+              height: 80,
+              width: 80,
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.DROP,
+              height: 80,
+              width: 80,
+            ),
+          ],
+        )),
+      );
+    } else if (gameName == SubCategoryData.CRANE) {
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap(Lift)",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: craneLiftSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        craneLiftSwap = val;
+                      });
+                    })
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap(Swing)",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: craneSwingSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        craneSwingSwap = val;
+                      });
+                    })
+              ],
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.LIFT,
+              height: 50,
+              width: 50,
+            ),
+            VerticalGap(8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  Assets.SWING_LEFT,
+                  height: 50,
+                  width: 50,
+                ),
+                HorizontalGap(16),
+                Image.asset(
+                  Assets.SWING_RIGHT,
+                  height: 50,
+                  width: 50,
+                ),
+              ],
+            ),
+            VerticalGap(8),
+            Image.asset(
+              Assets.DROP,
+              height: 50,
+              width: 50,
+            ),
+          ],
+        ),
+      );
+    } else if (gameName == SubCategoryData.CATAPULT) {
+      return Container(
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Swap",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
+                Switch(
+                    value: catapultSwap,
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.white,
+                    onChanged: (val) {
+                      setState(() {
+                        catapultSwap = val;
+                      });
+                    })
+              ],
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.THROW,
+              height: 80,
+              width: 80,
+              fit: BoxFit.fill,
+            ),
+            VerticalGap(16),
+            Image.asset(
+              Assets.RELOAD,
+              height: 80,
+              width: 80,
+            ),
+          ],
+        )),
+      );
     } else {
       return Container();
     }
@@ -320,6 +522,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   void onUltrasonicValueChange(double val) {
     setState(() {
       ultrasonicValue = val;
+    });
+  }
+
+  void onDumpValueChange(double val) {
+    setState(() {
+      dumpValue = val;
     });
   }
 

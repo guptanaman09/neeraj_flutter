@@ -114,6 +114,13 @@ class LineFollowerGameScreenState extends BaseClass
             top: 32,
             right: 150,
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+              child: Text("Play"),
+              onPressed: () {},
+            ),
+          )
         ],
       ),
     );

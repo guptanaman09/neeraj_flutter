@@ -41,7 +41,7 @@ class MainCategoryModel {
   static List<SubCategoryDetail> getSpaceRoverSubCategory() {
     List<SubCategoryDetail> list = [];
     SubCategoryDetail model_1 = SubCategoryDetail(
-        SubCategoryData.FREE_RUN, Assets.FREE_RUN, CategoryData.SPACE_ROVER);
+        SubCategoryData.FREE_RUN, Assets.FREE_RUNN, CategoryData.SPACE_ROVER);
     SubCategoryDetail model_2 = SubCategoryDetail(
         SubCategoryData.RADAR, Assets.RADAR, CategoryData.SPACE_ROVER);
     SubCategoryDetail model_3 = SubCategoryDetail(

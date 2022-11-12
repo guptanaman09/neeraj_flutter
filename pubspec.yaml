@@ -109,6 +109,13 @@ flutter:
     - assets/image/car_horn-on.png
     - assets/image/back.png
     - assets/image/red.png
+    - assets/image/freerunn.png
+    - assets/image/drop.png
+    - assets/image/lift.png
+    - assets/image/swingleft.png
+    - assets/image/swingright.png
+    - assets/image/throw.png
+    - assets/image/reload1.png
 
   fonts:
     - family: Inter
