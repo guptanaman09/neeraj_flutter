@@ -9,7 +9,6 @@ class BleConnectivity {
   late BluetoothCharacteristic writeCharacterstics;
   late BluetoothCharacteristic readCharacterstics;
   late BluetoothDeviceState _deviceState;
-  late final Function pushScanResult;
   late final Function showBottomDialog;
   late final connectBluetoothBle;
 
@@ -22,7 +21,7 @@ class BleConnectivity {
     r.device.connect().then((value) => r.device.state.listen((event) {
           print("device connection state=$event");
           _deviceState = event;
-          connectBluetoothBle(event,r);
+          connectBluetoothBle(event, r);
           if (event == BluetoothDeviceState.connected) {
             listenForServices(r);
           }
@@ -46,36 +45,34 @@ class BleConnectivity {
     }
   }
 
-    void listenForServices(ScanResult r) async {
-      List<BluetoothService> services = await r.device.discoverServices();
-      for (BluetoothService service in services) {
-        if (service.uuid.toString().trim() ==
-            "0000FFE0-0000-1000-8000-00805F9B34FB") {
-          print("service uuid found");
-          var characteristics = service.characteristics;
-          for (BluetoothCharacteristic c in characteristics) {
-            if (c.uuid.toString().trim() ==
-                "0000FFE1-0000-1000-8000-00805F9B34FB") {
-              print("character uuid found");
-              if (c.properties.read) {
-                readCharacterstics = c;
-              } else if (c.properties.write) {
-                writeCharacterstics = c;
-              }
+  void listenForServices(ScanResult r) async {
+    List<BluetoothService> services = await r.device.discoverServices();
+    for (BluetoothService service in services) {
+      if (service.uuid.toString().trim() ==
+          "0000FFE0-0000-1000-8000-00805F9B34FB") {
+        print("service uuid found");
+        var characteristics = service.characteristics;
+        for (BluetoothCharacteristic c in characteristics) {
+          if (c.uuid.toString().trim() ==
+              "0000FFE1-0000-1000-8000-00805F9B34FB") {
+            print("character uuid found");
+            if (c.properties.read) {
+              readCharacterstics = c;
+            } else if (c.properties.write) {
+              writeCharacterstics = c;
             }
           }
         }
       }
     }
-
+  }
 
   void disconnectToBluetooth(ScanResult r) async {
     await r.device.disconnect();
   }
 
-  void askRuntimePermissions(BuildContext context, Function pushScanResult,
-      Function showBottomDialog, Function connectBleDevice) async {
-    this.pushScanResult = pushScanResult;
+  void askRuntimePermissions(BuildContext context, Function showBottomDialog,
+      Function connectBleDevice) async {
     this.showBottomDialog = showBottomDialog;
     this.connectBluetoothBle = connectBleDevice;
     // Permission.bluetoothConnect,
@@ -150,14 +147,14 @@ class BleConnectivity {
   void startScanning(BuildContext context) {
     flutterBlue.startScan(timeout: Duration(seconds: 5));
 // Listen to scan results
-    showBottomDialog();
-    var subscription = flutterBlue.scanResults.listen((results) {
-      // do something with scan results
-      for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
-        pushScanResult(r);
-      }
-    });
+    showBottomDialog(flutterBlue.scanResults);
+    // var subscription = flutterBlue.scanResults.listen((results) {
+    //   // do something with scan results
+    //   for (ScanResult r in results) {
+    //     print('${r.device.name} found! rssi: ${r.rssi}');
+    //     pushScanResult(r);
+    //   }
+    // });
 
 // Stop scanning
     flutterBlue.stopScan();

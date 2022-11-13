@@ -20,11 +20,28 @@ class ArduinoSerialConnectivity {
   ArduinoSerialConnectivity(this.nonBleIsConnected);
   void start(BuildContext context) async {
     print("inside start");
-    if (instance.isEnabled == true) {
-      showBondedDevices(context);
-    } else {
-      enableBluetoth(context);
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+      print(statuses[Permission.bluetoothConnect]);
+      if (instance.isEnabled == true) {
+        showBondedDevices(context);
+      } else {
+        enableBluetoth(context);
+      }
+      instance.onStateChanged().listen((event) {
+        _state = event;
+        print("adapter state=" + event.stringValue);
+        if (_state == BluetoothState.STATE_OFF) {
+          nonBleIsConnected(false);
+          enableBluetoth(context);
+        } else if (_state == BluetoothState.STATE_ON) {
+          showBondedDevices(context);
+        }
+      });
+      //showBottomDialog(context);
     }
+
     // await instance.state.then((value) => () {
     //       print("then state=" + value.stringValue);
     //
@@ -35,17 +52,6 @@ class ArduinoSerialConnectivity {
     //         showBondedDevices();
     //       }
     //     });
-
-    instance.onStateChanged().listen((event) {
-      _state = event;
-      print("adapter state=" + event.stringValue);
-      if (_state == BluetoothState.STATE_OFF) {
-        nonBleIsConnected(false);
-        enableBluetoth(context);
-      } else if (_state == BluetoothState.STATE_ON) {
-        showBondedDevices(context);
-      }
-    });
   }
 
   void enableBluetoth(BuildContext context) {

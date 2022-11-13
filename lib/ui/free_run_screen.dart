@@ -43,7 +43,6 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   double greenSliderValue = 0;
   double blueSliderValue = 0;
   double ultrasonicValue = 0;
-  List<ScanResult> list = [];
 
   late AnimationController _animationController;
   bool ultrasonicSwitchValue = false;
@@ -426,8 +425,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   void onSelectBle() {
     bleConnect = BleConnectivity();
-    bleConnect!.askRuntimePermissions(
-        context, pushScanResult, showBottomDialog, connectBleDevice);
+    bleConnect!
+        .askRuntimePermissions(context, showBottomDialog, connectBleDevice);
   }
 
   void onSelectNonBle() {
@@ -451,68 +450,88 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     }
   }
 
-  void showBottomDialog() {
+  void showBottomDialog(Stream data) {
     showModalBottomSheet(
         constraints: BoxConstraints(maxWidth: 300, minHeight: 100),
         context: context,
         builder: (context) {
-          return Container(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: list.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          HorizontalGap(10),
-                          Icon(
-                            Icons.bluetooth,
-                            color: Colors.blue,
-                            size: 20,
-                          ),
-                          HorizontalGap(10),
-                          Text(
-                            list[index].device.name,
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.lightGreen),
-                          ),
-                          HorizontalGap(10),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(Dimensions.size_8),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(Dimensions.size_10),
-                                  ),
+          return StreamBuilder(
+            builder: (c, snapshot) {
+              print(snapshot.connectionState.toString());
+              print(snapshot.data.toString());
+
+              if (snapshot.data != null) {
+                return Container(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: (snapshot.data as List<ScanResult>).length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                HorizontalGap(10),
+                                Icon(
+                                  Icons.bluetooth,
+                                  color: Colors.blue,
+                                  size: 20,
                                 ),
-                              ),
-                              onPressed: () {
-                                if (getButtonText(list[index]) ==
-                                    "Disconnect") {
-                                  bleConnect!
-                                      .disconnectToBluetooth(list[index]);
-                                } else {
-                                  bleConnect!.connectToBluetooth(list[index]);
-                                }
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                  width: 100,
-                                  child: CustomText(
-                                    getButtonText(list[index]),
-                                    ButtonStyles.getButtonTextStyle(),
-                                    textAlign: TextAlign.center,
-                                  ))),
-                          HorizontalGap(10),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+                                HorizontalGap(10),
+                                Text(
+                                  (snapshot.data as List<ScanResult>)[index]
+                                      .device
+                                      .name,
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.lightGreen),
+                                ),
+                                HorizontalGap(10),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      padding:
+                                          EdgeInsets.all(Dimensions.size_8),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(Dimensions.size_10),
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      if (getButtonText((snapshot.data
+                                              as List<ScanResult>)[index]) ==
+                                          "Disconnect") {
+                                        bleConnect!.disconnectToBluetooth(
+                                            (snapshot.data
+                                                as List<ScanResult>)[index]);
+                                      } else {
+                                        bleConnect!.connectToBluetooth((snapshot
+                                            .data as List<ScanResult>)[index]);
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                        width: 100,
+                                        child: CustomText(
+                                          getButtonText((snapshot.data
+                                              as List<ScanResult>)[index]),
+                                          ButtonStyles.getButtonTextStyle(),
+                                          textAlign: TextAlign.center,
+                                        ))),
+                                HorizontalGap(10),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                );
+              } else {
+                return Container();
+              }
+            },
+            initialData: false,
+            stream: data,
           );
         },
         isDismissible: true,
@@ -524,14 +543,6 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10.0),
                 topRight: Radius.circular(10.0))));
-  }
-
-  void pushScanResult(ScanResult r) {
-    print("inside push result");
-
-    setState(() {
-      list.add(r);
-    });
   }
 
   String getButtonText(ScanResult r) {
