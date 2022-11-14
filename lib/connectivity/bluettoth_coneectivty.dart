@@ -48,19 +48,24 @@ class BleConnectivity {
   void listenForServices(ScanResult r) async {
     List<BluetoothService> services = await r.device.discoverServices();
     for (BluetoothService service in services) {
-      if (service.uuid.toString().trim() ==
+      print("service uuid=" + service.uuid.toString());
+      if (service.uuid.toString().trim().toUpperCase() ==
           "0000FFE0-0000-1000-8000-00805F9B34FB") {
         print("service uuid found");
         var characteristics = service.characteristics;
         for (BluetoothCharacteristic c in characteristics) {
-          if (c.uuid.toString().trim() ==
+          print("characterstics uuid=" + c.uuid.toString());
+          if (c.uuid.toString().trim().toUpperCase() ==
               "0000FFE1-0000-1000-8000-00805F9B34FB") {
             print("character uuid found");
-            if (c.properties.read) {
-              readCharacterstics = c;
-            } else if (c.properties.write) {
-              writeCharacterstics = c;
-            }
+            readCharacterstics = c;
+            writeCharacterstics = c;
+
+            // if (c.properties.read) {
+            //   readCharacterstics = c;
+            // } else if (c.properties.write) {
+            //   writeCharacterstics = c;
+            // }
           }
         }
       }

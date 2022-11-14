@@ -70,6 +70,17 @@ class Assets {
   static const String BACK_BUTTON = "assets/image/back.png";
   static const String RED_DOT = "assets/image/red.png";
   static const String GREEN_DOT = "assets/image/GREEN.png";
+  static const String FREE_RUNN = "assets/image/freerunn.png";
+  static const String DROP = "assets/image/drop.png";
+  static const String LIFT = "assets/image/lift.png";
+  static const String SWING_LEFT = "assets/image/swingleft.png";
+  static const String SWING_RIGHT = "assets/image/swingright.png";
+  static const String THROW = "assets/image/throw.png";
+  static const String RELOAD = "assets/image/reload1.png";
+  static const String SHOOOT = "assets/image/shooot.png";
+  static const String SHOOOTER_MDPI = "assets/image/shootermdpi.png";
+  static const String SWING_MDPI = "assets/image/swingmdpi.png";
+  static const String SWING_MDPI_2 = "assets/image/swingmdpi2.png";
   static const String SENSOR_INPUT_BLOCKS =
       "assets/image/ultrasonic_sensor.png";
   static const String STRUCTURED_BASED_ACTIVITY =

@@ -4,6 +4,7 @@ import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
+import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/sub_category_card_widget.dart';
@@ -93,6 +94,10 @@ class SubCategoryScreenState extends BaseClass {
 
   void onPlayButtonClick(SubCategoryDetail model) {
     print("play game clicked  ${model.title}");
-    Navigator.of(context).pushNamed(Classes.freeRunScreen, arguments: model);
+    if (model.title != SubCategoryData.LINE_FOLLOWER)
+      Navigator.of(context).pushNamed(Classes.freeRunScreen, arguments: model);
+    else
+      Navigator.of(context)
+          .pushNamed(Classes.lineFollowerGameScreen, arguments: model);
   }
 }

@@ -54,7 +54,7 @@ class CardWidget extends StatelessWidget {
               ])),
               child: Image.asset(
                 detailModel.image,
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
                 alignment: Alignment.center,
               ),
             ))
