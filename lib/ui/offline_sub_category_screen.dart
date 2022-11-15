@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
@@ -52,7 +53,13 @@ class OfflineSubCategoryScreenState extends BaseClass {
             crossAxisCount: 2,
             scrollDirection: Axis.horizontal,
             children: model.subCategoryDetailList
-                .map((e) => OfflineSubCardWidget(e, Colors.green))
+                .map((e) => GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                          Classes.offLineGamePlayScreen,
+                          arguments: e);
+                    },
+                    child: OfflineSubCardWidget(e, Colors.green)))
                 .toList(),
           ))
         ],
