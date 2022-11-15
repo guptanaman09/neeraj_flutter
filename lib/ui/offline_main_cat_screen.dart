@@ -29,7 +29,7 @@ class OfflineMainCategoryScreenState extends BaseClass {
   void initState() {
     super.initState();
     UdpConnectivity connectivity = UdpConnectivity();
-    connectivity.start();
+    connectivity.start(context);
     offlineMainCategoryModel = OfflineCategoryModel();
 
     setAppBarVisibility(true,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -111,6 +112,45 @@ class BaseClass extends State {
           : Container(),
       elevation: 0,
     );
+  }
+
+  void showAlertOkayMessage(String message, Function onOkayPressed) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Alert",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+                onOkayPressed();
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "okay",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   void showAlert(String title, String subTitle,

@@ -6,9 +6,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 class BleConnectivity {
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  List<ScanResult> list = [];
   late BluetoothCharacteristic writeCharacterstics;
+  late BluetoothCharacteristic readCharacterstics;
   late BluetoothDeviceState _deviceState;
+  late final Function showBottomDialog;
+  late final connectBluetoothBle;
 
   FlutterBlue getInstance() {
     flutterBlue ??= FlutterBlue.instance;
@@ -19,6 +21,7 @@ class BleConnectivity {
     r.device.connect().then((value) => r.device.state.listen((event) {
           print("device connection state=$event");
           _deviceState = event;
+          connectBluetoothBle(event, r);
           if (event == BluetoothDeviceState.connected) {
             listenForServices(r);
           }
@@ -33,87 +36,50 @@ class BleConnectivity {
     }
   }
 
+  void readFromBle() async {
+    if (readCharacterstics.properties.read) {
+      List<int> value = await readCharacterstics.read();
+      if (value.isNotEmpty) {
+        print("read data from char=" + String.fromCharCodes(value));
+      }
+    }
+  }
+
   void listenForServices(ScanResult r) async {
     List<BluetoothService> services = await r.device.discoverServices();
     for (BluetoothService service in services) {
-      var characteristics = service.characteristics;
-      for (BluetoothCharacteristic c in characteristics) {
-        var descriptors = c.descriptors;
-        for (BluetoothDescriptor d in descriptors) {
-          List<int> value = await d.read();
-          print("read data from descriptors=" + String.fromCharCodes(value));
-        }
-        if (c.properties.read) {
-          List<int> value = await c.read();
-          if (value.isNotEmpty) {
-            print("read data from char=" + String.fromCharCodes(value));
+      print("service uuid=" + service.uuid.toString());
+      if (service.uuid.toString().trim().toUpperCase() ==
+          "0000FFE0-0000-1000-8000-00805F9B34FB") {
+        print("service uuid found");
+        var characteristics = service.characteristics;
+        for (BluetoothCharacteristic c in characteristics) {
+          print("characterstics uuid=" + c.uuid.toString());
+          if (c.uuid.toString().trim().toUpperCase() ==
+              "0000FFE1-0000-1000-8000-00805F9B34FB") {
+            print("character uuid found");
+            readCharacterstics = c;
+            writeCharacterstics = c;
+
+            // if (c.properties.read) {
+            //   readCharacterstics = c;
+            // } else if (c.properties.write) {
+            //   writeCharacterstics = c;
+            // }
           }
-        }
-        if (c.properties.write) {
-          writeCharacterstics = c;
         }
       }
     }
-
-    writeToBle([0x12, 0x34]);
   }
 
   void disconnectToBluetooth(ScanResult r) async {
     await r.device.disconnect();
   }
 
-  void showBottomDialog(BuildContext context) {
-    showModalBottomSheet(
-        constraints: BoxConstraints(maxWidth: 200, minHeight: 100),
-        context: context,
-        builder: (context) {
-          return Container(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: list.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      connectToBluetooth(list[index]);
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      child: Row(
-                        children: [
-                          HorizontalGap(10),
-                          Icon(
-                            Icons.bluetooth,
-                            color: Colors.blue,
-                            size: 20,
-                          ),
-                          HorizontalGap(10),
-                          Text(
-                            list[index].device.name,
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.lightGreen),
-                          ),
-                          HorizontalGap(10),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-          );
-        },
-        isDismissible: true,
-        useRootNavigator: false,
-        isScrollControlled: false,
-        backgroundColor: Colors.white,
-        elevation: 10.0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0))));
-  }
-
-  void askRuntimePermissions(BuildContext context) async {
+  void askRuntimePermissions(BuildContext context, Function showBottomDialog,
+      Function connectBleDevice) async {
+    this.showBottomDialog = showBottomDialog;
+    this.connectBluetoothBle = connectBleDevice;
     // Permission.bluetoothConnect,
     // Permission.bluetoothAdvertise,
     // Permission.bluetooth,
@@ -185,19 +151,15 @@ class BleConnectivity {
 
   void startScanning(BuildContext context) {
     flutterBlue.startScan(timeout: Duration(seconds: 5));
-    list.clear();
 // Listen to scan results
-
-    var subscription = flutterBlue.scanResults.listen((results) {
-      // do something with scan results
-      for (ScanResult r in results) {
-        list.add(r);
-        print('${r.device.name} found! rssi: ${r.rssi}');
-      }
-      if (list.length > 0) {
-        showBottomDialog(context);
-      }
-    });
+    showBottomDialog(flutterBlue.scanResults);
+    // var subscription = flutterBlue.scanResults.listen((results) {
+    //   // do something with scan results
+    //   for (ScanResult r in results) {
+    //     print('${r.device.name} found! rssi: ${r.rssi}');
+    //     pushScanResult(r);
+    //   }
+    // });
 
 // Stop scanning
     flutterBlue.stopScan();

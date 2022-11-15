@@ -69,6 +69,7 @@ class Assets {
   static const String CAR_HORN_ON = "assets/image/car_horn-on.png";
   static const String BACK_BUTTON = "assets/image/back.png";
   static const String RED_DOT = "assets/image/red.png";
+  static const String GREEN_DOT = "assets/image/GREEN.png";
   static const String FREE_RUNN = "assets/image/freerunn.png";
   static const String DROP = "assets/image/drop.png";
   static const String LIFT = "assets/image/lift.png";

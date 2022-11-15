@@ -40,7 +40,6 @@ class MainScreenState extends BaseClass {
   @override
   void initState() {
     super.initState();
-    askPermission();
     mainCategoryModel = MainCategoryModel();
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,

@@ -23,13 +23,15 @@ dependencies:
   provider: ^5.0.0 # for state management
   mobx: ^2.0.1 # provides Store
   dio: ^4.0.0 # for APIs calling.
-  connectivity: ^3.0.3 # for internet connection check
+  connectivity_plus: ^3.0.2 # for internet connection check
   shimmer: ^2.0.0 # for shimmer loading
   flutter_blue: ^0.8.0
   permission_handler: ^10.2.0
   flutter_bluetooth_serial: ^0.4.0
   hex: ^0.2.0
   udp: ^5.0.3
+  sn_progress_dialog: ^1.0.8
+  fluttertoast: ^8.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -37,7 +39,7 @@ dev_dependencies:
   mobx_codegen: ^2.0.1+3 #for auto generating code for stores.
 
   flutter_lints: ^1.0.0
-
+  network_info_plus: ^3.0.1
 flutter:
 
   uses-material-design: true
@@ -109,6 +111,7 @@ flutter:
     - assets/image/car_horn-on.png
     - assets/image/back.png
     - assets/image/red.png
+    - assets/image/GREEN.png
     - assets/image/freerunn.png
     - assets/image/drop.png
     - assets/image/lift.png
@@ -120,6 +123,7 @@ flutter:
     - assets/image/shootermdpi.png
     - assets/image/swingmdpi.png
     - assets/image/swingmdpi2.png
+
 
   fonts:
     - family: Inter

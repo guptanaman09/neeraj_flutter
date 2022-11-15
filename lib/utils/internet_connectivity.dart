@@ -1,4 +1,4 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:neeraj_flutter_app/utils/logger.dart';
 
 ///Created by Naman Gupta on 19/4/21.
