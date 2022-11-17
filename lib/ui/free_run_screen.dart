@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' as io;
 import 'dart:typed_data';
 
@@ -64,6 +65,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   bool armyTankShootSwap = false;
   bool armyTankSwingSwap = false;
+  int outputObstaceleavoider = 0;
+  int obstacleAvoiderThreShold = -1;
+  String outputAvoidoValue = "";
 
   @override
   void initState() {
@@ -385,21 +389,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CustomText(
-                "OUTPUT:- ",
+                "OUTPUT:-$outputAvoidoValue",
                 const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w700)),
             VerticalGap(8),
             CustomText(
-                "Distance:- ",
+                "Distance:- $outputObstaceleavoider",
                 const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w700)),
             VerticalGap(8),
             CustomText(
-                "Set Ultrasonic value:- ",
+                "Set Ultrasonic value:-",
                 const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -422,7 +426,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             Container(
                 width: 100,
                 child: ElevatedButton(
-                    onPressed: () {}, child: Center(child: Text("Set"))))
+                    onPressed: () {
+                      obstacleAvoiderThreShold = ultrasonicValue.toInt();
+                    },
+                    child: Center(child: Text("Set"))))
           ],
         ),
       );
@@ -1096,12 +1103,35 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   void onSelectBle() {
     bleConnect = BleConnectivity();
-    bleConnect!
-        .askRuntimePermissions(context, showBottomDialog, connectBleDevice);
+    bleConnect!.askRuntimePermissions(
+        context, showBottomDialog, connectBleDevice, onrecvBleData);
+  }
+
+  void onrecvBleData(List<int> data) {
+    setState(() {
+      outputObstaceleavoider = data.first;
+    });
+    if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER) {
+      startObstacle();
+    } else {
+      startEdge();
+    }
+  }
+
+  void onrecvNonBleData(Uint8List data) {
+    setState(() {
+      outputObstaceleavoider = data.first;
+    });
+    if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER) {
+      startObstacle();
+    } else {
+      startEdge();
+    }
   }
 
   void onSelectNonBle() {
-    connectivity = ArduinoSerialConnectivity(onNondBleConnectvity);
+    connectivity =
+        ArduinoSerialConnectivity(onNondBleConnectvity, onrecvNonBleData);
     connectivity!.start(context);
   }
 
@@ -1110,16 +1140,44 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       isAnyBluetoothConnected = value;
       ifSerialConnected = value;
     });
+    if (ifSerialConnected) {
+      if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
+          subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
+        startSendingObstacleAvoiderCommandToRecvValues();
+      }
+    } else {
+      if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
+          subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
+        stopSendingObstacleAvoiderCommandToRecvValues();
+      }
+    }
   }
 
   void onOkayPressed() {
-    print("inside on okeypressed");
     if (isAnyBluetoothConnected) {
+      if (obstacleAvoiderThreShold != -1) {
+        writeToBLuetooth([0XB4]);
+      }
       if (ifSerialConnected) {
         connectivity!.disconnecToBluetooth();
       } else {
         bleConnect!.disconnectToBluetooth(scanResult!);
       }
+    }
+  }
+
+  Timer? timer;
+  void startSendingObstacleAvoiderCommandToRecvValues() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      writeToBLuetooth([0XD0]);
+    });
+  }
+
+  void stopSendingObstacleAvoiderCommandToRecvValues() {
+    timer!.cancel();
+    commandTimer?.cancel();
+    if (obstacleAvoiderThreShold != -1) {
+      writeToBLuetooth([0XB4]);
     }
   }
 
@@ -1249,15 +1307,86 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   void connectBleDevice(BluetoothDeviceState state, ScanResult result) {
     this.scanResult = result;
     if (state == BluetoothDeviceState.connected) {
+      if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
+          subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
+        startSendingObstacleAvoiderCommandToRecvValues();
+      }
       setState(() {
         isAnyBluetoothConnected = true;
         ifBleConnected = true;
       });
     } else if (state == BluetoothDeviceState.disconnected) {
+      if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
+          subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
+        stopSendingObstacleAvoiderCommandToRecvValues();
+      }
       setState(() {
         isAnyBluetoothConnected = false;
         ifBleConnected = false;
       });
     }
+  }
+
+  void startObstacle() {
+    if (obstacleAvoiderThreShold != -1) {
+      if (outputObstaceleavoider > obstacleAvoiderThreShold) {
+        //go forward
+        setState(() {
+          outputAvoidoValue = "Forward";
+        });
+        writeToBLuetooth([0XB0]);
+      } else {
+        //left turn
+        if (!isBackward) {
+          setState(() {
+            outputAvoidoValue = "Backward";
+          });
+          runCommandTimer([0XB1]);
+          isBackward = true;
+        } else {
+          setState(() {
+            outputAvoidoValue = "Left";
+          });
+          isBackward = false;
+          runCommandTimer([0XB2]);
+        }
+      }
+    }
+  }
+
+  bool isBackward = false;
+  void startEdge() {
+    if (obstacleAvoiderThreShold != -1) {
+      if (outputObstaceleavoider < obstacleAvoiderThreShold) {
+        //go forward
+        setState(() {
+          outputAvoidoValue = "Forward";
+        });
+        writeToBLuetooth([0XB0]);
+      } else {
+        //left turn
+        if (!isBackward) {
+          setState(() {
+            outputAvoidoValue = "Backward";
+          });
+          runCommandTimer([0XB1]);
+          isBackward = true;
+        } else {
+          setState(() {
+            outputAvoidoValue = "Left";
+          });
+          isBackward = false;
+          runCommandTimer([0XB2]);
+        }
+      }
+    }
+  }
+
+  Timer? commandTimer;
+  void runCommandTimer(List<int> command) {
+    commandTimer?.cancel();
+    commandTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      writeToBLuetooth(command);
+    });
   }
 }

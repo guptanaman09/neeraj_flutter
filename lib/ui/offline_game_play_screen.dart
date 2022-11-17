@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/offline_udp_connectivity.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
@@ -38,6 +39,8 @@ class OfflineGamePlayScreenState extends BaseClass {
 
   @override
   void initState() {
+    UdpConnectivity connectivity = UdpConnectivity();
+    connectivity.start(context);
     super.initState();
   }
 

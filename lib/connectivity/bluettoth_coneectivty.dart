@@ -11,6 +11,7 @@ class BleConnectivity {
   late BluetoothDeviceState _deviceState;
   late final Function showBottomDialog;
   late final connectBluetoothBle;
+  late final onRecvData;
 
   FlutterBlue getInstance() {
     flutterBlue ??= FlutterBlue.instance;
@@ -37,11 +38,9 @@ class BleConnectivity {
   }
 
   void readFromBle() async {
-    if (readCharacterstics.properties.read) {
-      List<int> value = await readCharacterstics.read();
-      if (value.isNotEmpty) {
-        print("read data from char=" + String.fromCharCodes(value));
-      }
+    List<int> value = await readCharacterstics.read();
+    if (value.isNotEmpty) {
+      print("read data from char=" + value.toString());
     }
   }
 
@@ -70,6 +69,11 @@ class BleConnectivity {
         }
       }
     }
+    await readCharacterstics.setNotifyValue(true);
+    readCharacterstics.value.listen((event) {
+      onRecvData(event);
+      print("read data from stream listener=" + event.toString());
+    });
   }
 
   void disconnectToBluetooth(ScanResult r) async {
@@ -77,9 +81,10 @@ class BleConnectivity {
   }
 
   void askRuntimePermissions(BuildContext context, Function showBottomDialog,
-      Function connectBleDevice) async {
+      Function connectBleDevice, Function onRecvBleData) async {
     this.showBottomDialog = showBottomDialog;
     this.connectBluetoothBle = connectBleDevice;
+    this.onRecvData = onRecvBleData;
     // Permission.bluetoothConnect,
     // Permission.bluetoothAdvertise,
     // Permission.bluetooth,

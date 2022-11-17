@@ -77,15 +77,18 @@ class UdpConnectivity {
 
   void makeudpConnection() async {
     conn = await UDP.bind(Endpoint.any(port: Port.any));
-    sendData();
     conn.asStream().listen((event) {
       print("recv udp data:" + String.fromCharCodes(event!.data));
     });
   }
 
-  void sendData() async {
+  void closeConnection() {
+    conn.close();
+  }
+
+  void sendData(List<int> data) async {
     var datalength = await conn.send(
-        [0XC2, 0X64],
+        data,
         Endpoint.multicast(
             InternetAddress("192.168.4.1", type: InternetAddressType.IPv4),
             port: Port(8888)));
