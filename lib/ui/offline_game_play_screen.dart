@@ -524,7 +524,7 @@ class OfflineGamePlayScreenState extends BaseClass {
           Text("wifi name:-", style: TextStyle(fontSize: 12)),
           VerticalGap(4),
           Text(
-              "Enter the WiFi Name of the Magic Wand CPU, so that the Wand and Dolls can be paried.",
+              "Enter the WiFi Name of the Magic Wand CPU, so that the Wand and Dolls can be paired.",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14)),
           VerticalGap(16),
