@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
+import 'package:neeraj_flutter_app/ui/smart_lamp_category_screen.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text_field.dart';
@@ -50,6 +51,30 @@ class OfflineGamePlayScreenState extends BaseClass {
 
   double touchlessDorbellValue = 1;
 
+  double lightBasedDarknessValue = 0;
+  double lightBasedRedValue = 0;
+  double lightBasedGreenValue = 0;
+  double lightBasedBlueValue = 0;
+
+  double gestureBasedDarknessValue = 0;
+  double gestureBasedRedValue = 0;
+  double gestureBasedGreenValue = 0;
+  double gestureBasedBlueValue = 0;
+
+  double clapBasedDarknessValue = 0;
+  double clapBasedRedValue = 0;
+  double clapBasedGreenValue = 0;
+  double clapBasedBlueValue = 0;
+
+  double mobileControlledDarknessValue = 0;
+  double mobileControlledRedValue = 0;
+  double mobileControlledGreenValue = 0;
+  double mobileControlledBlueValue = 0;
+
+  double switchControlledRedValue = 0;
+  double switchControlledGreenValue = 0;
+  double switchControlledBlueValue = 0;
+
   bool applianceSwitchValue = false;
   bool smartDustbinSwitchValue = false;
   bool smartIrrigationSwitchValue = false;
@@ -59,6 +84,12 @@ class OfflineGamePlayScreenState extends BaseClass {
   bool petFeederSwitchValue = false;
   bool airGuitarSwitchValue = false;
   bool touchlessDorbellSwitchValue = false;
+  bool lightBasedSwitchValue = false;
+  bool gestureBasedSwitchValue = false;
+  bool switchControlledSwitchValue = false;
+  bool clapBasedSwitchValue = false;
+  bool mobileControlledSwitchValue = false;
+
 
   late TextEditingController dancingDollWifiName;
 
@@ -549,6 +580,368 @@ class OfflineGamePlayScreenState extends BaseClass {
                 style: TextStyle(
                     fontStyle: FontStyle.italic, fontWeight: FontWeight.w700),
               ))
+        ],
+      );
+    else if(data.title == SmartLampDetailData.LIGHT_SENSOR_BASED)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: lightBasedSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  lightBasedSwitchValue = val;
+                });
+              }),
+          VerticalGap(8),
+          Text("Darkness Threshold (%):- ${lightBasedDarknessValue.round()}"),
+          Slider(
+            value: lightBasedDarknessValue,
+            onChanged: (val) {
+              setState(() {
+                lightBasedDarknessValue = val;
+              });
+            },
+            label: lightBasedDarknessValue.round().toString(),
+            max: 100,
+            divisions: 100,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("RED:- ${lightBasedRedValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: lightBasedRedValue,
+            onChanged: (val) {
+              setState(() {
+                lightBasedRedValue = val;
+              });
+            },
+            label: lightBasedRedValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.red,
+            inactiveColor: Colors.black,
+          ),
+          Text("GREEN:- ${lightBasedGreenValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: lightBasedGreenValue,
+            onChanged: (val) {
+              setState(() {
+                lightBasedGreenValue = val;
+              });
+            },
+            label: lightBasedGreenValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.green,
+            inactiveColor: Colors.black,
+          ),
+          Text("BLUE:- ${lightBasedBlueValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: lightBasedBlueValue,
+            onChanged: (val) {
+              setState(() {
+                lightBasedBlueValue = val;
+              });
+            },
+            label: lightBasedBlueValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.blue,
+            inactiveColor: Colors.black,
+          ),
+        ],
+      );
+    else if(data.title == SmartLampDetailData.GESTURE_BASED)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: gestureBasedSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  gestureBasedSwitchValue = val;
+                });
+              }),
+          VerticalGap(8),
+          Text("Darkness Threshold (%):- ${gestureBasedDarknessValue.round()}"),
+          Slider(
+            value: gestureBasedDarknessValue,
+            onChanged: (val) {
+              setState(() {
+                gestureBasedDarknessValue = val;
+              });
+            },
+            label: gestureBasedDarknessValue.round().toString(),
+            max: 100,
+            divisions: 100,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("RED:- ${gestureBasedRedValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: gestureBasedRedValue,
+            onChanged: (val) {
+              setState(() {
+                gestureBasedRedValue = val;
+              });
+            },
+            label: gestureBasedRedValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.red,
+            inactiveColor: Colors.black,
+          ),
+          Text("GREEN:- ${gestureBasedGreenValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: gestureBasedGreenValue,
+            onChanged: (val) {
+              setState(() {
+                gestureBasedGreenValue = val;
+              });
+            },
+            label: gestureBasedGreenValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.green,
+            inactiveColor: Colors.black,
+          ),
+          Text("BLUE:- ${gestureBasedBlueValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: gestureBasedBlueValue,
+            onChanged: (val) {
+              setState(() {
+                gestureBasedBlueValue = val;
+              });
+            },
+            label: gestureBasedBlueValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.blue,
+            inactiveColor: Colors.black,
+          ),
+        ],
+      );
+
+    else if(data.title == SmartLampDetailData.SWITCH_CONTROLLED)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: switchControlledSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  switchControlledSwitchValue = val;
+                });
+              }),
+          VerticalGap(8),
+          Text("RED:- ${switchControlledRedValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: switchControlledRedValue,
+            onChanged: (val) {
+              setState(() {
+                switchControlledRedValue = val;
+              });
+            },
+            label: switchControlledRedValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.red,
+            inactiveColor: Colors.black,
+          ),
+          Text("GREEN:- ${switchControlledGreenValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: switchControlledGreenValue,
+            onChanged: (val) {
+              setState(() {
+                switchControlledGreenValue = val;
+              });
+            },
+            label: switchControlledGreenValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.green,
+            inactiveColor: Colors.black,
+          ),
+          Text("BLUE:- ${switchControlledBlueValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: switchControlledBlueValue,
+            onChanged: (val) {
+              setState(() {
+                switchControlledBlueValue = val;
+              });
+            },
+            label: switchControlledBlueValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.blue,
+            inactiveColor: Colors.black,
+          ),
+        ],
+      );
+    else if(data.title == SmartLampDetailData.CLAP_BASED)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: clapBasedSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  clapBasedSwitchValue = val;
+                });
+              }),
+          VerticalGap(8),
+          Text("Darkness Threshold (%):- ${clapBasedDarknessValue.round()}"),
+          Slider(
+            value: clapBasedDarknessValue,
+            onChanged: (val) {
+              setState(() {
+                clapBasedDarknessValue = val;
+              });
+            },
+            label: clapBasedDarknessValue.round().toString(),
+            max: 100,
+            divisions: 100,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("RED:- ${clapBasedRedValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: clapBasedRedValue,
+            onChanged: (val) {
+              setState(() {
+                clapBasedRedValue = val;
+              });
+            },
+            label: clapBasedRedValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.red,
+            inactiveColor: Colors.black,
+          ),
+          Text("GREEN:- ${clapBasedGreenValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: clapBasedGreenValue,
+            onChanged: (val) {
+              setState(() {
+                clapBasedGreenValue = val;
+              });
+            },
+            label: clapBasedGreenValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.green,
+            inactiveColor: Colors.black,
+          ),
+          Text("BLUE:- ${clapBasedBlueValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: clapBasedBlueValue,
+            onChanged: (val) {
+              setState(() {
+                clapBasedBlueValue = val;
+              });
+            },
+            label: clapBasedBlueValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.blue,
+            inactiveColor: Colors.black,
+          ),
+        ],
+      );
+    else if(data.title == SmartLampDetailData.MOBILE_CONTROLLED)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: mobileControlledSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  mobileControlledSwitchValue = val;
+                });
+              }),
+          VerticalGap(8),
+          Text("Darkness Threshold (%):- ${mobileControlledDarknessValue.round()}"),
+          Slider(
+            value: mobileControlledDarknessValue,
+            onChanged: (val) {
+              setState(() {
+                mobileControlledDarknessValue = val;
+              });
+            },
+            label: mobileControlledDarknessValue.round().toString(),
+            max: 100,
+            divisions: 100,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("RED:- ${mobileControlledRedValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: mobileControlledRedValue,
+            onChanged: (val) {
+              setState(() {
+                mobileControlledRedValue = val;
+              });
+            },
+            label: mobileControlledRedValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.red,
+            inactiveColor: Colors.black,
+          ),
+          Text("GREEN:- ${mobileControlledGreenValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: mobileControlledGreenValue,
+            onChanged: (val) {
+              setState(() {
+                mobileControlledGreenValue = val;
+              });
+            },
+            label: mobileControlledGreenValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.green,
+            inactiveColor: Colors.black,
+          ),
+          Text("BLUE:- ${mobileControlledBlueValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: mobileControlledBlueValue,
+            onChanged: (val) {
+              setState(() {
+                mobileControlledBlueValue = val;
+              });
+            },
+            label: mobileControlledBlueValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.blue,
+            inactiveColor: Colors.black,
+          ),
         ],
       );
     return Container();
