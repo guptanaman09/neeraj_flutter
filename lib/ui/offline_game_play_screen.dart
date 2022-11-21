@@ -77,6 +77,8 @@ class OfflineGamePlayScreenState extends BaseClass {
   double switchControlledBlueValue = 0;
 
   bool applianceSwitchValue = false;
+  bool isOnPressedAppliance = false;
+  bool isOffPressedAppliance = false;
   bool smartDustbinSwitchValue = false;
   bool smartIrrigationSwitchValue = false;
   bool smartAlarmSwitchValue = false;
@@ -91,13 +93,13 @@ class OfflineGamePlayScreenState extends BaseClass {
   bool clapBasedSwitchValue = false;
   bool mobileControlledSwitchValue = false;
 
-
   late TextEditingController dancingDollWifiName;
+  late UdpConnectivity? connectivity;
 
   @override
   void initState() {
-    UdpConnectivity connectivity = UdpConnectivity();
-    connectivity.start(context);
+    connectivity = UdpConnectivity();
+    connectivity!.start(context);
     super.initState();
 
     dancingDollWifiName = TextEditingController();
@@ -168,9 +170,52 @@ class OfflineGamePlayScreenState extends BaseClass {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(onPressed: () {}, child: Text("ON")),
+              ElevatedButton(
+                onPressed: applianceSwitchValue
+                    ? null
+                    : () async {
+                        bool isSend = false;
+                        if (!isOffPressedAppliance) {
+                          isSend = await connectivity!.sendData([0XC0, 0]);
+                        }
+                        if (isSend) {
+                          setState(() {
+                            if (!isOnPressedAppliance) {
+                              connectivity!.sendData([0XC0, 1]);
+                              isOffPressedAppliance = false;
+                              isOnPressedAppliance = true;
+                            }
+                          });
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOnPressedAppliance ? Colors.yellow : Colors.blue),
+                child: Text("ON"),
+              ),
               HorizontalGap(24),
-              ElevatedButton(onPressed: () {}, child: Text("OFF")),
+              ElevatedButton(
+                onPressed: applianceSwitchValue
+                    ? null
+                    : () async {
+                        bool isSend = false;
+                        if (!isOffPressedAppliance) {
+                          isSend = await connectivity!.sendData([0XC0, 0]);
+                        }
+                        if (isSend) {
+                          setState(() {
+                            if (!isOffPressedAppliance) {
+                              isOffPressedAppliance = true;
+                              isOnPressedAppliance = false;
+                            }
+                          });
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOffPressedAppliance ? Colors.yellow : Colors.blue),
+                child: Text("OFF"),
+              ),
             ],
           )
         ],
@@ -585,7 +630,7 @@ class OfflineGamePlayScreenState extends BaseClass {
               ))
         ],
       );
-    else if(data.title == SmartLampDetailData.LIGHT_SENSOR_BASED)
+    else if (data.title == SmartLampDetailData.LIGHT_SENSOR_BASED)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -660,7 +705,7 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
-    else if(data.title == SmartLampDetailData.GESTURE_BASED)
+    else if (data.title == SmartLampDetailData.GESTURE_BASED)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -735,8 +780,7 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
-
-    else if(data.title == SmartLampDetailData.SWITCH_CONTROLLED)
+    else if (data.title == SmartLampDetailData.SWITCH_CONTROLLED)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -797,7 +841,7 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
-    else if(data.title == SmartLampDetailData.CLAP_BASED)
+    else if (data.title == SmartLampDetailData.CLAP_BASED)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -872,7 +916,7 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
-    else if(data.title == SmartLampDetailData.MOBILE_CONTROLLED)
+    else if (data.title == SmartLampDetailData.MOBILE_CONTROLLED)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -886,7 +930,8 @@ class OfflineGamePlayScreenState extends BaseClass {
                 });
               }),
           VerticalGap(8),
-          Text("Darkness Threshold (%):- ${mobileControlledDarknessValue.round()}"),
+          Text(
+              "Darkness Threshold (%):- ${mobileControlledDarknessValue.round()}"),
           Slider(
             value: mobileControlledDarknessValue,
             onChanged: (val) {
