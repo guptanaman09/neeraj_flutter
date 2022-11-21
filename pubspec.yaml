@@ -123,6 +123,10 @@ flutter:
     - assets/image/shootermdpi.png
     - assets/image/swingmdpi.png
     - assets/image/swingmdpi2.png
+    - assets/image/GestureBased.png
+    - assets/image/SwitchControlled.png
+    - assets/image/ClapBased.png
+    - assets/image/MobileControlled.png
 
 
   fonts:

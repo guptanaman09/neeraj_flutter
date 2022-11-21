@@ -6,6 +6,7 @@ import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
+import 'package:neeraj_flutter_app/models/offline_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
@@ -55,9 +56,13 @@ class OfflineSubCategoryScreenState extends BaseClass {
             children: model.subCategoryDetailList
                 .map((e) => GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                          Classes.offLineGamePlayScreen,
-                          arguments: e);
+                      if (e.title == OfflineSubCategoryData.SMART_LAMP)
+                        Navigator.of(context)
+                            .pushNamed(Classes.smartLampCategoryScreen);
+                      else
+                        Navigator.of(context).pushNamed(
+                            Classes.offLineGamePlayScreen,
+                            arguments: e);
                     },
                     child: OfflineSubCardWidget(e, Colors.green)))
                 .toList(),

@@ -11,6 +11,7 @@ class Classes {
   static const String freeRunScreen = "/free_run_screen";
   static const String lineFollowerGameScreen = "/line_follower_game_screen";
   static const String offLineGamePlayScreen = "/offline_game_play_screen";
+  static const String smartLampCategoryScreen = "/smart_lamp_category_screen";
   static const String offlineMainCategoryScreen =
       "/offline_main_category_screen";
   static const String bluetoothBle = "/FlutterBlueApp";

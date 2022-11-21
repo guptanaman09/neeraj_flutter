@@ -46,6 +46,7 @@ android {
         applicationId "com.auriga.neeraj_flutter_app"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
+        compileSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

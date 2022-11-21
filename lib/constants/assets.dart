@@ -81,6 +81,10 @@ class Assets {
   static const String SHOOOTER_MDPI = "assets/image/shootermdpi.png";
   static const String SWING_MDPI = "assets/image/swingmdpi.png";
   static const String SWING_MDPI_2 = "assets/image/swingmdpi2.png";
+  static const String GESTURE_BASED = "assets/image/GestureBased.png";
+  static const String SWITCH_CONTROLLED = "assets/image/SwitchControlled.png";
+  static const String CLAP_BASED = "assets/image/ClapBased.png";
+  static const String MOBILE_CONTROLLED = "assets/image/MobileControlled.png";
   static const String SENSOR_INPUT_BLOCKS =
       "assets/image/ultrasonic_sensor.png";
   static const String STRUCTURED_BASED_ACTIVITY =

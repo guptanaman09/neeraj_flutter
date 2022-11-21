@@ -15,6 +15,7 @@ import 'package:neeraj_flutter_app/ui/offline_game_play_screen.dart';
 import 'package:neeraj_flutter_app/ui/offline_main_cat_screen.dart';
 import 'package:neeraj_flutter_app/ui/offline_sub_category_screen.dart';
 import 'package:neeraj_flutter_app/ui/online_iot_screen.dart';
+import 'package:neeraj_flutter_app/ui/smart_lamp_category_screen.dart';
 import 'package:neeraj_flutter_app/ui/splash_screen.dart';
 import 'package:neeraj_flutter_app/ui/sub_category_screen.dart';
 
@@ -51,6 +52,12 @@ class Routing {
         {
           return MaterialPageRoute(
               builder: (_) => OfflineMainCategoryScreen(),
+              settings: RouteSettings(name: settings.name));
+        }
+      case Classes.smartLampCategoryScreen:
+        {
+          return MaterialPageRoute(
+              builder: (_) => SmartLampCategoryScreen(),
               settings: RouteSettings(name: settings.name));
         }
       case Classes.offlineSubCategoryScreen:
