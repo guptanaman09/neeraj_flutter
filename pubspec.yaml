@@ -18,7 +18,6 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   intl: ^0.17.0 # library for internalization
-  shared_preferences: ^2.0.5 # For storing data in local storage.
   flutter_mobx: ^2.0.0 # for state management and this provides the Observer.
   provider: ^5.0.0 # for state management
   mobx: ^2.0.1 # provides Store
@@ -33,6 +32,7 @@ dependencies:
   sn_progress_dialog: ^1.0.8
   fluttertoast: ^8.1.1
   location: ^4.4.0
+  shared_preferences: ^2.0.15
 dev_dependencies:
   flutter_test:
     sdk: flutter

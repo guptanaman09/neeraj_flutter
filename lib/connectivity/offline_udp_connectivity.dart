@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:neeraj_flutter_app/utils/internet_connectivity.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -99,9 +100,21 @@ class UdpConnectivity {
     conn!.close();
   }
 
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
   Future<bool> sendData(List<int> data) async {
     if (conn == null) {
       start(context);
+
       return false;
     }
     var datalength = await conn!.send(
@@ -113,6 +126,8 @@ class UdpConnectivity {
     if (datalength > 0) {
       return true;
     }
+    showToast(
+        "Device connection lost. make sure you are connected to the intellecto wifi");
     return false;
   }
 }

@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/connectivity/offline_udp_connectivity.dart';
+import 'package:neeraj_flutter_app/constants/assets.dart';
+import 'package:neeraj_flutter_app/data/shared_preference/my_shared_preference.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
 import 'package:neeraj_flutter_app/ui/smart_lamp_category_screen.dart';
@@ -80,6 +84,7 @@ class OfflineGamePlayScreenState extends BaseClass {
   bool isOnPressedAppliance = false;
   bool isOffPressedAppliance = false;
   bool smartDustbinSwitchValue = false;
+  bool ironManSwitchValue = false;
   bool smartIrrigationSwitchValue = false;
   bool smartAlarmSwitchValue = false;
   bool burglarAlarmSwitchValue = false;
@@ -100,9 +105,62 @@ class OfflineGamePlayScreenState extends BaseClass {
   void initState() {
     connectivity = UdpConnectivity();
     connectivity!.start(context);
+    loadPrefsValues();
     super.initState();
 
     dancingDollWifiName = TextEditingController();
+  }
+
+  void loadPrefsValues() async {
+    smartDustbinSwitchValue = await MySharedPreference.getSmartDustbinSwitch();
+    dustbinSensingSliderValue =
+        await MySharedPreference.getSmartDustbinSensing();
+    dustbinOpenPeriodSliderValue =
+        await MySharedPreference.getSmartDustbinOpen();
+
+    ironManSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.IRONMAN_SWITCH);
+    ironManRedSliderValue =
+        await MySharedPreference.getDouble(MySharedPreference.IRONMAN_RED);
+    ironManGreenSliderValue =
+        await MySharedPreference.getDouble(MySharedPreference.IRONMAN_GREEN);
+    ironManBlueSliderValue =
+        await MySharedPreference.getDouble(MySharedPreference.IRONMAN_BLUE);
+    smartIrrigationSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.SMART_IRRIGATION_SWITCH);
+    smartIrrigationDryThresholdValue = await MySharedPreference.getDouble(
+        MySharedPreference.SMART_IRRIGATION_THRESHOLD);
+    smartIrrigationDispencePeriodValue = await MySharedPreference.getDouble(
+        MySharedPreference.SMART_IRRIGATION_DISPENSE);
+    smartAlarmSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.SMART_ALARM_SWITCH);
+    smartSensingDistanceAlarmValue = await MySharedPreference.getDouble(
+        MySharedPreference.SMART_ALARM_DISTANCE);
+    smartAlarmDarknessThresholdValue = await MySharedPreference.getDouble(
+        MySharedPreference.SMART_ALARM_DARKNESS);
+    burglarAlarmSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.BURGLAR_ALARM_SWITCH);
+    burglarAlarmValue = await MySharedPreference.getDouble(
+        MySharedPreference.BURGLAR_ALARM_DISTANCE);
+    soapDispencerSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.SOAP_DISPENSER_SWITCH);
+    soapDisSensindDistanceValue = await MySharedPreference.getDouble(
+        MySharedPreference.SOAP_DISPENSER_DISTANCE);
+    soapDisDispnecePeriodValue = await MySharedPreference.getDouble(
+        MySharedPreference.SOAP_DISPENSER_PERIOD);
+    petFeederSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.PET_FEDDER_SWITCH);
+    petFeederSensingValue = await MySharedPreference.getDouble(
+        MySharedPreference.PET_FEDDER_DISTANCE);
+    petFeederOpenValue = await MySharedPreference.getDouble(
+        MySharedPreference.PET_FEDDER_PERIOD);
+    airGuitarSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.AIRGUITAR_SWITCH);
+    touchlessDorbellValue =
+        await MySharedPreference.getDouble(MySharedPreference.DOORBELL_VALUE);
+    touchlessDorbellSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.DOORBELL_SWITCH);
+    setState(() {});
   }
 
   @override
@@ -119,6 +177,30 @@ class OfflineGamePlayScreenState extends BaseClass {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      child: Image.asset(
+                        Assets.BACK_BUTTON,
+                        height: 30,
+                        width: 30,
+                      ),
+                    ),
+                  ),
+                  HorizontalGap(50),
+                  CustomText(
+                      data.title,
+                      TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,6 +244,9 @@ class OfflineGamePlayScreenState extends BaseClass {
               setState(() {
                 applianceSwitchValue = val;
               });
+              if (!val) {
+                connectivity!.sendData([0XE2]);
+              }
             },
             activeTrackColor: Colors.yellow,
             activeColor: Colors.white,
@@ -175,13 +260,12 @@ class OfflineGamePlayScreenState extends BaseClass {
                     ? null
                     : () async {
                         bool isSend = false;
-                        if (!isOffPressedAppliance) {
-                          isSend = await connectivity!.sendData([0XC0, 0]);
+                        if (!isOnPressedAppliance) {
+                          isSend = await connectivity!.sendData([0XC0, 1]);
                         }
                         if (isSend) {
                           setState(() {
                             if (!isOnPressedAppliance) {
-                              connectivity!.sendData([0XC0, 1]);
                               isOffPressedAppliance = false;
                               isOnPressedAppliance = true;
                             }
@@ -220,7 +304,7 @@ class OfflineGamePlayScreenState extends BaseClass {
           )
         ],
       );
-    else if (data.title == OfflineSubCategoryData.SMART_DUSTBIN)
+    else if (data.title == OfflineSubCategoryData.SMART_DUSTBIN) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -232,16 +316,40 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   smartDustbinSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setSmartDustbinSwitch(val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC2,
+                    dustbinSensingSliderValue.toInt(),
+                    dustbinOpenPeriodSliderValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setSmartDustbinSwitch(val);
+                      MySharedPreference.setSmartDustbinOpen(
+                          dustbinOpenPeriodSliderValue);
+                      MySharedPreference.setSmartDustbinSensing(
+                          dustbinSensingSliderValue);
+                    }
+                  });
+                }
               }),
           Text("Sensing Distance (cm):- ${dustbinSensingSliderValue.round()}",
               style: TextStyle(fontSize: 12)),
           Slider(
             value: dustbinSensingSliderValue,
-            onChanged: (val) {
-              setState(() {
-                dustbinSensingSliderValue = val;
-              });
-            },
+            onChanged: smartDustbinSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      dustbinSensingSliderValue = val;
+                    });
+                  },
             label: dustbinSensingSliderValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -252,11 +360,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: dustbinOpenPeriodSliderValue,
-            onChanged: (val) {
-              setState(() {
-                dustbinOpenPeriodSliderValue = val;
-              });
-            },
+            onChanged: smartDustbinSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      dustbinOpenPeriodSliderValue = val;
+                    });
+                  },
             label: dustbinOpenPeriodSliderValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -265,18 +375,48 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
-    else if (data.title == OfflineSubCategoryData.IRON_MAN_HAND)
+    } else if (data.title == OfflineSubCategoryData.IRON_MAN_HAND)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text("OFF/ON"),
           Switch(
-              value: smartDustbinSwitchValue,
+              value: ironManSwitchValue,
               onChanged: (val) {
                 setState(() {
-                  smartDustbinSwitchValue = val;
+                  ironManSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.IRONMAN_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC4,
+                    ironManRedSliderValue.toInt(),
+                    ironManGreenSliderValue.toInt(),
+                    ironManBlueSliderValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.IRONMAN_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.IRONMAN_RED,
+                          ironManRedSliderValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.IRONMAN_GREEN,
+                          ironManGreenSliderValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.IRONMAN_BLUE,
+                          ironManBlueSliderValue);
+                    }
+                  });
+                }
               }),
           Container(
             color: Colors.grey,
@@ -291,11 +431,13 @@ class OfflineGamePlayScreenState extends BaseClass {
           Text("RED:- ${ironManRedSliderValue.round()}"),
           Slider(
             value: ironManRedSliderValue,
-            onChanged: (val) {
-              setState(() {
-                ironManRedSliderValue = val;
-              });
-            },
+            onChanged: ironManSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      ironManRedSliderValue = val;
+                    });
+                  },
             label: ironManRedSliderValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -306,11 +448,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: ironManGreenSliderValue,
-            onChanged: (val) {
-              setState(() {
-                ironManGreenSliderValue = val;
-              });
-            },
+            onChanged: ironManSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      ironManGreenSliderValue = val;
+                    });
+                  },
             label: ironManGreenSliderValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -321,11 +465,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: ironManBlueSliderValue,
-            onChanged: (val) {
-              setState(() {
-                ironManBlueSliderValue = val;
-              });
-            },
+            onChanged: ironManSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      ironManBlueSliderValue = val;
+                    });
+                  },
             label: ironManBlueSliderValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -346,17 +492,45 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   smartIrrigationSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SMART_IRRIGATION_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC6,
+                    smartIrrigationDryThresholdValue.toInt(),
+                    smartIrrigationDispencePeriodValue.toInt(),
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SMART_IRRIGATION_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SMART_IRRIGATION_THRESHOLD,
+                          smartIrrigationDryThresholdValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SMART_IRRIGATION_DISPENSE,
+                          smartIrrigationDispencePeriodValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text(
               "Dry Threshold (%):- ${smartIrrigationDryThresholdValue.round()}"),
           Slider(
             value: smartIrrigationDryThresholdValue,
-            onChanged: (val) {
-              setState(() {
-                smartIrrigationDryThresholdValue = val;
-              });
-            },
+            onChanged: smartIrrigationSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      smartIrrigationDryThresholdValue = val;
+                    });
+                  },
             label: smartIrrigationDryThresholdValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -368,11 +542,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: smartIrrigationDispencePeriodValue,
-            onChanged: (val) {
-              setState(() {
-                smartIrrigationDispencePeriodValue = val;
-              });
-            },
+            onChanged: smartIrrigationSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      smartIrrigationDispencePeriodValue = val;
+                    });
+                  },
             label: smartIrrigationDispencePeriodValue.round().toString(),
             max: 10,
             divisions: 10,
@@ -393,17 +569,45 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   smartAlarmSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SMART_ALARM_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC7,
+                    smartSensingDistanceAlarmValue.toInt(),
+                    smartAlarmDarknessThresholdValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SMART_ALARM_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SMART_ALARM_DARKNESS,
+                          smartAlarmDarknessThresholdValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SMART_ALARM_DISTANCE,
+                          smartSensingDistanceAlarmValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text(
               "Darkness Threshold (%):- ${smartAlarmDarknessThresholdValue.round()}"),
           Slider(
             value: smartAlarmDarknessThresholdValue,
-            onChanged: (val) {
-              setState(() {
-                smartAlarmDarknessThresholdValue = val;
-              });
-            },
+            onChanged: smartAlarmSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      smartAlarmDarknessThresholdValue = val;
+                    });
+                  },
             label: smartAlarmDarknessThresholdValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -415,11 +619,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: smartSensingDistanceAlarmValue,
-            onChanged: (val) {
-              setState(() {
-                smartSensingDistanceAlarmValue = val;
-              });
-            },
+            onChanged: smartAlarmSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      smartSensingDistanceAlarmValue = val;
+                    });
+                  },
             label: smartSensingDistanceAlarmValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -440,16 +646,40 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   burglarAlarmSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.BURGLAR_ALARM_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC9,
+                    burglarAlarmValue.toInt(),
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.BURGLAR_ALARM_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.BURGLAR_ALARM_DISTANCE,
+                          burglarAlarmValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("Sensing Distance (cm):- ${burglarAlarmValue.round()}"),
           Slider(
             value: burglarAlarmValue,
-            onChanged: (val) {
-              setState(() {
-                burglarAlarmValue = val;
-              });
-            },
+            onChanged: burglarAlarmSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      burglarAlarmValue = val;
+                    });
+                  },
             label: burglarAlarmValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -470,17 +700,45 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   soapDispencerSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SOAP_DISPENSER_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC1,
+                    soapDisSensindDistanceValue.toInt(),
+                    soapDisDispnecePeriodValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SOAP_DISPENSER_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SOAP_DISPENSER_DISTANCE,
+                          soapDisSensindDistanceValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SOAP_DISPENSER_PERIOD,
+                          soapDisDispnecePeriodValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text(
               "Sensing Distance (cm):- ${soapDisSensindDistanceValue.round()}"),
           Slider(
             value: soapDisSensindDistanceValue,
-            onChanged: (val) {
-              setState(() {
-                soapDisSensindDistanceValue = val;
-              });
-            },
+            onChanged: soapDispencerSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      soapDisSensindDistanceValue = val;
+                    });
+                  },
             label: soapDisSensindDistanceValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -492,11 +750,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: soapDisDispnecePeriodValue,
-            onChanged: (val) {
-              setState(() {
-                soapDisDispnecePeriodValue = val;
-              });
-            },
+            onChanged: soapDispencerSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      soapDisDispnecePeriodValue = val;
+                    });
+                  },
             label: soapDisDispnecePeriodValue.round().toString(),
             max: 10,
             divisions: 10,
@@ -517,16 +777,44 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   petFeederSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.PET_FEDDER_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC3,
+                    petFeederSensingValue.toInt(),
+                    petFeederOpenValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.PET_FEDDER_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.PET_FEDDER_DISTANCE,
+                          petFeederSensingValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.PET_FEDDER_PERIOD,
+                          petFeederOpenValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("Sensing Distance (cm):- ${petFeederSensingValue.round()}"),
           Slider(
             value: petFeederSensingValue,
-            onChanged: (val) {
-              setState(() {
-                petFeederSensingValue = val;
-              });
-            },
+            onChanged: petFeederSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      petFeederSensingValue = val;
+                    });
+                  },
             label: petFeederSensingValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -537,11 +825,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: petFeederOpenValue,
-            onChanged: (val) {
-              setState(() {
-                petFeederOpenValue = val;
-              });
-            },
+            onChanged: petFeederSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      petFeederOpenValue = val;
+                    });
+                  },
             label: petFeederOpenValue.round().toString(),
             max: 10,
             divisions: 10,
@@ -562,6 +852,24 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   airGuitarSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.AIRGUITAR_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC5,
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.AIRGUITAR_SWITCH, val);
+                    }
+                  });
+                }
               }),
         ],
       );
@@ -577,16 +885,40 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   touchlessDorbellSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.DOORBELL_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XCA,
+                    touchlessDorbellValue.toInt(),
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.DOORBELL_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.DOORBELL_VALUE,
+                          touchlessDorbellValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("RLI Threshold (%):- ${touchlessDorbellValue.round()}"),
           Slider(
             value: touchlessDorbellValue,
-            onChanged: (val) {
-              setState(() {
-                touchlessDorbellValue = val;
-              });
-            },
+            onChanged: touchlessDorbellSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      touchlessDorbellValue = val;
+                    });
+                  },
             label: touchlessDorbellValue.round().toString(),
             max: 100,
             divisions: 100,
