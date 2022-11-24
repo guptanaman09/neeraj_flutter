@@ -92,7 +92,7 @@ class UdpConnectivity {
   void makeudpConnection() async {
     conn = await UDP.bind(Endpoint.any(port: Port.any));
     conn!.asStream().listen((event) {
-      print("recv udp data:" + String.fromCharCodes(event!.data));
+      print("recv udp data:" + event!.data.first.toString());
     });
   }
 

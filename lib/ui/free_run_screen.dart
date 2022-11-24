@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/connectivity/bluetooth_serial_connectivty.dart';
 import 'package:neeraj_flutter_app/connectivity/bluettoth_coneectivty.dart';
@@ -75,6 +76,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         vsync: this, duration: Duration(milliseconds: 150));
     _animationController.repeat(reverse: true);
     super.initState();
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   @override
@@ -1072,8 +1084,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         actions: [
           TextButton(
               onPressed: () {
-                Navigator.pop(context, true);
                 onSelectBle();
+                Navigator.pop(context, true);
               },
               child: Container(
                 color: Colors.deepPurple,
@@ -1085,8 +1097,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               )),
           TextButton(
               onPressed: () {
-                Navigator.pop(context, true);
                 onSelectNonBle();
+                Navigator.pop(context, true);
               },
               child: Container(
                 color: Colors.deepPurple,
@@ -1188,14 +1200,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         builder: (context) {
           return StreamBuilder(
             builder: (c, snapshot) {
-              print(snapshot.connectionState.toString());
-              print(snapshot.data.toString());
-
               if (snapshot.data != null) {
                 return Container(
                   child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: (snapshot.data as List<ScanResult>).length,
+                      itemCount: (snapshot.data as List<dynamic>)!.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           child: Container(
@@ -1261,7 +1270,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 return Container();
               }
             },
-            initialData: List<ScanResult>,
+            initialData: [],
             stream: data,
           );
         },

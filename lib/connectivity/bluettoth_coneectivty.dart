@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -80,6 +81,18 @@ class BleConnectivity {
     await r.device.disconnect();
   }
 
+  void showToast(String message) {
+    print(message);
+    // Fluttertoast.showToast(
+    //     msg: message,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.black,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
+  }
+
   void askRuntimePermissions(BuildContext context, Function showBottomDialog,
       Function connectBleDevice, Function onRecvBleData) async {
     this.showBottomDialog = showBottomDialog;
@@ -88,17 +101,19 @@ class BleConnectivity {
     // Permission.bluetoothConnect,
     // Permission.bluetoothAdvertise,
     // Permission.bluetooth,
-
+    showToast("Ask permission");
     Map<Permission, PermissionStatus> statuses =
         await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
-    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted ||
+        statuses[Permission.bluetoothScan] == PermissionStatus.granted) {
+      showToast("permission granted");
       print(statuses[Permission.bluetoothConnect]);
       listenState(context);
       //showBottomDialog(context);
     }
   }
 
-  Widget bluettothStateCheck(var state, BuildContext context) {
+  void bluettothStateCheck(var state, BuildContext context) {
     if (state == BluetoothState.on) {
       //show alert dialog
       startScanning(context);
@@ -106,10 +121,10 @@ class BleConnectivity {
         state == BluetoothState.unknown ||
         state == BluetoothState.unavailable ||
         state == BluetoothState.unauthorized) {
+      showToast("Bluettoth is off");
       showAlertMessage(
           "Please switch on bluetooth to connect a device", context);
     }
-    return Container();
   }
 
   void showAlertMessage(String message, BuildContext context) {
@@ -141,7 +156,7 @@ class BleConnectivity {
 
   void listenState(BuildContext context) {
     // Start scanning
-    print("njvj :inside listen state");
+    showToast("njvj :inside listen state");
 
     if (flutterBlue.isAvailable == false) {
       //show alert dialog
@@ -149,12 +164,13 @@ class BleConnectivity {
       return;
     }
     flutterBlue.state.listen((event) {
-      print("njvj :$event");
+      showToast("njvj :$event");
       bluettothStateCheck(event, context);
     });
   }
 
   void startScanning(BuildContext context) {
+    showToast("start scanning");
     flutterBlue.startScan(timeout: Duration(seconds: 5));
 // Listen to scan results
     showBottomDialog(flutterBlue.scanResults);

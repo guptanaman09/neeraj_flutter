@@ -29,6 +29,32 @@ class MySharedPreference {
   static const String AIRGUITAR_SWITCH = "air_switch";
   static const String DOORBELL_SWITCH = "doorbell_switch";
   static const String DOORBELL_VALUE = "doorbell_value";
+  static const String LIGHTBASED_SWITCH = "light_based_switch";
+  static const String LIGHTBASED_DARKNEDD = "light_based_darkness";
+  static const String LIGHTBASED_RED = "light_based_red";
+  static const String LIGHTBASED_GREEN = "light_based_green";
+  static const String LIGHTBASED_BLUE = "light_based_blue";
+  static const String GESTUREBASED_SWITCH = "gesture_based_switch";
+  static const String GESTUREBASED_DARKNEDD = "gesture_based_darkness";
+  static const String GESTUREBASED_RED = "gesture_based_red";
+  static const String GESTUREBASED_GREEN = "gesture_based_green";
+  static const String GESTUREBASED_BLUE = "gesture_based_blue";
+
+  static const String SWITCHBASED_SWITCH = "switch_based_switch";
+  static const String SWITCHBASED_RED = "switch_based_red";
+  static const String SWITCHBASED_GREEN = "switch_based_green";
+  static const String SWITCHBASED_BLUE = "switch_based_blue";
+
+  static const String CLAPBASED_SWITCH = "clap_based_switch";
+  static const String CLAPBASED_DARKNEDD = "clap_based_darkness";
+  static const String CLAPBASED_RED = "clap_based_red";
+  static const String CLAPBASED_GREEN = "clap_based_green";
+  static const String CLAPBASED_BLUE = "clap_based_blue";
+
+  static const String MOBILEBASED_SWITCH = "mobile_based_switch";
+  static const String MOBILEBASED_RED = "mobile_based_red";
+  static const String MOBILEBASED_GREEN = "mobile_based_green";
+  static const String MOBILEBASED_BLUE = "mobile_based_blue";
   static setDouble(String key, double value) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.setDouble(key, value);

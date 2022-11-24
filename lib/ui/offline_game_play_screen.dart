@@ -160,6 +160,55 @@ class OfflineGamePlayScreenState extends BaseClass {
         await MySharedPreference.getDouble(MySharedPreference.DOORBELL_VALUE);
     touchlessDorbellSwitchValue =
         await MySharedPreference.getBoolean(MySharedPreference.DOORBELL_SWITCH);
+    lightBasedSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.LIGHTBASED_SWITCH);
+    lightBasedDarknessValue = await MySharedPreference.getDouble(
+        MySharedPreference.LIGHTBASED_DARKNEDD);
+    lightBasedRedValue =
+        await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_RED);
+    lightBasedGreenValue =
+        await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_GREEN);
+    lightBasedBlueValue =
+        await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_BLUE);
+    gestureBasedSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.GESTUREBASED_SWITCH);
+    gestureBasedDarknessValue = await MySharedPreference.getDouble(
+        MySharedPreference.GESTUREBASED_DARKNEDD);
+    gestureBasedRedValue =
+        await MySharedPreference.getDouble(MySharedPreference.GESTUREBASED_RED);
+    gestureBasedGreenValue = await MySharedPreference.getDouble(
+        MySharedPreference.GESTUREBASED_GREEN);
+    gestureBasedBlueValue = await MySharedPreference.getDouble(
+        MySharedPreference.GESTUREBASED_BLUE);
+
+    switchControlledSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.SWITCHBASED_SWITCH);
+    switchControlledRedValue =
+        await MySharedPreference.getDouble(MySharedPreference.SWITCHBASED_RED);
+    switchControlledGreenValue = await MySharedPreference.getDouble(
+        MySharedPreference.SWITCHBASED_GREEN);
+    switchControlledBlueValue =
+        await MySharedPreference.getDouble(MySharedPreference.SWITCHBASED_BLUE);
+
+    clapBasedSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.CLAPBASED_SWITCH);
+    clapBasedDarknessValue = await MySharedPreference.getDouble(
+        MySharedPreference.CLAPBASED_DARKNEDD);
+    clapBasedRedValue =
+        await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_RED);
+    clapBasedGreenValue =
+        await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_GREEN);
+    clapBasedBlueValue =
+        await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_BLUE);
+    mobileControlledSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.MOBILEBASED_SWITCH);
+    mobileControlledRedValue =
+        await MySharedPreference.getDouble(MySharedPreference.MOBILEBASED_RED);
+    mobileControlledGreenValue = await MySharedPreference.getDouble(
+        MySharedPreference.MOBILEBASED_GREEN);
+    mobileControlledBlueValue =
+        await MySharedPreference.getDouble(MySharedPreference.MOBILEBASED_BLUE);
+
     setState(() {});
   }
 
@@ -226,9 +275,119 @@ class OfflineGamePlayScreenState extends BaseClass {
       width: DeviceUtils.getScreenWidtht(context) * 0.40,
       color: Colors.grey,
       child: CustomText(
-          "Control the AC Appliances like Desk Lamp, Night Lamp, Tanle Fan or any other small appliance using the app. \n Circuit Blocks nedded - Relay and RGB LED Connections with CPU - \n Relay at Port 1 \n RGB LED at Port 3",
-          TextStyle(color: Colors.white, fontSize: 14)),
+          getLeftText(), TextStyle(color: Colors.white, fontSize: 14)),
     );
+  }
+
+  String getLeftText() {
+    String text =
+        "Control the AC Appliances like Desk Lamp, Night Lamp, Tanle Fan or any other small appliance using the app. \n Circuit Blocks nedded - Relay and RGB LED Connections with CPU - \n Relay at Port 1 \n RGB LED at Port 3";
+    switch (data.title) {
+      case OfflineSubCategoryData.APPLIANCE_CONTROL:
+        text =
+            "Control the AC Appliances like Desk Lamp, Night Lamp, Tanle Fan or any other small appliance using the app. \nCircuit Blocks nedded - Relay and RGB LED Connections with CPU - \nRelay at Port 1 \nRGB LED at Port 3";
+        break;
+      case OfflineSubCategoryData.SMART_DUSTBIN:
+        text =
+            "Put the trash inside the Dustbin without touching it, just by placing your hand in front of the sensor.\nCircuit blocks needed-Servo driver and sonar sensor \nConnection with CPU- \nServo driver at Port 3 \nSONAR Sensor at Port 1";
+        break;
+      case OfflineSubCategoryData.IRON_MAN_HAND:
+        text =
+            "Get the experience of wearing a replica of Iron Man hand glow when raised. \nCircuit Blocks Needed-RGB LED and Motion Sensor \nConnections with CPU- \nRGB LED at Port 3 \nMotion Sensor at Port 1";
+        break;
+      case OfflineSubCategoryData.SMART_IRRIGATION:
+        text =
+            "The plant will automatically get the water when it gets dry. \nSelect the Moist Percentage below which the soil will be treated as Dry \nCircuit Blocks Needed-Pump Driver and Moist Sensor \nConnection with CPU- \nPump Driver at port 3 \nMoist Sensor at Port 2";
+        break;
+      case OfflineSubCategoryData.SOAP_DISPENSOR:
+        text =
+            "Place hand below the sensor and the machine will automatically dispense the liquid \nCircuit Blocks Nedded-Pump Driver and Sonar Sensor \nConnections with CPU- \nPump Driver at Port 3 \nSONAR Sensor at Port 1";
+        break;
+      case OfflineSubCategoryData.PET_FEEDER:
+        text =
+            "The pet will automatically get the food when it gets near the food tray.The sensor senses the presence and release the food.\nCircuit Blocks Needed-Servo Driver and SONAR Sensor\nConnections with CPU-\nServo Driver at Port 3 \nSONAR sensor at Port1";
+        break;
+      case OfflineSubCategoryData.AIR_GUITAR:
+        text =
+            "Try the innovative way of playing the guitar tunes in the air using the sensor.\nCircuit Blocks Needed-Buzzer and SONAR sensor\nConnections with CPU-Buzzer at Port 3 \nSONAR Sensor at Port 1";
+        break;
+      case OfflineSubCategoryData.SMART_ALARM:
+        text =
+            "Place the alarm near the window from where sunlight is coming. the alarm will be raised when there is light and will get off when you get in front of it.\nCircuit Blocks Needed-Light Sensor and SONAR Sensor \nConnections with CPU-\nLight Sensor at Port 2\nSONAR Sensor at Port1";
+        break;
+      case OfflineSubCategoryData.BURGLAR_ALARM:
+        text =
+            "Place the structure near a door to detect the presence of a person coming in. Raise the alarm when a person is detected.\nCircuit Blocks Needed-\nBuzzer at Port 3 \nSONAR Sensor at Port1";
+        break;
+      case OfflineSubCategoryData.MAGIC_DANCING_DOLL:
+        text =
+            "Prepare the structure of the Magic Wand.\nConnect Motion Sensor at Port 1.\nConnect servo driver at Port 3. use Servo1 and Servo2 for the dolls.\nConnect the app with the wifi dolls CPU.\nEnter the wifi name of the Magic Wand CPU, so that the wand and dolls can pe paired.\nReset the hardware to get back to normal functioning.";
+        break;
+      case OfflineSubCategoryData.PERSON_COUNTER:
+        text =
+            "Place the structure near a door to detect the presence of a person coming in the room.\nCircuit Blocks Needed-SONAR Sensor and RGB LED\nConnections with CPU-\nRGB LED at Port 3 \nSONAR Sensor at Port 1";
+        break;
+
+      case OfflineSubCategoryData.TOUCHLESS_DOORBELL:
+        text =
+            "Place the hand in front of the sensor to ring the bell.\nCircuit Blocks Needed-Proximity Sensor and Buzzer\nConnections with CPU-\nBuzzer at Port 3 \nProximty Sensor at Port 2";
+        break;
+      case OfflineSubCategoryData.IOT_CLOUD:
+        break;
+      case OfflineSubCategoryData.BUZZER:
+        break;
+      case OfflineSubCategoryData.AC_RELAY:
+        break;
+      case OfflineSubCategoryData.SERVO_DRIVER:
+        break;
+      case OfflineSubCategoryData.RGB_LED:
+        break;
+
+      case OfflineSubCategoryData.PUMP_DRIVER:
+        break;
+      case OfflineSubCategoryData.MOTOR_DRIVER:
+        break;
+      case OfflineSubCategoryData.PRXIMITY_SENSOR:
+        break;
+      case OfflineSubCategoryData.WEATHOR_SENSOR:
+        break;
+      case OfflineSubCategoryData.SOUND_SENSOR:
+        break;
+      case OfflineSubCategoryData.MOTION_SENSOR:
+        break;
+      case OfflineSubCategoryData.ULTRASONIC_SENSOR:
+        break;
+      case OfflineSubCategoryData.SOIL_MOISTURE_SENSOR:
+        break;
+      case OfflineSubCategoryData.LIGHT_SENSOR:
+        break;
+      case OfflineSubCategoryData.PUSH_SWITCH:
+        break;
+      case SmartLampDetailData.LIGHT_SENSOR_BASED:
+        text =
+            "Control the brightness of the lamp according to the natural light in the room. the lamp will get on when it's dark inside and will act as a night lamp.\nSelect the light intensity percentage below which there will be darkness.\nCircuit Blocks Needed-RGB LED and Light Sensor\nConnections with CPU-\nRGB LED at Port 3\nLight Sensor at Port 2";
+
+        break;
+
+      case SmartLampDetailData.GESTURE_BASED:
+        text =
+            "Wave the hand in front of the sensor to switch the lamp on/off.\nSelect the RLI percentage above which it will  be taken as Gesture.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnections with CPU-\nRGB LED at Port 3\nProximity Sensor at Port 2";
+        break;
+      case SmartLampDetailData.SWITCH_CONTROLLED:
+        text =
+            "Control the colour of the lamp from the push switch.\nCircuit Blocks Needed-RGB LED and Push Switch\nConnection with CPU-RGB LED at Port 3\nPush Switch at Port 1";
+        break;
+      case SmartLampDetailData.CLAP_BASED:
+        text =
+            "Control the switching of the lamp with a clap.\nSelect the noise level percentage above which it will be taken as a clap.\nCircuit Blocks Needed-RGB LED and Light\nConnection with CPU-\nRGB LED at Port 3\nSound Sensor at Port 2";
+        break;
+      case SmartLampDetailData.MOBILE_CONTROLLED:
+        text =
+            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3";
+        break;
+    }
+
+    return text;
   }
 
   Widget getRightLayout() {
@@ -974,16 +1133,52 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   lightBasedSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.LIGHTBASED_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XCD,
+                    lightBasedDarknessValue.toInt(),
+                    lightBasedRedValue.toInt(),
+                    lightBasedGreenValue.toInt(),
+                    lightBasedBlueValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.LIGHTBASED_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.LIGHTBASED_DARKNEDD,
+                          lightBasedDarknessValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.LIGHTBASED_RED,
+                          lightBasedRedValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.LIGHTBASED_GREEN,
+                          lightBasedGreenValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.LIGHTBASED_BLUE,
+                          lightBasedBlueValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("Darkness Threshold (%):- ${lightBasedDarknessValue.round()}"),
           Slider(
             value: lightBasedDarknessValue,
-            onChanged: (val) {
-              setState(() {
-                lightBasedDarknessValue = val;
-              });
-            },
+            onChanged: lightBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      lightBasedDarknessValue = val;
+                    });
+                  },
             label: lightBasedDarknessValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -994,11 +1189,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: lightBasedRedValue,
-            onChanged: (val) {
-              setState(() {
-                lightBasedRedValue = val;
-              });
-            },
+            onChanged: lightBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      lightBasedRedValue = val;
+                    });
+                  },
             label: lightBasedRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1009,11 +1206,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: lightBasedGreenValue,
-            onChanged: (val) {
-              setState(() {
-                lightBasedGreenValue = val;
-              });
-            },
+            onChanged: lightBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      lightBasedGreenValue = val;
+                    });
+                  },
             label: lightBasedGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1024,11 +1223,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: lightBasedBlueValue,
-            onChanged: (val) {
-              setState(() {
-                lightBasedBlueValue = val;
-              });
-            },
+            onChanged: lightBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      lightBasedBlueValue = val;
+                    });
+                  },
             label: lightBasedBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1049,16 +1250,52 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   gestureBasedSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.GESTUREBASED_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XCF,
+                    gestureBasedDarknessValue.toInt(),
+                    gestureBasedRedValue.toInt(),
+                    gestureBasedGreenValue.toInt(),
+                    gestureBasedBlueValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.GESTUREBASED_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.GESTUREBASED_DARKNEDD,
+                          gestureBasedDarknessValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.GESTUREBASED_RED,
+                          gestureBasedRedValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.GESTUREBASED_GREEN,
+                          gestureBasedGreenValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.GESTUREBASED_BLUE,
+                          gestureBasedBlueValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("Darkness Threshold (%):- ${gestureBasedDarknessValue.round()}"),
           Slider(
             value: gestureBasedDarknessValue,
-            onChanged: (val) {
-              setState(() {
-                gestureBasedDarknessValue = val;
-              });
-            },
+            onChanged: gestureBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      gestureBasedDarknessValue = val;
+                    });
+                  },
             label: gestureBasedDarknessValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1069,11 +1306,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: gestureBasedRedValue,
-            onChanged: (val) {
-              setState(() {
-                gestureBasedRedValue = val;
-              });
-            },
+            onChanged: gestureBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      gestureBasedRedValue = val;
+                    });
+                  },
             label: gestureBasedRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1084,11 +1323,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: gestureBasedGreenValue,
-            onChanged: (val) {
-              setState(() {
-                gestureBasedGreenValue = val;
-              });
-            },
+            onChanged: gestureBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      gestureBasedGreenValue = val;
+                    });
+                  },
             label: gestureBasedGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1099,11 +1340,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: gestureBasedBlueValue,
-            onChanged: (val) {
-              setState(() {
-                gestureBasedBlueValue = val;
-              });
-            },
+            onChanged: gestureBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      gestureBasedBlueValue = val;
+                    });
+                  },
             label: gestureBasedBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1124,17 +1367,49 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   switchControlledSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SWITCHBASED_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XD1,
+                    switchControlledRedValue.toInt(),
+                    switchControlledGreenValue.toInt(),
+                    switchControlledBlueValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SWITCHBASED_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SWITCHBASED_RED,
+                          switchControlledRedValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SWITCHBASED_GREEN,
+                          switchControlledGreenValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.SWITCHBASED_BLUE,
+                          switchControlledBlueValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("RED:- ${switchControlledRedValue.round()}",
               style: TextStyle(fontSize: 12)),
           Slider(
             value: switchControlledRedValue,
-            onChanged: (val) {
-              setState(() {
-                switchControlledRedValue = val;
-              });
-            },
+            onChanged: switchControlledSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      switchControlledRedValue = val;
+                    });
+                  },
             label: switchControlledRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1145,11 +1420,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: switchControlledGreenValue,
-            onChanged: (val) {
-              setState(() {
-                switchControlledGreenValue = val;
-              });
-            },
+            onChanged: switchControlledSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      switchControlledGreenValue = val;
+                    });
+                  },
             label: switchControlledGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1160,11 +1437,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: switchControlledBlueValue,
-            onChanged: (val) {
-              setState(() {
-                switchControlledBlueValue = val;
-              });
-            },
+            onChanged: switchControlledSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      switchControlledBlueValue = val;
+                    });
+                  },
             label: switchControlledBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1185,16 +1464,51 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   clapBasedSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.CLAPBASED_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XCD,
+                    clapBasedDarknessValue.toInt(),
+                    clapBasedRedValue.toInt(),
+                    clapBasedGreenValue.toInt(),
+                    clapBasedBlueValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.CLAPBASED_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.CLAPBASED_DARKNEDD,
+                          clapBasedDarknessValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.CLAPBASED_RED, clapBasedRedValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.CLAPBASED_GREEN,
+                          clapBasedGreenValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.CLAPBASED_BLUE,
+                          clapBasedBlueValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
           Text("Darkness Threshold (%):- ${clapBasedDarknessValue.round()}"),
           Slider(
             value: clapBasedDarknessValue,
-            onChanged: (val) {
-              setState(() {
-                clapBasedDarknessValue = val;
-              });
-            },
+            onChanged: clapBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      clapBasedDarknessValue = val;
+                    });
+                  },
             label: clapBasedDarknessValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1205,11 +1519,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: clapBasedRedValue,
-            onChanged: (val) {
-              setState(() {
-                clapBasedRedValue = val;
-              });
-            },
+            onChanged: clapBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      clapBasedRedValue = val;
+                    });
+                  },
             label: clapBasedRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1220,11 +1536,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: clapBasedGreenValue,
-            onChanged: (val) {
-              setState(() {
-                clapBasedGreenValue = val;
-              });
-            },
+            onChanged: clapBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      clapBasedGreenValue = val;
+                    });
+                  },
             label: clapBasedGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1235,11 +1553,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: clapBasedBlueValue,
-            onChanged: (val) {
-              setState(() {
-                clapBasedBlueValue = val;
-              });
-            },
+            onChanged: clapBasedSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      clapBasedBlueValue = val;
+                    });
+                  },
             label: clapBasedBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1260,32 +1580,50 @@ class OfflineGamePlayScreenState extends BaseClass {
                 setState(() {
                   mobileControlledSwitchValue = val;
                 });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.MOBILEBASED_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XD3,
+                    mobileControlledRedValue.toInt(),
+                    mobileControlledGreenValue.toInt(),
+                    mobileControlledBlueValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.MOBILEBASED_SWITCH, val);
+
+                      MySharedPreference.setDouble(
+                          MySharedPreference.MOBILEBASED_RED,
+                          mobileControlledRedValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.MOBILEBASED_GREEN,
+                          mobileControlledGreenValue);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.MOBILEBASED_BLUE,
+                          mobileControlledBlueValue);
+                    }
+                  });
+                }
               }),
           VerticalGap(8),
-          Text(
-              "Darkness Threshold (%):- ${mobileControlledDarknessValue.round()}"),
-          Slider(
-            value: mobileControlledDarknessValue,
-            onChanged: (val) {
-              setState(() {
-                mobileControlledDarknessValue = val;
-              });
-            },
-            label: mobileControlledDarknessValue.round().toString(),
-            max: 100,
-            divisions: 100,
-            activeColor: Colors.yellow,
-            inactiveColor: Colors.black,
-          ),
           Text("RED:- ${mobileControlledRedValue.round()}",
               style: TextStyle(fontSize: 12)),
           Slider(
             value: mobileControlledRedValue,
-            onChanged: (val) {
-              setState(() {
-                mobileControlledRedValue = val;
-              });
-            },
+            onChanged: mobileControlledSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      mobileControlledRedValue = val;
+                    });
+                  },
             label: mobileControlledRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1296,11 +1634,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: mobileControlledGreenValue,
-            onChanged: (val) {
-              setState(() {
-                mobileControlledGreenValue = val;
-              });
-            },
+            onChanged: mobileControlledSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      mobileControlledGreenValue = val;
+                    });
+                  },
             label: mobileControlledGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1311,11 +1651,13 @@ class OfflineGamePlayScreenState extends BaseClass {
               style: TextStyle(fontSize: 12)),
           Slider(
             value: mobileControlledBlueValue,
-            onChanged: (val) {
-              setState(() {
-                mobileControlledBlueValue = val;
-              });
-            },
+            onChanged: mobileControlledSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      mobileControlledBlueValue = val;
+                    });
+                  },
             label: mobileControlledBlueValue.round().toString(),
             max: 255,
             divisions: 255,
