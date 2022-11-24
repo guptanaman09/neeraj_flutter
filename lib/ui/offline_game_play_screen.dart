@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
@@ -106,11 +107,20 @@ class OfflineGamePlayScreenState extends BaseClass {
   bool acSwitchValue = false;
   bool pumpSwitchValue = false;
   bool servoDriverSwitchValue = false;
-
+  bool isOnPressedClockwiseOne = false;
+  bool isOnPressedStopOne = true;
+  bool isOnPressedAntiClockWiseOne = false;
+  bool motorSwitchValue = false;
+  bool isOnPressedClockwiseTwo = false;
+  bool isOnPressedStopTwo = true;
+  bool isOnPressedAntiClockWiseTwo = false;
   bool rgbSwitchValue = false;
   double rgbRedValue = 0;
   double rgbGreenValue = 0;
   double rgbBlueValue = 0;
+  bool proximitySwitchValue = false;
+  int sensorvalue = 0;
+  int sensorvalue2 = 0;
 
   late TextEditingController dancingDollWifiName;
   late UdpConnectivity? connectivity;
@@ -118,7 +128,7 @@ class OfflineGamePlayScreenState extends BaseClass {
   @override
   void initState() {
     connectivity = UdpConnectivity();
-    connectivity!.start(context);
+    connectivity!.start(context, onRecvValue);
     loadPrefsValues();
     super.initState();
 
@@ -2011,6 +2021,281 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
+    else if (data.title == OfflineSubCategoryData.MOTOR_DRIVER)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: motorSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  motorSwitchValue = val;
+                });
+                if (!val) {
+                  connectivity!.sendData([0XE2]);
+                } else {
+                  sendCommandForMotorDriver();
+                }
+              }),
+          VerticalGap(8),
+          Text("Motor 1-", style: TextStyle(fontSize: 12)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: motorSwitchValue
+                    ? () async {
+                        setState(() {
+                          if (!isOnPressedClockwiseOne) {
+                            isOnPressedClockwiseOne = true;
+                            isOnPressedStopOne = false;
+                            isOnPressedAntiClockWiseOne = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOnPressedClockwiseOne ? Colors.yellow : Colors.blue),
+                child: Text("Clockwise"),
+              ),
+              HorizontalGap(12),
+              ElevatedButton(
+                onPressed: motorSwitchValue
+                    ? () async {
+                        setState(() {
+                          if (!isOnPressedStopOne) {
+                            isOnPressedClockwiseOne = false;
+                            isOnPressedStopOne = true;
+                            isOnPressedAntiClockWiseOne = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOnPressedStopOne ? Colors.yellow : Colors.blue),
+                child: Text("STOP"),
+              ),
+              HorizontalGap(12),
+              ElevatedButton(
+                onPressed: motorSwitchValue
+                    ? () async {
+                        setState(() {
+                          if (!isOnPressedAntiClockWiseOne) {
+                            isOnPressedClockwiseOne = false;
+                            isOnPressedStopOne = false;
+                            isOnPressedAntiClockWiseOne = true;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: isOnPressedAntiClockWiseOne
+                        ? Colors.yellow
+                        : Colors.blue),
+                child: Text("Anti Clockwise"),
+              ),
+            ],
+          ),
+          Text("Motor 2-", style: TextStyle(fontSize: 12)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: motorSwitchValue
+                    ? () async {
+                        setState(() {
+                          if (!isOnPressedClockwiseTwo) {
+                            isOnPressedClockwiseTwo = true;
+                            isOnPressedStopTwo = false;
+                            isOnPressedAntiClockWiseTwo = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOnPressedClockwiseTwo ? Colors.yellow : Colors.blue),
+                child: Text("Clockwise"),
+              ),
+              HorizontalGap(12),
+              ElevatedButton(
+                onPressed: motorSwitchValue
+                    ? () async {
+                        setState(() {
+                          if (!isOnPressedStopTwo) {
+                            isOnPressedClockwiseTwo = false;
+                            isOnPressedStopTwo = true;
+                            isOnPressedAntiClockWiseTwo = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOnPressedStopTwo ? Colors.yellow : Colors.blue),
+                child: Text("STOP"),
+              ),
+              HorizontalGap(12),
+              ElevatedButton(
+                onPressed: motorSwitchValue
+                    ? () async {
+                        setState(() {
+                          if (!isOnPressedAntiClockWiseTwo) {
+                            isOnPressedClockwiseTwo = false;
+                            isOnPressedStopTwo = false;
+                            isOnPressedAntiClockWiseTwo = true;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: isOnPressedAntiClockWiseTwo
+                        ? Colors.yellow
+                        : Colors.blue),
+                child: Text("Anti Clockwise"),
+              ),
+            ],
+          ),
+        ],
+      );
+    else if (data.title == OfflineSubCategoryData.PRXIMITY_SENSOR)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB2]);
+                }),
+            VerticalGap(24),
+            Text("RLI(%):-{$sensorvalue}", style: TextStyle(fontSize: 20)),
+          ]);
+    else if (data.title == OfflineSubCategoryData.ULTRASONIC_SENSOR)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB1]);
+                }),
+            VerticalGap(24),
+            Text("Measured Distance(cm):-{$sensorvalue} CM",
+                style: TextStyle(fontSize: 20)),
+          ]);
+    else if (data.title == OfflineSubCategoryData.SOIL_MOISTURE_SENSOR)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB4]);
+                }),
+            VerticalGap(24),
+            Text("Moisture Content(%):-{$sensorvalue} %",
+                style: TextStyle(fontSize: 20)),
+          ]);
+    else if (data.title == OfflineSubCategoryData.SOUND_SENSOR)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB5]);
+                }),
+            VerticalGap(24),
+            Text("Noise Level(%):-{$sensorvalue} %",
+                style: TextStyle(fontSize: 20)),
+          ]);
+    else if (data.title == OfflineSubCategoryData.LIGHT_SENSOR)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB6]);
+                }),
+            VerticalGap(24),
+            Text("Light Intensity(%):-{$sensorvalue} %",
+                style: TextStyle(fontSize: 20)),
+          ]);
+    else if (data.title == OfflineSubCategoryData.PUSH_SWITCH)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB7]);
+                }),
+            VerticalGap(24),
+            Text("State:-{$sensorvalue} ", style: TextStyle(fontSize: 20)),
+          ]);
+    else if (data.title == OfflineSubCategoryData.WEATHOR_SENSOR)
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("OFF/ON"),
+            Switch(
+                value: proximitySwitchValue,
+                onChanged: (val) {
+                  setState(() {
+                    proximitySwitchValue = val;
+                  });
+                  startSendingSensorValue([0XB3]);
+                }),
+            VerticalGap(24),
+            Text("Temp (deg C):-{$sensorvalue} ",
+                style: TextStyle(fontSize: 20)),
+            Text("Humidity (%):-{$sensorvalue2} ",
+                style: TextStyle(fontSize: 20)),
+          ]);
     return Container();
   }
 
@@ -2053,5 +2338,45 @@ class OfflineGamePlayScreenState extends BaseClass {
               MySharedPreference.RGB_BLUE_VALUE, rgbBlueValue);
         }
       });
+  }
+
+  void sendCommandForMotorDriver() {
+    int val1 = 1;
+    if (isOnPressedAntiClockWiseOne) {
+      val1 = 2;
+    } else if (isOnPressedClockwiseOne) {
+      val1 = 0;
+    } else if (isOnPressedStopOne) {
+      val1 = 1;
+    }
+    int val2 = 1;
+    if (isOnPressedAntiClockWiseTwo) {
+      val2 = 2;
+    } else if (isOnPressedClockwiseTwo) {
+      val2 = 0;
+    } else if (isOnPressedStopTwo) {
+      val2 = 1;
+    }
+    connectivity!.sendData([0XA6, val1, val2]);
+  }
+
+  Timer? commandTimer;
+
+  void startSendingSensorValue(List<int> command) {
+    commandTimer?.cancel();
+    commandTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      if (proximitySwitchValue) {
+        connectivity!.sendData(command);
+      }
+    });
+  }
+
+  void onRecvValue(List<int> data) {
+    setState(() {
+      sensorvalue = data.first;
+      if (data.length > 1) {
+        sensorvalue2 = data[1];
+      }
+    });
   }
 }

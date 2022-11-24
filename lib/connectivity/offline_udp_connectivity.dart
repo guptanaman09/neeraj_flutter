@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart' as myHandler;
 class UdpConnectivity {
   UDP? conn;
   late BuildContext context;
+  late Function onRecvValue;
   void showAlertMessage(String message, BuildContext context) {
     showDialog(
       context: context,
@@ -42,7 +43,8 @@ class UdpConnectivity {
     );
   }
 
-  void start(BuildContext context) async {
+  void start(BuildContext context, Function onRecvValue) async {
+    this.onRecvValue = onRecvValue;
     this.context = context;
     Connectivity cn = Connectivity();
     ConnectivityResult result = await cn.checkConnectivity();
@@ -84,7 +86,7 @@ class UdpConnectivity {
           makeudpConnection();
         }
       } else {
-        start(context);
+        start(context, onRecvValue);
       }
     }
   }
@@ -92,7 +94,8 @@ class UdpConnectivity {
   void makeudpConnection() async {
     conn = await UDP.bind(Endpoint.any(port: Port.any));
     conn!.asStream().listen((event) {
-      print("recv udp data:" + event!.data.first.toString());
+      print("recv udp data:" + event!.data.toString());
+      onRecvValue(event!.data);
     });
   }
 
@@ -113,7 +116,7 @@ class UdpConnectivity {
 
   Future<bool> sendData(List<int> data) async {
     if (conn == null) {
-      start(context);
+      start(context, onRecvValue);
 
       return false;
     }
