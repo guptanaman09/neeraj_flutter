@@ -80,6 +80,11 @@ class OfflineGamePlayScreenState extends BaseClass {
   double switchControlledGreenValue = 0;
   double switchControlledBlueValue = 0;
 
+  double servoOneValue = 0;
+  double servoTwoValue = 0;
+  double servoThreeValue = 0;
+  double servoFourValue = 0;
+
   bool applianceSwitchValue = false;
   bool isOnPressedAppliance = false;
   bool isOffPressedAppliance = false;
@@ -97,6 +102,15 @@ class OfflineGamePlayScreenState extends BaseClass {
   bool switchControlledSwitchValue = false;
   bool clapBasedSwitchValue = false;
   bool mobileControlledSwitchValue = false;
+  bool buzzerSwitchValue = false;
+  bool acSwitchValue = false;
+  bool pumpSwitchValue = false;
+  bool servoDriverSwitchValue = false;
+
+  bool rgbSwitchValue = false;
+  double rgbRedValue = 0;
+  double rgbGreenValue = 0;
+  double rgbBlueValue = 0;
 
   late TextEditingController dancingDollWifiName;
   late UdpConnectivity? connectivity;
@@ -208,6 +222,33 @@ class OfflineGamePlayScreenState extends BaseClass {
         MySharedPreference.MOBILEBASED_GREEN);
     mobileControlledBlueValue =
         await MySharedPreference.getDouble(MySharedPreference.MOBILEBASED_BLUE);
+
+    buzzerSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.BUZZER_SWITCH);
+    acSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.AC_SWITCH);
+    pumpSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.PUMP_SWITCH);
+
+    servoDriverSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.SERVO_SWITCH);
+    servoOneValue =
+        await MySharedPreference.getDouble(MySharedPreference.SERVO1_VALUE);
+    servoTwoValue =
+        await MySharedPreference.getDouble(MySharedPreference.SERVO2_VALUE);
+    servoThreeValue =
+        await MySharedPreference.getDouble(MySharedPreference.SERVO3_VALUE);
+    servoFourValue =
+        await MySharedPreference.getDouble(MySharedPreference.SERVO4_VALUE);
+
+    rgbSwitchValue =
+        await MySharedPreference.getBoolean(MySharedPreference.RGB_SWITCH);
+    rgbRedValue =
+        await MySharedPreference.getDouble(MySharedPreference.RGB_RED_VALUE);
+    rgbGreenValue =
+        await MySharedPreference.getDouble(MySharedPreference.RGB_GREEN_VALUE);
+    rgbBlueValue =
+        await MySharedPreference.getDouble(MySharedPreference.RGB_BLUE_VALUE);
 
     setState(() {});
   }
@@ -335,33 +376,60 @@ class OfflineGamePlayScreenState extends BaseClass {
       case OfflineSubCategoryData.IOT_CLOUD:
         break;
       case OfflineSubCategoryData.BUZZER:
+        text =
+            "Make the Beep Sound with the help of Buzzer.\nConnect the Buzzer at Port 3 of the CPU.";
         break;
       case OfflineSubCategoryData.AC_RELAY:
+        text =
+            "Control Small AC appliances remotely.\nConnect the Relay at Port 1 of the CPU.";
         break;
       case OfflineSubCategoryData.SERVO_DRIVER:
+        text =
+            "Control the angular position of the Servo Motor.\nServo Motor can move between 0 to 180 degrees.\nConnect the Servo Driver at Port3 of the CPU.";
         break;
       case OfflineSubCategoryData.RGB_LED:
+        text =
+            "Make different colours using Primary Colours Red,Green and Blue.\nConnect the LED at PORT 3 of the CPU.";
         break;
 
       case OfflineSubCategoryData.PUMP_DRIVER:
+        text =
+            "Control Water Pump.\nConnect the Pump Driver at Port 3 of the CPU.";
         break;
       case OfflineSubCategoryData.MOTOR_DRIVER:
+        text =
+            "Control the rotation of Motors\nConnect the Motor Driver at Port 3 of the CPU. ";
         break;
       case OfflineSubCategoryData.PRXIMITY_SENSOR:
+        text =
+            "The Proximity Sensor measures the Reflected Light Intensity (RLI) using the Physics Law of Reflection. The RLI can be used to check the colour of any object or to detect its presence.The Sensor uses infrared rays that cannot be seen by naked eye.\nConnect the Sensor at PORT 2 of the CPU.";
         break;
       case OfflineSubCategoryData.WEATHOR_SENSOR:
+        text =
+            "Measure the Humidity and Temperature of the surrounding. \nConnect the Weather Sensor at Port 1 of the CPU.";
         break;
       case OfflineSubCategoryData.SOUND_SENSOR:
+        text =
+            "Measure the percentage of Noise Level in the surrounding\nConnect the Sound Sensor at Port2 of the CPU.";
         break;
       case OfflineSubCategoryData.MOTION_SENSOR:
+        text = "";
         break;
       case OfflineSubCategoryData.ULTRASONIC_SENSOR:
+        text =
+            "Check the presence of any object by measuring the distance using SONAR(Sound Navigation and Ranging)./nThe Ultrasonic Sensor emits Ultrsaound waves that cannot be heard by humans. It uses the concept of ECHO and calculate the ditance using\nDistance=Speed*(Half of Time taken by Sound to get back to the resource)\nConnect the Sensor at Port 1 of the CPU to measure the Distance in Centimeters.";
         break;
       case OfflineSubCategoryData.SOIL_MOISTURE_SENSOR:
+        text =
+            "Measure the percentage of Moisture content in the soil.\nConnect the Moisture Sensor at Port 2 of the CPU.";
         break;
       case OfflineSubCategoryData.LIGHT_SENSOR:
+        text =
+            "Measure the percentage of light Intensity in the surrounding.\nConnect the Light Sensor at Port 2 of the CPU.";
         break;
       case OfflineSubCategoryData.PUSH_SWITCH:
+        text =
+            "Check the state of the Push Switch. The possible states are ON and OFF.\nConnect the Switch at Port1 of the CPU.";
         break;
       case SmartLampDetailData.LIGHT_SENSOR_BASED:
         text =
@@ -1666,6 +1734,324 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
+    else if (data.title == OfflineSubCategoryData.BUZZER)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: buzzerSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  buzzerSwitchValue = val;
+                });
+                if (val) {
+                  connectivity!.sendData([0XA4, 1]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.BUZZER_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([0XA4, 0]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.BUZZER_SWITCH, val);
+                    }
+                  });
+                }
+              }),
+        ],
+      );
+    else if (data.title == OfflineSubCategoryData.AC_RELAY)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: acSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  acSwitchValue = val;
+                });
+                if (val) {
+                  connectivity!.sendData([0XA3, 1]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.AC_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([0XA3, 0]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.AC_SWITCH, val);
+                    }
+                  });
+                }
+              }),
+        ],
+      );
+    else if (data.title == OfflineSubCategoryData.PUMP_DRIVER)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: pumpSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  pumpSwitchValue = val;
+                });
+                if (val) {
+                  connectivity!.sendData([0XA2, 1]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.AC_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([0XA2, 0]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.AC_SWITCH, val);
+                    }
+                  });
+                }
+              }),
+        ],
+      );
+    else if (data.title == OfflineSubCategoryData.SERVO_DRIVER)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: servoDriverSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  servoDriverSwitchValue = val;
+                });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.SERVO_SWITCH, val);
+                    }
+                  });
+                } else {
+                  MySharedPreference.setBoolean(
+                      MySharedPreference.SERVO_SWITCH, val);
+                }
+              }),
+          VerticalGap(8),
+          Text("Servo 1:- ${servoOneValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: servoOneValue,
+            onChanged: servoDriverSwitchValue
+                ? (val) {
+                    setState(() {
+                      servoOneValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
+                : null,
+            label: servoOneValue.round().toString(),
+            max: 180,
+            divisions: 180,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("Servo 2:- ${servoTwoValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: servoTwoValue,
+            onChanged: servoDriverSwitchValue
+                ? (val) {
+                    setState(() {
+                      servoTwoValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
+                : null,
+            label: servoTwoValue.round().toString(),
+            max: 180,
+            divisions: 180,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("Servo 3:- ${servoThreeValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: servoThreeValue,
+            onChanged: servoDriverSwitchValue
+                ? (val) {
+                    setState(() {
+                      servoThreeValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
+                : null,
+            label: servoThreeValue.round().toString(),
+            max: 180,
+            divisions: 180,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          Text("Servo 4:- ${servoFourValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: servoFourValue,
+            onChanged: servoDriverSwitchValue
+                ? (val) {
+                    setState(() {
+                      servoFourValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
+                : null,
+            label: servoFourValue.round().toString(),
+            max: 180,
+            divisions: 180,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+        ],
+      );
+    else if (data.title == OfflineSubCategoryData.RGB_LED)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: rgbSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  rgbSwitchValue = val;
+                });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.RGB_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XA5,
+                    rgbRedValue.toInt(),
+                    rgbGreenValue.toInt(),
+                    rgbBlueValue.toInt()
+                  ]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.RGB_SWITCH, val);
+                    }
+                  });
+                }
+              }),
+          VerticalGap(8),
+          Text("RED ${rgbRedValue.round()}", style: TextStyle(fontSize: 12)),
+          Slider(
+            value: rgbRedValue,
+            onChanged: rgbSwitchValue
+                ? (val) {
+                    setState(() {
+                      rgbRedValue = val;
+                    });
+                    sendRGBCommand();
+                  }
+                : null,
+            label: rgbRedValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.red,
+            inactiveColor: Colors.black,
+          ),
+          Text("Green ${rgbGreenValue.round()}",
+              style: TextStyle(fontSize: 12)),
+          Slider(
+            value: rgbGreenValue,
+            onChanged: rgbSwitchValue
+                ? (val) {
+                    setState(() {
+                      rgbGreenValue = val;
+                    });
+                    sendRGBCommand();
+                  }
+                : null,
+            label: rgbGreenValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.green,
+            inactiveColor: Colors.black,
+          ),
+          Text("Blue ${rgbBlueValue.round()}", style: TextStyle(fontSize: 12)),
+          Slider(
+            value: rgbBlueValue,
+            onChanged: rgbSwitchValue
+                ? (val) {
+                    setState(() {
+                      rgbBlueValue = val;
+                    });
+                    sendRGBCommand();
+                  }
+                : null,
+            label: rgbBlueValue.round().toString(),
+            max: 255,
+            divisions: 255,
+            activeColor: Colors.blue,
+            inactiveColor: Colors.black,
+          ),
+        ],
+      );
     return Container();
+  }
+
+  void sendServoDriverCommand() {
+    connectivity!.sendData([
+      0XA1,
+      servoOneValue.toInt(),
+      servoTwoValue.toInt(),
+      servoThreeValue.toInt(),
+      servoFourValue.toInt()
+    ])
+      ..then((value) {
+        if (value) {
+          MySharedPreference.setDouble(
+              MySharedPreference.SERVO1_VALUE, servoOneValue);
+          MySharedPreference.setDouble(
+              MySharedPreference.SERVO2_VALUE, servoTwoValue);
+          MySharedPreference.setDouble(
+              MySharedPreference.SERVO3_VALUE, servoThreeValue);
+          MySharedPreference.setDouble(
+              MySharedPreference.SERVO4_VALUE, servoFourValue);
+        }
+      });
+  }
+
+  void sendRGBCommand() {
+    connectivity!.sendData([
+      0XA5,
+      rgbRedValue.toInt(),
+      rgbGreenValue.toInt(),
+      rgbBlueValue.toInt(),
+    ])
+      ..then((value) {
+        if (value) {
+          MySharedPreference.setDouble(
+              MySharedPreference.RGB_RED_VALUE, rgbRedValue);
+          MySharedPreference.setDouble(
+              MySharedPreference.RGB_GREEN_VALUE, rgbGreenValue);
+          MySharedPreference.setDouble(
+              MySharedPreference.RGB_BLUE_VALUE, rgbBlueValue);
+        }
+      });
   }
 }

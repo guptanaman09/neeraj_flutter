@@ -55,6 +55,22 @@ class MySharedPreference {
   static const String MOBILEBASED_RED = "mobile_based_red";
   static const String MOBILEBASED_GREEN = "mobile_based_green";
   static const String MOBILEBASED_BLUE = "mobile_based_blue";
+
+  static const String BUZZER_SWITCH = "buzzer_switch";
+  static const String AC_SWITCH = "ac_switch";
+  static const String PUMP_SWITCH = "pump_switch";
+
+  static const String SERVO_SWITCH = "servo_switch";
+  static const String SERVO1_VALUE = "servoone_value";
+  static const String SERVO2_VALUE = "servotwo_value";
+  static const String SERVO3_VALUE = "servothree_value";
+  static const String SERVO4_VALUE = "servofour_value";
+
+  static const String RGB_SWITCH = "rgb_switch";
+  static const String RGB_RED_VALUE = "rgb_red";
+  static const String RGB_GREEN_VALUE = "rgb_green";
+  static const String RGB_BLUE_VALUE = "rgb_blue";
+
   static setDouble(String key, double value) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.setDouble(key, value);
