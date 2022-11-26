@@ -3,14 +3,19 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:location/location.dart';
 import 'package:neeraj_flutter_app/utils/internet_connectivity.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:udp/udp.dart';
 import 'package:network_info_plus/network_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart' as myHandler;
 
 ///Created by Neeraj Vijayvargiya on 10/11/22.
 class UdpConnectivity {
-  late UDP conn;
+  UDP? conn;
+  late BuildContext context;
+  late Function onRecvValue;
   void showAlertMessage(String message, BuildContext context) {
     showDialog(
       context: context,
@@ -38,7 +43,9 @@ class UdpConnectivity {
     );
   }
 
-  void start(BuildContext context) async {
+  void start(BuildContext context, Function onRecvValue) async {
+    this.onRecvValue = onRecvValue;
+    this.context = context;
     Connectivity cn = Connectivity();
     ConnectivityResult result = await cn.checkConnectivity();
     cn.onConnectivityChanged.listen((event) {
@@ -57,38 +64,73 @@ class UdpConnectivity {
 
       return;
     }
-    Map<Permission, PermissionStatus> statuses =
+    Map<Permission, myHandler.PermissionStatus> statuses =
         await [Permission.location].request();
-    if (statuses[Permission.location] == PermissionStatus.granted) {
+    if (statuses[Permission.location] == myHandler.PermissionStatus.granted) {
       print(statuses[Permission.location]);
       //showBottomDialog(context);
-      NetworkInfo info = NetworkInfo();
-      String? wifiName = await info.getWifiName();
-      print("wifi name=" + wifiName!);
-      if (!wifiName!.toLowerCase().contains("intellecto")) {
-        //show alert here and
-        showAlertMessage("connect to the actual intellecto device", context);
+      Location location = new Location();
+      bool isOn = await location.serviceEnabled();
+      if (!isOn) {
+        isOn = await location.requestService();
+      }
+      if (isOn) {
+        NetworkInfo info = NetworkInfo();
+        String? wifiName = await info.getWifiName();
+        print(wifiName ?? "wifi name not found");
+        if (!wifiName!.toLowerCase().contains("intellecto")) {
+          //show alert here and
+          showAlertMessage("connect to the actual intellecto device", context);
+        } else {
+          // make udp connection
+          makeudpConnection();
+        }
       } else {
-        // make udp connection
-        makeudpConnection();
+        start(context, onRecvValue);
       }
     }
   }
 
   void makeudpConnection() async {
     conn = await UDP.bind(Endpoint.any(port: Port.any));
-    sendData();
-    conn.asStream().listen((event) {
-      print("recv udp data:" + String.fromCharCodes(event!.data));
+    conn!.asStream().listen((event) {
+      print("recv udp data:" + event!.data.toString());
+      onRecvValue(event!.data);
     });
   }
 
-  void sendData() async {
-    var datalength = await conn.send(
-        [0XC2, 0X64],
+  void closeConnection() {
+    conn!.close();
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  Future<bool> sendData(List<int> data) async {
+    if (conn == null) {
+      start(context, onRecvValue);
+
+      return false;
+    }
+    var datalength = await conn!.send(
+        data,
         Endpoint.multicast(
             InternetAddress("192.168.4.1", type: InternetAddressType.IPv4),
             port: Port(8888)));
     print("Data send size" + datalength.toString());
+    if (datalength > 0) {
+      return true;
+    }
+    showToast(
+        "Device connection lost. make sure you are connected to the intellecto wifi");
+    return false;
   }
 }

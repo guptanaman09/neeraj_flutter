@@ -17,7 +17,8 @@ class ArduinoSerialConnectivity {
   List<BluetoothDevice> list = [];
   late BluetoothConnection blConnection;
   late final Function nonBleIsConnected;
-  ArduinoSerialConnectivity(this.nonBleIsConnected);
+  late final Function dataRecieved;
+  ArduinoSerialConnectivity(this.nonBleIsConnected, this.dataRecieved);
   void start(BuildContext context) async {
     print("inside start");
     Map<Permission, PermissionStatus> statuses =
@@ -187,7 +188,11 @@ class ArduinoSerialConnectivity {
 
     if (blConnection.isConnected) {
       nonBleIsConnected(true);
-      blConnection.input!.listen((event) {});
+      blConnection.input!.listen((event) {
+        dataRecieved(event);
+
+        print("recv value=" + event.first.toString());
+      });
       // Uint8List data = Uint8List(2);
       // data[0] = (0xC2);
       // data[1] = (0x64);
