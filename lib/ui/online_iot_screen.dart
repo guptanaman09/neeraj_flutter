@@ -142,9 +142,13 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: Container(
-                      child: CustomText(
-                          "Skip->", MyTextStyles.getItalicTextStyle()),
+                    child: GestureDetector(
+                      onTap: onSkip,
+                      child: Container(
+                        padding: EdgeInsets.all(4),
+                        child: CustomText(
+                            "Skip->", MyTextStyles.getItalicTextStyle()),
+                      ),
                     ),
                   ),
                 )
@@ -155,10 +159,14 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
       ),
     );
   }
+  
+  void onSkip(){
+    Navigator.of(context).pushNamed(Classes.onlineMainCatScreen);
+
+  }
 
   void onUserNameChanged(String userName) {}
 
   void onConnect(BuildContext context) {
-    Navigator.of(context).pushNamed(Classes.onlineMainCatScreen);
   }
 }
