@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
+import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
@@ -160,9 +161,13 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: Container(
-                      child: CustomText(
-                          "Skip->", MyTextStyles.getItalicTextStyle()),
+                    child: InkWell(
+                      onTap: onSkip,
+                      child: Container(
+                        padding: EdgeInsets.all(4),
+                        child: CustomText(
+                            "Skip->", MyTextStyles.getItalicTextStyle()),
+                      ),
                     ),
                   ),
                 )
@@ -174,9 +179,13 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
     );
   }
 
+  void onSkip() {
+    Navigator.of(context).pushNamed(Classes.onlineMainCatScreen);
+  }
+
   void onUserNameChanged(String userName) {}
 
-  void onConnect() {
+  void onConnect(BuildContext context) {
     if (textEditingControllerUserName.text.isEmpty) {
       showToast("Please enter username!");
     } else if (textEditingControllerPaswword.text.isEmpty) {

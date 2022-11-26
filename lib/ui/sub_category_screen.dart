@@ -94,10 +94,6 @@ class SubCategoryScreenState extends BaseClass {
 
   void onPlayButtonClick(SubCategoryDetail model) {
     print("play game clicked  ${model.title}");
-    if (model.title != SubCategoryData.LINE_FOLLOWER)
       Navigator.of(context).pushNamed(Classes.freeRunScreen, arguments: model);
-    else
-      Navigator.of(context)
-          .pushNamed(Classes.lineFollowerGameScreen, arguments: model);
   }
 }
