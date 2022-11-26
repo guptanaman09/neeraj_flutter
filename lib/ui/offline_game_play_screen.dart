@@ -126,6 +126,18 @@ class OfflineGamePlayScreenState extends BaseClass {
   late UdpConnectivity? connectivity;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    if (commandTimer != null) {
+      commandTimer!.cancel();
+    }
+    if (connectivity != null) {
+      connectivity!.closeConnection();
+    }
+    super.dispose();
+  }
+
+  @override
   void initState() {
     connectivity = UdpConnectivity();
     connectivity!.start(context, onRecvValue);
@@ -282,6 +294,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                 children: [
                   InkWell(
                     onTap: () {
+                      stopTimer();
                       Navigator.of(context).pop();
                     },
                     child: Container(
@@ -1181,17 +1194,35 @@ class OfflineGamePlayScreenState extends BaseClass {
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             padding: EdgeInsets.all(4),
             child: Center(
-              child: CustomTextField(
-                  dancingDollWifiName,
-                  TextInputType.text,
-                  InputDecoration(
-                      border: InputBorder.none, hintText: "WiFi Name"),
-                  TextStyle()),
+              child: TextField(
+                controller: dancingDollWifiName,
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+                decoration: InputDecoration(
+                    border: InputBorder.none, hintText: "WiFi Name"),
+                style: TextStyle(),
+              ),
             ),
           ),
           VerticalGap(16),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (dancingDollWifiName.text.isEmpty) {
+                  showToast(
+                      "Please enter the last digits of you intellecto wifi name!");
+                } else if (dancingDollWifiName.text.length < 5) {
+                  showToast("Wifi name should be of 5 digit!");
+                } else {
+                  List<int> data = [];
+                  List<int> data1 = dancingDollWifiName.text
+                      .split("")
+                      .map(int.parse)
+                      .toList();
+                  data.add(0XCB);
+                  data.addAll(data1);
+                  connectivity!.sendData(data);
+                }
+              },
               child: Text(
                 "Activate",
                 style: TextStyle(
@@ -2378,5 +2409,11 @@ class OfflineGamePlayScreenState extends BaseClass {
         sensorvalue2 = data[1];
       }
     });
+  }
+
+  void stopTimer() {
+    if (commandTimer != null) {
+      commandTimer!.cancel();
+    }
   }
 }

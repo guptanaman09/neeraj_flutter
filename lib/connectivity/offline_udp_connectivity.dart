@@ -100,7 +100,9 @@ class UdpConnectivity {
   }
 
   void closeConnection() {
-    conn!.close();
+    if (conn != null) {
+      conn!.close();
+    }
   }
 
   void showToast(String message) {
