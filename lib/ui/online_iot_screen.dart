@@ -7,6 +7,7 @@ import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_button.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
@@ -161,8 +162,7 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
   }
   
   void onSkip(){
-    Navigator.of(context).pushNamed(Classes.onlineMainCatScreen);
-
+    Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen, arguments: OfflineGamePlayType.ONLINE);
   }
 
   void onUserNameChanged(String userName) {}
