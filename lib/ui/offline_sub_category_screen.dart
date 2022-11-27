@@ -57,9 +57,14 @@ class OfflineSubCategoryScreenState extends BaseClass {
                         Navigator.of(context)
                             .pushNamed(Classes.smartLampCategoryScreen);
                       else {
+                        if(model[1] == OfflineGamePlayType.OFFLINE)
                         Navigator.of(context).pushNamed(
                             Classes.offLineGamePlayScreen,
                             arguments: [e, model[1]]);
+                        else
+                          Navigator.of(context).pushNamed(
+                              Classes.onlineGamePlayScreen,
+                              arguments: e);
                       }
                     },
                     child: OfflineSubCardWidget(e, Colors.green)))

@@ -129,6 +129,7 @@ class OnlineGamePlayScreenState extends BaseClass {
 
   @override
   void initState() {
+    print("online game play screen");
     connectivity = UdpConnectivity();
     connectivity!.start(context, onRecvValue);
     loadPrefsValues();
