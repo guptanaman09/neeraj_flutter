@@ -33,6 +33,8 @@ dependencies:
   fluttertoast: ^8.1.1
   location: ^4.4.0
   shared_preferences: ^2.0.15
+  firebase_core: ^2.3.0
+  firebase_database: ^10.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 
 import 'package:neeraj_flutter_app/test_ble.dart';
 
@@ -14,6 +15,7 @@ import 'package:neeraj_flutter_app/ui/main_screen.dart';
 import 'package:neeraj_flutter_app/ui/offline_game_play_screen.dart';
 import 'package:neeraj_flutter_app/ui/offline_main_cat_screen.dart';
 import 'package:neeraj_flutter_app/ui/offline_sub_category_screen.dart';
+import 'package:neeraj_flutter_app/ui/online_game_play_screen.dart';
 import 'package:neeraj_flutter_app/ui/online_iot_screen.dart';
 import 'package:neeraj_flutter_app/ui/online_main_cat_screen.dart';
 import 'package:neeraj_flutter_app/ui/smart_lamp_category_screen.dart';
@@ -52,7 +54,7 @@ class Routing {
       case Classes.offlineMainCategoryScreen:
         {
           return MaterialPageRoute(
-              builder: (_) => OfflineMainCategoryScreen(),
+              builder: (_) => OfflineMainCategoryScreen(settings.arguments as OfflineGamePlayType),
               settings: RouteSettings(name: settings.name));
         }
       case Classes.smartLampCategoryScreen:
@@ -65,7 +67,7 @@ class Routing {
         {
           return MaterialPageRoute(
               builder: (_) => OfflineSubCategoryScreen(
-                  settings.arguments as OfflineMainCategoryDetail),
+                  settings.arguments as List<dynamic>),
               settings: RouteSettings(name: settings.name));
         }
 
@@ -94,7 +96,7 @@ class Routing {
         {
           return MaterialPageRoute(
               builder: (_) => OfflineGamePlayScreen(
-                  settings.arguments as OfflineSubCategoryDetail),
+                  settings.arguments as List<dynamic>),
               settings: RouteSettings(name: settings.name));
         }
 
@@ -102,6 +104,13 @@ class Routing {
         {
           return MaterialPageRoute(
               builder: (_) => OnlineMainCategoryScreen(),
+              settings: RouteSettings(name: settings.name));
+        }
+
+      case Classes.onlineGamePlayScreen:
+        {
+          return MaterialPageRoute(
+              builder: (_) => OnlineGamePlayScreen(settings.arguments as OfflineSubCategoryDetail),
               settings: RouteSettings(name: settings.name));
         }
 

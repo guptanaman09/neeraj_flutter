@@ -1606,8 +1606,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    height: 20,
                     width: 100,
+                    padding:EdgeInsets.symmetric(horizontal: 4),
                     color: Colors.white,
                     child: TextField(
                         controller: prox_1_black_controller,
@@ -1630,7 +1630,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    height: 20,
+                    padding:EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
                     child: TextField(
@@ -1699,7 +1699,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    height: 20,
+                    padding:EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
                     child: TextField(
@@ -1723,7 +1723,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    height: 20,
+                    padding:EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
                     child: TextField(

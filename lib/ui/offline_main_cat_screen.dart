@@ -8,6 +8,7 @@ import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
 import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
 import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
@@ -16,14 +17,24 @@ import 'package:neeraj_flutter_app/widgets/offline_card_widget.dart';
 ///Created by Naman Gupta on 6/11/22.
 
 class OfflineMainCategoryScreen extends StatefulWidget {
+
+  OfflineGamePlayType data;
+
+  OfflineMainCategoryScreen(this.data);
+
   @override
   State<StatefulWidget> createState() {
-    return OfflineMainCategoryScreenState();
+    return OfflineMainCategoryScreenState(this.data);
   }
 }
 
 class OfflineMainCategoryScreenState extends BaseClass {
+
+  OfflineGamePlayType data;
+
   late OfflineCategoryModel offlineMainCategoryModel;
+
+  OfflineMainCategoryScreenState(this.data);
 
   @override
   void initState() {
@@ -76,7 +87,7 @@ class OfflineMainCategoryScreenState extends BaseClass {
 
   void onSelectCategory(OfflineMainCategoryDetail model, int index) {
     Navigator.of(context)
-        .pushNamed(Classes.offlineSubCategoryScreen, arguments: model);
+        .pushNamed(Classes.offlineSubCategoryScreen, arguments: [model, data]);
   }
 
   Color getColor(int index) {

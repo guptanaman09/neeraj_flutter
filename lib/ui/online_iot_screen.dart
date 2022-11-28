@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/FirebaseConnectivity.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_button.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
@@ -39,6 +41,8 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
     connectivity!.start(context, onRecvValue);
     textEditingControllerUserName = TextEditingController();
     textEditingControllerPaswword = TextEditingController();
+    FirebaseConnctivity conn = FirebaseConnctivity();
+    conn.start();
   }
 
   void onRecvValue(List<int> data) {}
@@ -180,7 +184,8 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
   }
 
   void onSkip() {
-    Navigator.of(context).pushNamed(Classes.onlineMainCatScreen);
+    Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen,
+        arguments: OfflineGamePlayType.ONLINE);
   }
 
   void onUserNameChanged(String userName) {}
@@ -199,7 +204,11 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
       List<int> data = [];
       data.add(0XE4);
       data.addAll(utf8.encode(userPass));
-      connectivity!.sendData(data);
+      connectivity!.sendData(data).then((value) {
+        if (value) {
+          onSkip();
+        }
+      });
     }
   }
 }

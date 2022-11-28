@@ -3,19 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
-import 'package:neeraj_flutter_app/constants/dimensions.dart';
-import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
-import 'package:neeraj_flutter_app/widgets/custom_text.dart';
-import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/offline_sub_card_widget.dart';
 
 ///Created by Naman Gupta on 6/11/22.
 
 class OfflineSubCategoryScreen extends StatefulWidget {
-  OfflineMainCategoryDetail model;
+  List<dynamic> model;
 
   OfflineSubCategoryScreen(this.model);
 
@@ -26,18 +23,18 @@ class OfflineSubCategoryScreen extends StatefulWidget {
 }
 
 class OfflineSubCategoryScreenState extends BaseClass {
-  OfflineMainCategoryDetail model;
+  List<dynamic> model;
 
   OfflineSubCategoryScreenState(this.model);
 
   @override
   void initState() {
     super.initState();
-
+    print("offline type >>> ${model[1]} >>>> ${(model[0] as OfflineMainCategoryDetail).subCategoryDetailList}");
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,
         appBarTitleCenter: true,
-        appBarTitle: model.title,
+        appBarTitle: model[0].title,
         backButtonVisibility: true);
   }
 
@@ -53,16 +50,22 @@ class OfflineSubCategoryScreenState extends BaseClass {
               child: GridView.count(
             crossAxisCount: 2,
             scrollDirection: Axis.horizontal,
-            children: model.subCategoryDetailList
+            children: (model[0] as OfflineMainCategoryDetail).subCategoryDetailList
                 .map((e) => GestureDetector(
                     onTap: () {
                       if (e.title == OfflineSubCategoryData.SMART_LAMP)
                         Navigator.of(context)
                             .pushNamed(Classes.smartLampCategoryScreen);
-                      else
+                      else {
+                        if(model[1] == OfflineGamePlayType.OFFLINE)
                         Navigator.of(context).pushNamed(
                             Classes.offLineGamePlayScreen,
-                            arguments: e);
+                            arguments: [e, model[1]]);
+                        else
+                          Navigator.of(context).pushNamed(
+                              Classes.onlineGamePlayScreen,
+                              arguments: e);
+                      }
                     },
                     child: OfflineSubCardWidget(e, Colors.green)))
                 .toList(),

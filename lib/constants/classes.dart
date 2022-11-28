@@ -16,4 +16,5 @@ class Classes {
       "/offline_main_category_screen";
   static const String bluetoothBle = "/FlutterBlueApp";
   static const String onlineMainCatScreen = "/onlineMainCatScreen";
+  static const String onlineGamePlayScreen = "/onlineGamePlayScreen";
 }

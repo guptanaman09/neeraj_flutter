@@ -8,6 +8,8 @@ import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
 import 'package:neeraj_flutter_app/locale/languages/app_localizations.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
+import 'package:neeraj_flutter_app/ui/offline_game_play_screen.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
@@ -133,9 +135,9 @@ class IOTScreenState extends BaseClass {
 
   void onSelectOption(IOTOption option) {
     if (option == IOTOption.ONLINE) {
-      Navigator.of(context).pushNamed(Classes.onlineIOTScreen);
+      Navigator.of(context).pushNamed(Classes.onlineIOTScreen, arguments: OfflineGamePlayType.ONLINE);
     } else
-      Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen);
+      Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen, arguments: OfflineGamePlayType.OFFLINE);
   }
 }
 
