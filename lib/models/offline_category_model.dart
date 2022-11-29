@@ -68,10 +68,10 @@ class OfflineCategoryModel {
         OfflineSubCategoryData.TOUCHLESS_DOORBELL,
         Assets.TOUCHLESS_DOORBELL,
         OfflineData.STRUCTURED_BASED_ACTIVTIES);
-    OfflineSubCategoryDetail model_14 = OfflineSubCategoryDetail(
-        OfflineSubCategoryData.IOT_CLOUD,
-        Assets.IOT_CLOUD,
-        OfflineData.STRUCTURED_BASED_ACTIVTIES);
+    // OfflineSubCategoryDetail model_14 = OfflineSubCategoryDetail(
+    //     OfflineSubCategoryData.IOT_CLOUD,
+    //     Assets.IOT_CLOUD,
+    //     OfflineData.STRUCTURED_BASED_ACTIVTIES);
 
     list.add(model_1);
     list.add(model_2);
@@ -86,7 +86,7 @@ class OfflineCategoryModel {
     list.add(model_11);
     list.add(model_12);
     list.add(model_13);
-    list.add(model_14);
+    //  list.add(model_14);
 
     return list;
   }
@@ -142,10 +142,10 @@ class OfflineCategoryModel {
         OfflineSubCategoryData.SOUND_SENSOR,
         Assets.SOUND_SENSOR,
         OfflineData.SENSONRS_AND_INPUT_BLOCKS);
-    OfflineSubCategoryDetail model_4 = OfflineSubCategoryDetail(
-        OfflineSubCategoryData.MOTION_SENSOR,
-        Assets.MOTION_SENSOR,
-        OfflineData.SENSONRS_AND_INPUT_BLOCKS);
+    // OfflineSubCategoryDetail model_4 = OfflineSubCategoryDetail(
+    //     OfflineSubCategoryData.MOTION_SENSOR,
+    //     Assets.MOTION_SENSOR,
+    //     OfflineData.SENSONRS_AND_INPUT_BLOCKS);
     OfflineSubCategoryDetail model_5 = OfflineSubCategoryDetail(
         OfflineSubCategoryData.ULTRASONIC_SENSOR,
         Assets.ULTRASONIC_SENSOR,
@@ -168,7 +168,7 @@ class OfflineCategoryModel {
     list.add(model_1);
     list.add(model_2);
     list.add(model_3);
-    list.add(model_4);
+    //  list.add(model_4);
     list.add(model_5);
     list.add(model_6);
     list.add(model_7);

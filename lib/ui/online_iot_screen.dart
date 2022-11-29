@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/FirebaseConnectivity.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
+import 'package:neeraj_flutter_app/data/shared_preference/my_shared_preference.dart';
 import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_button.dart';
@@ -14,6 +19,7 @@ import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text_field.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
+import 'package:neeraj_flutter_app/connectivity/offline_udp_connectivity.dart';
 
 ///Created by Naman Gupta on 6/11/22.
 
@@ -27,12 +33,27 @@ class OnlineIOTScreen extends StatefulWidget {
 class OnlineIOTScreenState extends State<StatefulWidget> {
   late TextEditingController textEditingControllerUserName;
   late TextEditingController textEditingControllerPaswword;
+  late UdpConnectivity? connectivity;
 
   @override
   void initState() {
     super.initState();
+    connectivity = UdpConnectivity();
+    connectivity!.start(context, onRecvValue);
     textEditingControllerUserName = TextEditingController();
     textEditingControllerPaswword = TextEditingController();
+  }
+
+  void onRecvValue(List<int> data) {}
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   @override
@@ -143,7 +164,7 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: onSkip,
                       child: Container(
                         padding: EdgeInsets.all(4),
@@ -160,13 +181,35 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
       ),
     );
   }
-  
-  void onSkip(){
-    Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen, arguments: OfflineGamePlayType.ONLINE);
+
+  void onSkip() {
+    Navigator.of(context).pushNamed(Classes.offlineMainCategoryScreen,
+        arguments: OfflineGamePlayType.ONLINE);
   }
 
   void onUserNameChanged(String userName) {}
 
   void onConnect(BuildContext context) {
+    if (textEditingControllerUserName.text.isEmpty) {
+      showToast("Please enter username!");
+    } else if (textEditingControllerPaswword.text.isEmpty) {
+      showToast("Please enter password");
+    } else {
+      //call conection
+      String diffSymbol = "\$";
+      String userPass = textEditingControllerPaswword.text.toString() +
+          diffSymbol +
+          textEditingControllerUserName.text.toString();
+      List<int> data = [];
+      data.add(0XE4);
+      data.addAll(utf8.encode(userPass));
+      connectivity!.sendData(data).then((value) {
+        if (value) {
+          MySharedPreference.setString(
+              MySharedPreference.CONNECTEDWIFINAME, connectivity!.wifiName!);
+          onSkip();
+        }
+      });
+    }
   }
 }

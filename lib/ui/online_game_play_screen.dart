@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'dart:async';
@@ -6,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
+import 'package:neeraj_flutter_app/connectivity/FirebaseConnectivity.dart';
 import 'package:neeraj_flutter_app/connectivity/offline_udp_connectivity.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/data/shared_preference/my_shared_preference.dart';
@@ -125,13 +125,14 @@ class OnlineGamePlayScreenState extends BaseClass {
   int sensorvalue2 = 0;
 
   late TextEditingController dancingDollWifiName;
-  late UdpConnectivity? connectivity;
+  late FirebaseConnctivity? connectivity;
 
   @override
   void initState() {
     print("online game play screen");
-    connectivity = UdpConnectivity();
-    connectivity!.start(context, onRecvValue);
+    connectivity = FirebaseConnctivity();
+    connectivity!.start();
+
     loadPrefsValues();
     super.initState();
 
@@ -141,127 +142,127 @@ class OnlineGamePlayScreenState extends BaseClass {
   void loadPrefsValues() async {
     smartDustbinSwitchValue = await MySharedPreference.getSmartDustbinSwitch();
     dustbinSensingSliderValue =
-    await MySharedPreference.getSmartDustbinSensing();
+        await MySharedPreference.getSmartDustbinSensing();
     dustbinOpenPeriodSliderValue =
-    await MySharedPreference.getSmartDustbinOpen();
+        await MySharedPreference.getSmartDustbinOpen();
 
-    ironManSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.IRONMAN_SWITCH);
+    ironManSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.IRONMAN_SWITCH_I);
     ironManRedSliderValue =
-    await MySharedPreference.getDouble(MySharedPreference.IRONMAN_RED);
+        await MySharedPreference.getDouble(MySharedPreference.IRONMAN_RED_I);
     ironManGreenSliderValue =
-    await MySharedPreference.getDouble(MySharedPreference.IRONMAN_GREEN);
+        await MySharedPreference.getDouble(MySharedPreference.IRONMAN_GREEN_I);
     ironManBlueSliderValue =
-    await MySharedPreference.getDouble(MySharedPreference.IRONMAN_BLUE);
+        await MySharedPreference.getDouble(MySharedPreference.IRONMAN_BLUE_I);
     smartIrrigationSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.SMART_IRRIGATION_SWITCH);
+        MySharedPreference.SMART_IRRIGATION_SWITCH_I);
     smartIrrigationDryThresholdValue = await MySharedPreference.getDouble(
-        MySharedPreference.SMART_IRRIGATION_THRESHOLD);
+        MySharedPreference.SMART_IRRIGATION_THRESHOLD_I);
     smartIrrigationDispencePeriodValue = await MySharedPreference.getDouble(
-        MySharedPreference.SMART_IRRIGATION_DISPENSE);
+        MySharedPreference.SMART_IRRIGATION_DISPENSE_I);
     smartAlarmSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.SMART_ALARM_SWITCH);
+        MySharedPreference.SMART_ALARM_SWITCH_I);
     smartSensingDistanceAlarmValue = await MySharedPreference.getDouble(
-        MySharedPreference.SMART_ALARM_DISTANCE);
+        MySharedPreference.SMART_ALARM_DISTANCE_I);
     smartAlarmDarknessThresholdValue = await MySharedPreference.getDouble(
-        MySharedPreference.SMART_ALARM_DARKNESS);
+        MySharedPreference.SMART_ALARM_DARKNESS_I);
     burglarAlarmSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.BURGLAR_ALARM_SWITCH);
+        MySharedPreference.BURGLAR_ALARM_SWITCH_I);
     burglarAlarmValue = await MySharedPreference.getDouble(
-        MySharedPreference.BURGLAR_ALARM_DISTANCE);
+        MySharedPreference.BURGLAR_ALARM_DISTANCE_I);
     soapDispencerSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.SOAP_DISPENSER_SWITCH);
+        MySharedPreference.SOAP_DISPENSER_SWITCH_I);
     soapDisSensindDistanceValue = await MySharedPreference.getDouble(
-        MySharedPreference.SOAP_DISPENSER_DISTANCE);
+        MySharedPreference.SOAP_DISPENSER_DISTANCE_I);
     soapDisDispnecePeriodValue = await MySharedPreference.getDouble(
-        MySharedPreference.SOAP_DISPENSER_PERIOD);
+        MySharedPreference.SOAP_DISPENSER_PERIOD_I);
     petFeederSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.PET_FEDDER_SWITCH);
+        MySharedPreference.PET_FEDDER_SWITCH_I);
     petFeederSensingValue = await MySharedPreference.getDouble(
-        MySharedPreference.PET_FEDDER_DISTANCE);
+        MySharedPreference.PET_FEDDER_DISTANCE_I);
     petFeederOpenValue = await MySharedPreference.getDouble(
-        MySharedPreference.PET_FEDDER_PERIOD);
+        MySharedPreference.PET_FEDDER_PERIOD_I);
     airGuitarSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.AIRGUITAR_SWITCH);
+        MySharedPreference.AIRGUITAR_SWITCH_I);
     touchlessDorbellValue =
-    await MySharedPreference.getDouble(MySharedPreference.DOORBELL_VALUE);
-    touchlessDorbellSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.DOORBELL_SWITCH);
+        await MySharedPreference.getDouble(MySharedPreference.DOORBELL_VALUE_I);
+    touchlessDorbellSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.DOORBELL_SWITCH_I);
     lightBasedSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.LIGHTBASED_SWITCH);
+        MySharedPreference.LIGHTBASED_SWITCH_I);
     lightBasedDarknessValue = await MySharedPreference.getDouble(
-        MySharedPreference.LIGHTBASED_DARKNEDD);
+        MySharedPreference.LIGHTBASED_DARKNEDD_I);
     lightBasedRedValue =
-    await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_RED);
-    lightBasedGreenValue =
-    await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_GREEN);
-    lightBasedBlueValue =
-    await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_BLUE);
+        await MySharedPreference.getDouble(MySharedPreference.LIGHTBASED_RED_I);
+    lightBasedGreenValue = await MySharedPreference.getDouble(
+        MySharedPreference.LIGHTBASED_GREEN_I);
+    lightBasedBlueValue = await MySharedPreference.getDouble(
+        MySharedPreference.LIGHTBASED_BLUE_I);
     gestureBasedSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.GESTUREBASED_SWITCH);
+        MySharedPreference.GESTUREBASED_SWITCH_I);
     gestureBasedDarknessValue = await MySharedPreference.getDouble(
-        MySharedPreference.GESTUREBASED_DARKNEDD);
-    gestureBasedRedValue =
-    await MySharedPreference.getDouble(MySharedPreference.GESTUREBASED_RED);
+        MySharedPreference.GESTUREBASED_DARKNEDD_I);
+    gestureBasedRedValue = await MySharedPreference.getDouble(
+        MySharedPreference.GESTUREBASED_RED_I);
     gestureBasedGreenValue = await MySharedPreference.getDouble(
-        MySharedPreference.GESTUREBASED_GREEN);
+        MySharedPreference.GESTUREBASED_GREEN_I);
     gestureBasedBlueValue = await MySharedPreference.getDouble(
-        MySharedPreference.GESTUREBASED_BLUE);
+        MySharedPreference.GESTUREBASED_BLUE_I);
 
     switchControlledSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.SWITCHBASED_SWITCH);
-    switchControlledRedValue =
-    await MySharedPreference.getDouble(MySharedPreference.SWITCHBASED_RED);
+        MySharedPreference.SWITCHBASED_SWITCH_I);
+    switchControlledRedValue = await MySharedPreference.getDouble(
+        MySharedPreference.SWITCHBASED_RED_I);
     switchControlledGreenValue = await MySharedPreference.getDouble(
-        MySharedPreference.SWITCHBASED_GREEN);
-    switchControlledBlueValue =
-    await MySharedPreference.getDouble(MySharedPreference.SWITCHBASED_BLUE);
+        MySharedPreference.SWITCHBASED_GREEN_I);
+    switchControlledBlueValue = await MySharedPreference.getDouble(
+        MySharedPreference.SWITCHBASED_BLUE_I);
 
     clapBasedSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.CLAPBASED_SWITCH);
+        MySharedPreference.CLAPBASED_SWITCH_I);
     clapBasedDarknessValue = await MySharedPreference.getDouble(
-        MySharedPreference.CLAPBASED_DARKNEDD);
+        MySharedPreference.CLAPBASED_DARKNEDD_I);
     clapBasedRedValue =
-    await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_RED);
-    clapBasedGreenValue =
-    await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_GREEN);
+        await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_RED_I);
+    clapBasedGreenValue = await MySharedPreference.getDouble(
+        MySharedPreference.CLAPBASED_GREEN_I);
     clapBasedBlueValue =
-    await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_BLUE);
+        await MySharedPreference.getDouble(MySharedPreference.CLAPBASED_BLUE_I);
     mobileControlledSwitchValue = await MySharedPreference.getBoolean(
-        MySharedPreference.MOBILEBASED_SWITCH);
-    mobileControlledRedValue =
-    await MySharedPreference.getDouble(MySharedPreference.MOBILEBASED_RED);
+        MySharedPreference.MOBILEBASED_SWITCH_I);
+    mobileControlledRedValue = await MySharedPreference.getDouble(
+        MySharedPreference.MOBILEBASED_RED_I);
     mobileControlledGreenValue = await MySharedPreference.getDouble(
-        MySharedPreference.MOBILEBASED_GREEN);
-    mobileControlledBlueValue =
-    await MySharedPreference.getDouble(MySharedPreference.MOBILEBASED_BLUE);
+        MySharedPreference.MOBILEBASED_GREEN_I);
+    mobileControlledBlueValue = await MySharedPreference.getDouble(
+        MySharedPreference.MOBILEBASED_BLUE_I);
 
     buzzerSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.BUZZER_SWITCH);
+        await MySharedPreference.getBoolean(MySharedPreference.BUZZER_SWITCH_I);
     acSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.AC_SWITCH);
+        await MySharedPreference.getBoolean(MySharedPreference.AC_SWITCH_I);
     pumpSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.PUMP_SWITCH);
+        await MySharedPreference.getBoolean(MySharedPreference.PUMP_SWITCH_I);
 
     servoDriverSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.SERVO_SWITCH);
+        await MySharedPreference.getBoolean(MySharedPreference.SERVO_SWITCH_I);
     servoOneValue =
-    await MySharedPreference.getDouble(MySharedPreference.SERVO1_VALUE);
+        await MySharedPreference.getDouble(MySharedPreference.SERVO1_VALUE_I);
     servoTwoValue =
-    await MySharedPreference.getDouble(MySharedPreference.SERVO2_VALUE);
+        await MySharedPreference.getDouble(MySharedPreference.SERVO2_VALUE_I);
     servoThreeValue =
-    await MySharedPreference.getDouble(MySharedPreference.SERVO3_VALUE);
+        await MySharedPreference.getDouble(MySharedPreference.SERVO3_VALUE_I);
     servoFourValue =
-    await MySharedPreference.getDouble(MySharedPreference.SERVO4_VALUE);
+        await MySharedPreference.getDouble(MySharedPreference.SERVO4_VALUE_I);
 
     rgbSwitchValue =
-    await MySharedPreference.getBoolean(MySharedPreference.RGB_SWITCH);
+        await MySharedPreference.getBoolean(MySharedPreference.RGB_SWITCH_I);
     rgbRedValue =
-    await MySharedPreference.getDouble(MySharedPreference.RGB_RED_VALUE);
-    rgbGreenValue =
-    await MySharedPreference.getDouble(MySharedPreference.RGB_GREEN_VALUE);
+        await MySharedPreference.getDouble(MySharedPreference.RGB_RED_VALUE_I);
+    rgbGreenValue = await MySharedPreference.getDouble(
+        MySharedPreference.RGB_GREEN_VALUE_I);
     rgbBlueValue =
-    await MySharedPreference.getDouble(MySharedPreference.RGB_BLUE_VALUE);
+        await MySharedPreference.getDouble(MySharedPreference.RGB_BLUE_VALUE_I);
 
     setState(() {});
   }
@@ -285,6 +286,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                 children: [
                   InkWell(
                     onTap: () {
+                      stopTimer();
                       Navigator.of(context).pop();
                     },
                     child: Container(
@@ -339,132 +341,132 @@ class OnlineGamePlayScreenState extends BaseClass {
     switch (data.title) {
       case OfflineSubCategoryData.APPLIANCE_CONTROL:
         text =
-        "Control the AC Appliances like Desk Lamp, Night Lamp, Tanle Fan or any other small appliance using the app. \nCircuit Blocks nedded - Relay and RGB LED Connections with CPU - \nRelay at Port 1 \nRGB LED at Port 3";
+            "Control the AC Appliances like Desk Lamp, Night Lamp, Tanle Fan or any other small appliance using the app. \nCircuit Blocks nedded - Relay and RGB LED Connections with CPU - \nRelay at Port 1 \nRGB LED at Port 3";
         break;
       case OfflineSubCategoryData.SMART_DUSTBIN:
         text =
-        "Put the trash inside the Dustbin without touching it, just by placing your hand in front of the sensor.\nCircuit blocks needed-Servo driver and sonar sensor \nConnection with CPU- \nServo driver at Port 3 \nSONAR Sensor at Port 1";
+            "Put the trash inside the Dustbin without touching it, just by placing your hand in front of the sensor.\nCircuit blocks needed-Servo driver and sonar sensor \nConnection with CPU- \nServo driver at Port 3 \nSONAR Sensor at Port 1";
         break;
       case OfflineSubCategoryData.IRON_MAN_HAND:
         text =
-        "Get the experience of wearing a replica of Iron Man hand glow when raised. \nCircuit Blocks Needed-RGB LED and Motion Sensor \nConnections with CPU- \nRGB LED at Port 3 \nMotion Sensor at Port 1";
+            "Get the experience of wearing a replica of Iron Man hand glow when raised. \nCircuit Blocks Needed-RGB LED and Motion Sensor \nConnections with CPU- \nRGB LED at Port 3 \nMotion Sensor at Port 1";
         break;
       case OfflineSubCategoryData.SMART_IRRIGATION:
         text =
-        "The plant will automatically get the water when it gets dry. \nSelect the Moist Percentage below which the soil will be treated as Dry \nCircuit Blocks Needed-Pump Driver and Moist Sensor \nConnection with CPU- \nPump Driver at port 3 \nMoist Sensor at Port 2";
+            "The plant will automatically get the water when it gets dry. \nSelect the Moist Percentage below which the soil will be treated as Dry \nCircuit Blocks Needed-Pump Driver and Moist Sensor \nConnection with CPU- \nPump Driver at port 3 \nMoist Sensor at Port 2";
         break;
       case OfflineSubCategoryData.SOAP_DISPENSOR:
         text =
-        "Place hand below the sensor and the machine will automatically dispense the liquid \nCircuit Blocks Nedded-Pump Driver and Sonar Sensor \nConnections with CPU- \nPump Driver at Port 3 \nSONAR Sensor at Port 1";
+            "Place hand below the sensor and the machine will automatically dispense the liquid \nCircuit Blocks Nedded-Pump Driver and Sonar Sensor \nConnections with CPU- \nPump Driver at Port 3 \nSONAR Sensor at Port 1";
         break;
       case OfflineSubCategoryData.PET_FEEDER:
         text =
-        "The pet will automatically get the food when it gets near the food tray.The sensor senses the presence and release the food.\nCircuit Blocks Needed-Servo Driver and SONAR Sensor\nConnections with CPU-\nServo Driver at Port 3 \nSONAR sensor at Port1";
+            "The pet will automatically get the food when it gets near the food tray.The sensor senses the presence and release the food.\nCircuit Blocks Needed-Servo Driver and SONAR Sensor\nConnections with CPU-\nServo Driver at Port 3 \nSONAR sensor at Port1";
         break;
       case OfflineSubCategoryData.AIR_GUITAR:
         text =
-        "Try the innovative way of playing the guitar tunes in the air using the sensor.\nCircuit Blocks Needed-Buzzer and SONAR sensor\nConnections with CPU-Buzzer at Port 3 \nSONAR Sensor at Port 1";
+            "Try the innovative way of playing the guitar tunes in the air using the sensor.\nCircuit Blocks Needed-Buzzer and SONAR sensor\nConnections with CPU-Buzzer at Port 3 \nSONAR Sensor at Port 1";
         break;
       case OfflineSubCategoryData.SMART_ALARM:
         text =
-        "Place the alarm near the window from where sunlight is coming. the alarm will be raised when there is light and will get off when you get in front of it.\nCircuit Blocks Needed-Light Sensor and SONAR Sensor \nConnections with CPU-\nLight Sensor at Port 2\nSONAR Sensor at Port1";
+            "Place the alarm near the window from where sunlight is coming. the alarm will be raised when there is light and will get off when you get in front of it.\nCircuit Blocks Needed-Light Sensor and SONAR Sensor \nConnections with CPU-\nLight Sensor at Port 2\nSONAR Sensor at Port1";
         break;
       case OfflineSubCategoryData.BURGLAR_ALARM:
         text =
-        "Place the structure near a door to detect the presence of a person coming in. Raise the alarm when a person is detected.\nCircuit Blocks Needed-\nBuzzer at Port 3 \nSONAR Sensor at Port1";
+            "Place the structure near a door to detect the presence of a person coming in. Raise the alarm when a person is detected.\nCircuit Blocks Needed-\nBuzzer at Port 3 \nSONAR Sensor at Port1";
         break;
       case OfflineSubCategoryData.MAGIC_DANCING_DOLL:
         text =
-        "Prepare the structure of the Magic Wand.\nConnect Motion Sensor at Port 1.\nConnect servo driver at Port 3. use Servo1 and Servo2 for the dolls.\nConnect the app with the wifi dolls CPU.\nEnter the wifi name of the Magic Wand CPU, so that the wand and dolls can pe paired.\nReset the hardware to get back to normal functioning.";
+            "Prepare the structure of the Magic Wand.\nConnect Motion Sensor at Port 1.\nConnect servo driver at Port 3. use Servo1 and Servo2 for the dolls.\nConnect the app with the wifi dolls CPU.\nEnter the wifi name of the Magic Wand CPU, so that the wand and dolls can pe paired.\nReset the hardware to get back to normal functioning.";
         break;
       case OfflineSubCategoryData.PERSON_COUNTER:
         text =
-        "Place the structure near a door to detect the presence of a person coming in the room.\nCircuit Blocks Needed-SONAR Sensor and RGB LED\nConnections with CPU-\nRGB LED at Port 3 \nSONAR Sensor at Port 1";
+            "Place the structure near a door to detect the presence of a person coming in the room.\nCircuit Blocks Needed-SONAR Sensor and RGB LED\nConnections with CPU-\nRGB LED at Port 3 \nSONAR Sensor at Port 1";
         break;
 
       case OfflineSubCategoryData.TOUCHLESS_DOORBELL:
         text =
-        "Place the hand in front of the sensor to ring the bell.\nCircuit Blocks Needed-Proximity Sensor and Buzzer\nConnections with CPU-\nBuzzer at Port 3 \nProximty Sensor at Port 2";
+            "Place the hand in front of the sensor to ring the bell.\nCircuit Blocks Needed-Proximity Sensor and Buzzer\nConnections with CPU-\nBuzzer at Port 3 \nProximty Sensor at Port 2";
         break;
       case OfflineSubCategoryData.IOT_CLOUD:
         break;
       case OfflineSubCategoryData.BUZZER:
         text =
-        "Make the Beep Sound with the help of Buzzer.\nConnect the Buzzer at Port 3 of the CPU.";
+            "Make the Beep Sound with the help of Buzzer.\nConnect the Buzzer at Port 3 of the CPU.";
         break;
       case OfflineSubCategoryData.AC_RELAY:
         text =
-        "Control Small AC appliances remotely.\nConnect the Relay at Port 1 of the CPU.";
+            "Control Small AC appliances remotely.\nConnect the Relay at Port 1 of the CPU.";
         break;
       case OfflineSubCategoryData.SERVO_DRIVER:
         text =
-        "Control the angular position of the Servo Motor.\nServo Motor can move between 0 to 180 degrees.\nConnect the Servo Driver at Port3 of the CPU.";
+            "Control the angular position of the Servo Motor.\nServo Motor can move between 0 to 180 degrees.\nConnect the Servo Driver at Port3 of the CPU.";
         break;
       case OfflineSubCategoryData.RGB_LED:
         text =
-        "Make different colours using Primary Colours Red,Green and Blue.\nConnect the LED at PORT 3 of the CPU.";
+            "Make different colours using Primary Colours Red,Green and Blue.\nConnect the LED at PORT 3 of the CPU.";
         break;
 
       case OfflineSubCategoryData.PUMP_DRIVER:
         text =
-        "Control Water Pump.\nConnect the Pump Driver at Port 3 of the CPU.";
+            "Control Water Pump.\nConnect the Pump Driver at Port 3 of the CPU.";
         break;
       case OfflineSubCategoryData.MOTOR_DRIVER:
         text =
-        "Control the rotation of Motors\nConnect the Motor Driver at Port 3 of the CPU. ";
+            "Control the rotation of Motors\nConnect the Motor Driver at Port 3 of the CPU. ";
         break;
       case OfflineSubCategoryData.PRXIMITY_SENSOR:
         text =
-        "The Proximity Sensor measures the Reflected Light Intensity (RLI) using the Physics Law of Reflection. The RLI can be used to check the colour of any object or to detect its presence.The Sensor uses infrared rays that cannot be seen by naked eye.\nConnect the Sensor at PORT 2 of the CPU.";
+            "The Proximity Sensor measures the Reflected Light Intensity (RLI) using the Physics Law of Reflection. The RLI can be used to check the colour of any object or to detect its presence.The Sensor uses infrared rays that cannot be seen by naked eye.\nConnect the Sensor at PORT 2 of the CPU.";
         break;
       case OfflineSubCategoryData.WEATHOR_SENSOR:
         text =
-        "Measure the Humidity and Temperature of the surrounding. \nConnect the Weather Sensor at Port 1 of the CPU.";
+            "Measure the Humidity and Temperature of the surrounding. \nConnect the Weather Sensor at Port 1 of the CPU.";
         break;
       case OfflineSubCategoryData.SOUND_SENSOR:
         text =
-        "Measure the percentage of Noise Level in the surrounding\nConnect the Sound Sensor at Port2 of the CPU.";
+            "Measure the percentage of Noise Level in the surrounding\nConnect the Sound Sensor at Port2 of the CPU.";
         break;
       case OfflineSubCategoryData.MOTION_SENSOR:
         text = "";
         break;
       case OfflineSubCategoryData.ULTRASONIC_SENSOR:
         text =
-        "Check the presence of any object by measuring the distance using SONAR(Sound Navigation and Ranging)./nThe Ultrasonic Sensor emits Ultrsaound waves that cannot be heard by humans. It uses the concept of ECHO and calculate the ditance using\nDistance=Speed*(Half of Time taken by Sound to get back to the resource)\nConnect the Sensor at Port 1 of the CPU to measure the Distance in Centimeters.";
+            "Check the presence of any object by measuring the distance using SONAR(Sound Navigation and Ranging)./nThe Ultrasonic Sensor emits Ultrsaound waves that cannot be heard by humans. It uses the concept of ECHO and calculate the ditance using\nDistance=Speed*(Half of Time taken by Sound to get back to the resource)\nConnect the Sensor at Port 1 of the CPU to measure the Distance in Centimeters.";
         break;
       case OfflineSubCategoryData.SOIL_MOISTURE_SENSOR:
         text =
-        "Measure the percentage of Moisture content in the soil.\nConnect the Moisture Sensor at Port 2 of the CPU.";
+            "Measure the percentage of Moisture content in the soil.\nConnect the Moisture Sensor at Port 2 of the CPU.";
         break;
       case OfflineSubCategoryData.LIGHT_SENSOR:
         text =
-        "Measure the percentage of light Intensity in the surrounding.\nConnect the Light Sensor at Port 2 of the CPU.";
+            "Measure the percentage of light Intensity in the surrounding.\nConnect the Light Sensor at Port 2 of the CPU.";
         break;
       case OfflineSubCategoryData.PUSH_SWITCH:
         text =
-        "Check the state of the Push Switch. The possible states are ON and OFF.\nConnect the Switch at Port1 of the CPU.";
+            "Check the state of the Push Switch. The possible states are ON and OFF.\nConnect the Switch at Port1 of the CPU.";
         break;
       case SmartLampDetailData.LIGHT_SENSOR_BASED:
         text =
-        "Control the brightness of the lamp according to the natural light in the room. the lamp will get on when it's dark inside and will act as a night lamp.\nSelect the light intensity percentage below which there will be darkness.\nCircuit Blocks Needed-RGB LED and Light Sensor\nConnections with CPU-\nRGB LED at Port 3\nLight Sensor at Port 2";
+            "Control the brightness of the lamp according to the natural light in the room. the lamp will get on when it's dark inside and will act as a night lamp.\nSelect the light intensity percentage below which there will be darkness.\nCircuit Blocks Needed-RGB LED and Light Sensor\nConnections with CPU-\nRGB LED at Port 3\nLight Sensor at Port 2";
 
         break;
 
       case SmartLampDetailData.GESTURE_BASED:
         text =
-        "Wave the hand in front of the sensor to switch the lamp on/off.\nSelect the RLI percentage above which it will  be taken as Gesture.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnections with CPU-\nRGB LED at Port 3\nProximity Sensor at Port 2";
+            "Wave the hand in front of the sensor to switch the lamp on/off.\nSelect the RLI percentage above which it will  be taken as Gesture.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnections with CPU-\nRGB LED at Port 3\nProximity Sensor at Port 2";
         break;
       case SmartLampDetailData.SWITCH_CONTROLLED:
         text =
-        "Control the colour of the lamp from the push switch.\nCircuit Blocks Needed-RGB LED and Push Switch\nConnection with CPU-RGB LED at Port 3\nPush Switch at Port 1";
+            "Control the colour of the lamp from the push switch.\nCircuit Blocks Needed-RGB LED and Push Switch\nConnection with CPU-RGB LED at Port 3\nPush Switch at Port 1";
         break;
       case SmartLampDetailData.CLAP_BASED:
         text =
-        "Control the switching of the lamp with a clap.\nSelect the noise level percentage above which it will be taken as a clap.\nCircuit Blocks Needed-RGB LED and Light\nConnection with CPU-\nRGB LED at Port 3\nSound Sensor at Port 2";
+            "Control the switching of the lamp with a clap.\nSelect the noise level percentage above which it will be taken as a clap.\nCircuit Blocks Needed-RGB LED and Light\nConnection with CPU-\nRGB LED at Port 3\nSound Sensor at Port 2";
         break;
       case SmartLampDetailData.MOBILE_CONTROLLED:
         text =
-        "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3";
+            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3";
         break;
     }
 
@@ -499,22 +501,22 @@ class OnlineGamePlayScreenState extends BaseClass {
                 onPressed: applianceSwitchValue
                     ? null
                     : () async {
-                  bool isSend = false;
-                  if (!isOnPressedAppliance) {
-                    isSend = await connectivity!.sendData([0XC0, 1]);
-                  }
-                  if (isSend) {
-                    setState(() {
-                      if (!isOnPressedAppliance) {
-                        isOffPressedAppliance = false;
-                        isOnPressedAppliance = true;
-                      }
-                    });
-                  }
-                },
+                        bool isSend = false;
+                        if (!isOnPressedAppliance) {
+                          isSend = await connectivity!.sendData([0XC0, 1]);
+                        }
+                        if (isSend) {
+                          setState(() {
+                            if (!isOnPressedAppliance) {
+                              isOffPressedAppliance = false;
+                              isOnPressedAppliance = true;
+                            }
+                          });
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    isOnPressedAppliance ? Colors.yellow : Colors.blue),
+                        isOnPressedAppliance ? Colors.yellow : Colors.blue),
                 child: Text("ON"),
               ),
               HorizontalGap(24),
@@ -522,22 +524,22 @@ class OnlineGamePlayScreenState extends BaseClass {
                 onPressed: applianceSwitchValue
                     ? null
                     : () async {
-                  bool isSend = false;
-                  if (!isOffPressedAppliance) {
-                    isSend = await connectivity!.sendData([0XC0, 0]);
-                  }
-                  if (isSend) {
-                    setState(() {
-                      if (!isOffPressedAppliance) {
-                        isOffPressedAppliance = true;
-                        isOnPressedAppliance = false;
-                      }
-                    });
-                  }
-                },
+                        bool isSend = false;
+                        if (!isOffPressedAppliance) {
+                          isSend = await connectivity!.sendData([0XC0, 0]);
+                        }
+                        if (isSend) {
+                          setState(() {
+                            if (!isOffPressedAppliance) {
+                              isOffPressedAppliance = true;
+                              isOnPressedAppliance = false;
+                            }
+                          });
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    isOffPressedAppliance ? Colors.yellow : Colors.blue),
+                        isOffPressedAppliance ? Colors.yellow : Colors.blue),
                 child: Text("OFF"),
               ),
             ],
@@ -586,10 +588,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: smartDustbinSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                dustbinSensingSliderValue = val;
-              });
-            },
+                    setState(() {
+                      dustbinSensingSliderValue = val;
+                    });
+                  },
             label: dustbinSensingSliderValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -603,10 +605,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: smartDustbinSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                dustbinOpenPeriodSliderValue = val;
-              });
-            },
+                    setState(() {
+                      dustbinOpenPeriodSliderValue = val;
+                    });
+                  },
             label: dustbinOpenPeriodSliderValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -631,7 +633,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.IRONMAN_SWITCH, val);
+                          MySharedPreference.IRONMAN_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -644,15 +646,15 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.IRONMAN_SWITCH, val);
+                          MySharedPreference.IRONMAN_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.IRONMAN_RED,
+                          MySharedPreference.IRONMAN_RED_I,
                           ironManRedSliderValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.IRONMAN_GREEN,
+                          MySharedPreference.IRONMAN_GREEN_I,
                           ironManGreenSliderValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.IRONMAN_BLUE,
+                          MySharedPreference.IRONMAN_BLUE_I,
                           ironManBlueSliderValue);
                     }
                   });
@@ -674,10 +676,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: ironManSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                ironManRedSliderValue = val;
-              });
-            },
+                    setState(() {
+                      ironManRedSliderValue = val;
+                    });
+                  },
             label: ironManRedSliderValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -691,10 +693,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: ironManSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                ironManGreenSliderValue = val;
-              });
-            },
+                    setState(() {
+                      ironManGreenSliderValue = val;
+                    });
+                  },
             label: ironManGreenSliderValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -708,10 +710,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: ironManSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                ironManBlueSliderValue = val;
-              });
-            },
+                    setState(() {
+                      ironManBlueSliderValue = val;
+                    });
+                  },
             label: ironManBlueSliderValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -736,7 +738,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SMART_IRRIGATION_SWITCH, val);
+                          MySharedPreference.SMART_IRRIGATION_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -748,12 +750,12 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SMART_IRRIGATION_SWITCH, val);
+                          MySharedPreference.SMART_IRRIGATION_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SMART_IRRIGATION_THRESHOLD,
+                          MySharedPreference.SMART_IRRIGATION_THRESHOLD_I,
                           smartIrrigationDryThresholdValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SMART_IRRIGATION_DISPENSE,
+                          MySharedPreference.SMART_IRRIGATION_DISPENSE_I,
                           smartIrrigationDispencePeriodValue);
                     }
                   });
@@ -767,10 +769,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: smartIrrigationSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                smartIrrigationDryThresholdValue = val;
-              });
-            },
+                    setState(() {
+                      smartIrrigationDryThresholdValue = val;
+                    });
+                  },
             label: smartIrrigationDryThresholdValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -785,10 +787,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: smartIrrigationSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                smartIrrigationDispencePeriodValue = val;
-              });
-            },
+                    setState(() {
+                      smartIrrigationDispencePeriodValue = val;
+                    });
+                  },
             label: smartIrrigationDispencePeriodValue.round().toString(),
             max: 10,
             divisions: 10,
@@ -813,7 +815,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SMART_ALARM_SWITCH, val);
+                          MySharedPreference.SMART_ALARM_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -825,12 +827,12 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SMART_ALARM_SWITCH, val);
+                          MySharedPreference.SMART_ALARM_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SMART_ALARM_DARKNESS,
+                          MySharedPreference.SMART_ALARM_DARKNESS_I,
                           smartAlarmDarknessThresholdValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SMART_ALARM_DISTANCE,
+                          MySharedPreference.SMART_ALARM_DISTANCE_I,
                           smartSensingDistanceAlarmValue);
                     }
                   });
@@ -844,10 +846,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: smartAlarmSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                smartAlarmDarknessThresholdValue = val;
-              });
-            },
+                    setState(() {
+                      smartAlarmDarknessThresholdValue = val;
+                    });
+                  },
             label: smartAlarmDarknessThresholdValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -862,10 +864,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: smartAlarmSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                smartSensingDistanceAlarmValue = val;
-              });
-            },
+                    setState(() {
+                      smartSensingDistanceAlarmValue = val;
+                    });
+                  },
             label: smartSensingDistanceAlarmValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -890,7 +892,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.BURGLAR_ALARM_SWITCH, val);
+                          MySharedPreference.BURGLAR_ALARM_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -901,9 +903,9 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.BURGLAR_ALARM_SWITCH, val);
+                          MySharedPreference.BURGLAR_ALARM_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.BURGLAR_ALARM_DISTANCE,
+                          MySharedPreference.BURGLAR_ALARM_DISTANCE_I,
                           burglarAlarmValue);
                     }
                   });
@@ -916,10 +918,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: burglarAlarmSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                burglarAlarmValue = val;
-              });
-            },
+                    setState(() {
+                      burglarAlarmValue = val;
+                    });
+                  },
             label: burglarAlarmValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -944,7 +946,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SOAP_DISPENSER_SWITCH, val);
+                          MySharedPreference.SOAP_DISPENSER_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -956,12 +958,12 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SOAP_DISPENSER_SWITCH, val);
+                          MySharedPreference.SOAP_DISPENSER_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SOAP_DISPENSER_DISTANCE,
+                          MySharedPreference.SOAP_DISPENSER_DISTANCE_I,
                           soapDisSensindDistanceValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SOAP_DISPENSER_PERIOD,
+                          MySharedPreference.SOAP_DISPENSER_PERIOD_I,
                           soapDisDispnecePeriodValue);
                     }
                   });
@@ -975,10 +977,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: soapDispencerSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                soapDisSensindDistanceValue = val;
-              });
-            },
+                    setState(() {
+                      soapDisSensindDistanceValue = val;
+                    });
+                  },
             label: soapDisSensindDistanceValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -993,10 +995,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: soapDispencerSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                soapDisDispnecePeriodValue = val;
-              });
-            },
+                    setState(() {
+                      soapDisDispnecePeriodValue = val;
+                    });
+                  },
             label: soapDisDispnecePeriodValue.round().toString(),
             max: 10,
             divisions: 10,
@@ -1021,7 +1023,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.PET_FEDDER_SWITCH, val);
+                          MySharedPreference.PET_FEDDER_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1033,12 +1035,12 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.PET_FEDDER_SWITCH, val);
+                          MySharedPreference.PET_FEDDER_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.PET_FEDDER_DISTANCE,
+                          MySharedPreference.PET_FEDDER_DISTANCE_I,
                           petFeederSensingValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.PET_FEDDER_PERIOD,
+                          MySharedPreference.PET_FEDDER_PERIOD_I,
                           petFeederOpenValue);
                     }
                   });
@@ -1051,10 +1053,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: petFeederSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                petFeederSensingValue = val;
-              });
-            },
+                    setState(() {
+                      petFeederSensingValue = val;
+                    });
+                  },
             label: petFeederSensingValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1068,10 +1070,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: petFeederSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                petFeederOpenValue = val;
-              });
-            },
+                    setState(() {
+                      petFeederOpenValue = val;
+                    });
+                  },
             label: petFeederOpenValue.round().toString(),
             max: 10,
             divisions: 10,
@@ -1096,7 +1098,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.AIRGUITAR_SWITCH, val);
+                          MySharedPreference.AIRGUITAR_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1106,7 +1108,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.AIRGUITAR_SWITCH, val);
+                          MySharedPreference.AIRGUITAR_SWITCH_I, val);
                     }
                   });
                 }
@@ -1129,7 +1131,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.DOORBELL_SWITCH, val);
+                          MySharedPreference.DOORBELL_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1140,9 +1142,9 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.DOORBELL_SWITCH, val);
+                          MySharedPreference.DOORBELL_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.DOORBELL_VALUE,
+                          MySharedPreference.DOORBELL_VALUE_I,
                           touchlessDorbellValue);
                     }
                   });
@@ -1155,10 +1157,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: touchlessDorbellSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                touchlessDorbellValue = val;
-              });
-            },
+                    setState(() {
+                      touchlessDorbellValue = val;
+                    });
+                  },
             label: touchlessDorbellValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1194,7 +1196,23 @@ class OnlineGamePlayScreenState extends BaseClass {
           ),
           VerticalGap(16),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (dancingDollWifiName.text.isEmpty) {
+                  showToast(
+                      "Please enter the last digits of you intellecto wifi name!");
+                } else if (dancingDollWifiName.text.length < 5) {
+                  showToast("Wifi name should be of 5 digit!");
+                } else {
+                  List<int> data = [];
+                  List<int> data1 = dancingDollWifiName.text
+                      .split("")
+                      .map(int.parse)
+                      .toList();
+                  data.add(0XCB);
+                  data.addAll(data1);
+                  connectivity!.sendData(data);
+                }
+              },
               child: Text(
                 "Activate",
                 style: TextStyle(
@@ -1218,7 +1236,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.LIGHTBASED_SWITCH, val);
+                          MySharedPreference.LIGHTBASED_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1232,18 +1250,18 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.LIGHTBASED_SWITCH, val);
+                          MySharedPreference.LIGHTBASED_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.LIGHTBASED_DARKNEDD,
+                          MySharedPreference.LIGHTBASED_DARKNEDD_I,
                           lightBasedDarknessValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.LIGHTBASED_RED,
+                          MySharedPreference.LIGHTBASED_RED_I,
                           lightBasedRedValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.LIGHTBASED_GREEN,
+                          MySharedPreference.LIGHTBASED_GREEN_I,
                           lightBasedGreenValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.LIGHTBASED_BLUE,
+                          MySharedPreference.LIGHTBASED_BLUE_I,
                           lightBasedBlueValue);
                     }
                   });
@@ -1256,10 +1274,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: lightBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                lightBasedDarknessValue = val;
-              });
-            },
+                    setState(() {
+                      lightBasedDarknessValue = val;
+                    });
+                  },
             label: lightBasedDarknessValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1273,10 +1291,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: lightBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                lightBasedRedValue = val;
-              });
-            },
+                    setState(() {
+                      lightBasedRedValue = val;
+                    });
+                  },
             label: lightBasedRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1290,10 +1308,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: lightBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                lightBasedGreenValue = val;
-              });
-            },
+                    setState(() {
+                      lightBasedGreenValue = val;
+                    });
+                  },
             label: lightBasedGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1307,10 +1325,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: lightBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                lightBasedBlueValue = val;
-              });
-            },
+                    setState(() {
+                      lightBasedBlueValue = val;
+                    });
+                  },
             label: lightBasedBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1335,7 +1353,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.GESTUREBASED_SWITCH, val);
+                          MySharedPreference.GESTUREBASED_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1349,18 +1367,18 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.GESTUREBASED_SWITCH, val);
+                          MySharedPreference.GESTUREBASED_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.GESTUREBASED_DARKNEDD,
+                          MySharedPreference.GESTUREBASED_DARKNEDD_I,
                           gestureBasedDarknessValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.GESTUREBASED_RED,
+                          MySharedPreference.GESTUREBASED_RED_I,
                           gestureBasedRedValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.GESTUREBASED_GREEN,
+                          MySharedPreference.GESTUREBASED_GREEN_I,
                           gestureBasedGreenValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.GESTUREBASED_BLUE,
+                          MySharedPreference.GESTUREBASED_BLUE_I,
                           gestureBasedBlueValue);
                     }
                   });
@@ -1373,10 +1391,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: gestureBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                gestureBasedDarknessValue = val;
-              });
-            },
+                    setState(() {
+                      gestureBasedDarknessValue = val;
+                    });
+                  },
             label: gestureBasedDarknessValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1390,10 +1408,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: gestureBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                gestureBasedRedValue = val;
-              });
-            },
+                    setState(() {
+                      gestureBasedRedValue = val;
+                    });
+                  },
             label: gestureBasedRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1407,10 +1425,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: gestureBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                gestureBasedGreenValue = val;
-              });
-            },
+                    setState(() {
+                      gestureBasedGreenValue = val;
+                    });
+                  },
             label: gestureBasedGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1424,10 +1442,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: gestureBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                gestureBasedBlueValue = val;
-              });
-            },
+                    setState(() {
+                      gestureBasedBlueValue = val;
+                    });
+                  },
             label: gestureBasedBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1452,7 +1470,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SWITCHBASED_SWITCH, val);
+                          MySharedPreference.SWITCHBASED_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1465,15 +1483,15 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SWITCHBASED_SWITCH, val);
+                          MySharedPreference.SWITCHBASED_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SWITCHBASED_RED,
+                          MySharedPreference.SWITCHBASED_RED_I,
                           switchControlledRedValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SWITCHBASED_GREEN,
+                          MySharedPreference.SWITCHBASED_GREEN_I,
                           switchControlledGreenValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.SWITCHBASED_BLUE,
+                          MySharedPreference.SWITCHBASED_BLUE_I,
                           switchControlledBlueValue);
                     }
                   });
@@ -1487,10 +1505,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: switchControlledSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                switchControlledRedValue = val;
-              });
-            },
+                    setState(() {
+                      switchControlledRedValue = val;
+                    });
+                  },
             label: switchControlledRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1504,10 +1522,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: switchControlledSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                switchControlledGreenValue = val;
-              });
-            },
+                    setState(() {
+                      switchControlledGreenValue = val;
+                    });
+                  },
             label: switchControlledGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1521,10 +1539,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: switchControlledSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                switchControlledBlueValue = val;
-              });
-            },
+                    setState(() {
+                      switchControlledBlueValue = val;
+                    });
+                  },
             label: switchControlledBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1549,7 +1567,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.CLAPBASED_SWITCH, val);
+                          MySharedPreference.CLAPBASED_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1563,17 +1581,18 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.CLAPBASED_SWITCH, val);
+                          MySharedPreference.CLAPBASED_SWITCH_I, val);
                       MySharedPreference.setDouble(
-                          MySharedPreference.CLAPBASED_DARKNEDD,
+                          MySharedPreference.CLAPBASED_DARKNEDD_I,
                           clapBasedDarknessValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.CLAPBASED_RED, clapBasedRedValue);
+                          MySharedPreference.CLAPBASED_RED_I,
+                          clapBasedRedValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.CLAPBASED_GREEN,
+                          MySharedPreference.CLAPBASED_GREEN_I,
                           clapBasedGreenValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.CLAPBASED_BLUE,
+                          MySharedPreference.CLAPBASED_BLUE_I,
                           clapBasedBlueValue);
                     }
                   });
@@ -1586,10 +1605,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: clapBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                clapBasedDarknessValue = val;
-              });
-            },
+                    setState(() {
+                      clapBasedDarknessValue = val;
+                    });
+                  },
             label: clapBasedDarknessValue.round().toString(),
             max: 100,
             divisions: 100,
@@ -1603,10 +1622,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: clapBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                clapBasedRedValue = val;
-              });
-            },
+                    setState(() {
+                      clapBasedRedValue = val;
+                    });
+                  },
             label: clapBasedRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1620,10 +1639,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: clapBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                clapBasedGreenValue = val;
-              });
-            },
+                    setState(() {
+                      clapBasedGreenValue = val;
+                    });
+                  },
             label: clapBasedGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1637,10 +1656,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: clapBasedSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                clapBasedBlueValue = val;
-              });
-            },
+                    setState(() {
+                      clapBasedBlueValue = val;
+                    });
+                  },
             label: clapBasedBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1665,7 +1684,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.MOBILEBASED_SWITCH, val);
+                          MySharedPreference.MOBILEBASED_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1678,16 +1697,16 @@ class OnlineGamePlayScreenState extends BaseClass {
                     if (value) {
                       print("data send storing in prefs");
                       MySharedPreference.setBoolean(
-                          MySharedPreference.MOBILEBASED_SWITCH, val);
+                          MySharedPreference.MOBILEBASED_SWITCH_I, val);
 
                       MySharedPreference.setDouble(
-                          MySharedPreference.MOBILEBASED_RED,
+                          MySharedPreference.MOBILEBASED_RED_I,
                           mobileControlledRedValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.MOBILEBASED_GREEN,
+                          MySharedPreference.MOBILEBASED_GREEN_I,
                           mobileControlledGreenValue);
                       MySharedPreference.setDouble(
-                          MySharedPreference.MOBILEBASED_BLUE,
+                          MySharedPreference.MOBILEBASED_BLUE_I,
                           mobileControlledBlueValue);
                     }
                   });
@@ -1701,10 +1720,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: mobileControlledSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                mobileControlledRedValue = val;
-              });
-            },
+                    setState(() {
+                      mobileControlledRedValue = val;
+                    });
+                  },
             label: mobileControlledRedValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1718,10 +1737,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: mobileControlledSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                mobileControlledGreenValue = val;
-              });
-            },
+                    setState(() {
+                      mobileControlledGreenValue = val;
+                    });
+                  },
             label: mobileControlledGreenValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1735,10 +1754,10 @@ class OnlineGamePlayScreenState extends BaseClass {
             onChanged: mobileControlledSwitchValue
                 ? null
                 : (val) {
-              setState(() {
-                mobileControlledBlueValue = val;
-              });
-            },
+                    setState(() {
+                      mobileControlledBlueValue = val;
+                    });
+                  },
             label: mobileControlledBlueValue.round().toString(),
             max: 255,
             divisions: 255,
@@ -1763,14 +1782,14 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XA4, 1]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.BUZZER_SWITCH, val);
+                          MySharedPreference.BUZZER_SWITCH_I, val);
                     }
                   });
                 } else {
                   connectivity!.sendData([0XA4, 0]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.BUZZER_SWITCH, val);
+                          MySharedPreference.BUZZER_SWITCH_I, val);
                     }
                   });
                 }
@@ -1793,14 +1812,14 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XA3, 1]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.AC_SWITCH, val);
+                          MySharedPreference.AC_SWITCH_I, val);
                     }
                   });
                 } else {
                   connectivity!.sendData([0XA3, 0]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.AC_SWITCH, val);
+                          MySharedPreference.AC_SWITCH_I, val);
                     }
                   });
                 }
@@ -1823,14 +1842,14 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XA2, 1]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.AC_SWITCH, val);
+                          MySharedPreference.AC_SWITCH_I, val);
                     }
                   });
                 } else {
                   connectivity!.sendData([0XA2, 0]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.AC_SWITCH, val);
+                          MySharedPreference.AC_SWITCH_I, val);
                     }
                   });
                 }
@@ -1853,12 +1872,12 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.SERVO_SWITCH, val);
+                          MySharedPreference.SERVO_SWITCH_I, val);
                     }
                   });
                 } else {
                   MySharedPreference.setBoolean(
-                      MySharedPreference.SERVO_SWITCH, val);
+                      MySharedPreference.SERVO_SWITCH_I, val);
                 }
               }),
           VerticalGap(8),
@@ -1868,11 +1887,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: servoOneValue,
             onChanged: servoDriverSwitchValue
                 ? (val) {
-              setState(() {
-                servoOneValue = val;
-              });
-              sendServoDriverCommand();
-            }
+                    setState(() {
+                      servoOneValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
                 : null,
             label: servoOneValue.round().toString(),
             max: 180,
@@ -1886,11 +1905,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: servoTwoValue,
             onChanged: servoDriverSwitchValue
                 ? (val) {
-              setState(() {
-                servoTwoValue = val;
-              });
-              sendServoDriverCommand();
-            }
+                    setState(() {
+                      servoTwoValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
                 : null,
             label: servoTwoValue.round().toString(),
             max: 180,
@@ -1904,11 +1923,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: servoThreeValue,
             onChanged: servoDriverSwitchValue
                 ? (val) {
-              setState(() {
-                servoThreeValue = val;
-              });
-              sendServoDriverCommand();
-            }
+                    setState(() {
+                      servoThreeValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
                 : null,
             label: servoThreeValue.round().toString(),
             max: 180,
@@ -1922,11 +1941,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: servoFourValue,
             onChanged: servoDriverSwitchValue
                 ? (val) {
-              setState(() {
-                servoFourValue = val;
-              });
-              sendServoDriverCommand();
-            }
+                    setState(() {
+                      servoFourValue = val;
+                    });
+                    sendServoDriverCommand();
+                  }
                 : null,
             label: servoFourValue.round().toString(),
             max: 180,
@@ -1952,7 +1971,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   connectivity!.sendData([0XE2]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.RGB_SWITCH, val);
+                          MySharedPreference.RGB_SWITCH_I, val);
                     }
                   });
                 } else {
@@ -1964,7 +1983,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   ]).then((value) {
                     if (value) {
                       MySharedPreference.setBoolean(
-                          MySharedPreference.RGB_SWITCH, val);
+                          MySharedPreference.RGB_SWITCH_I, val);
                     }
                   });
                 }
@@ -1975,11 +1994,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: rgbRedValue,
             onChanged: rgbSwitchValue
                 ? (val) {
-              setState(() {
-                rgbRedValue = val;
-              });
-              sendRGBCommand();
-            }
+                    setState(() {
+                      rgbRedValue = val;
+                    });
+                    sendRGBCommand();
+                  }
                 : null,
             label: rgbRedValue.round().toString(),
             max: 255,
@@ -1993,11 +2012,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: rgbGreenValue,
             onChanged: rgbSwitchValue
                 ? (val) {
-              setState(() {
-                rgbGreenValue = val;
-              });
-              sendRGBCommand();
-            }
+                    setState(() {
+                      rgbGreenValue = val;
+                    });
+                    sendRGBCommand();
+                  }
                 : null,
             label: rgbGreenValue.round().toString(),
             max: 255,
@@ -2010,11 +2029,11 @@ class OnlineGamePlayScreenState extends BaseClass {
             value: rgbBlueValue,
             onChanged: rgbSwitchValue
                 ? (val) {
-              setState(() {
-                rgbBlueValue = val;
-              });
-              sendRGBCommand();
-            }
+                    setState(() {
+                      rgbBlueValue = val;
+                    });
+                    sendRGBCommand();
+                  }
                 : null,
             label: rgbBlueValue.round().toString(),
             max: 255,
@@ -2051,53 +2070,53 @@ class OnlineGamePlayScreenState extends BaseClass {
               ElevatedButton(
                 onPressed: motorSwitchValue
                     ? () async {
-                  setState(() {
-                    if (!isOnPressedClockwiseOne) {
-                      isOnPressedClockwiseOne = true;
-                      isOnPressedStopOne = false;
-                      isOnPressedAntiClockWiseOne = false;
-                    }
-                  });
-                  sendCommandForMotorDriver();
-                }
+                        setState(() {
+                          if (!isOnPressedClockwiseOne) {
+                            isOnPressedClockwiseOne = true;
+                            isOnPressedStopOne = false;
+                            isOnPressedAntiClockWiseOne = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    isOnPressedClockwiseOne ? Colors.yellow : Colors.blue),
+                        isOnPressedClockwiseOne ? Colors.yellow : Colors.blue),
                 child: Text("Clockwise"),
               ),
               HorizontalGap(12),
               ElevatedButton(
                 onPressed: motorSwitchValue
                     ? () async {
-                  setState(() {
-                    if (!isOnPressedStopOne) {
-                      isOnPressedClockwiseOne = false;
-                      isOnPressedStopOne = true;
-                      isOnPressedAntiClockWiseOne = false;
-                    }
-                  });
-                  sendCommandForMotorDriver();
-                }
+                        setState(() {
+                          if (!isOnPressedStopOne) {
+                            isOnPressedClockwiseOne = false;
+                            isOnPressedStopOne = true;
+                            isOnPressedAntiClockWiseOne = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    isOnPressedStopOne ? Colors.yellow : Colors.blue),
+                        isOnPressedStopOne ? Colors.yellow : Colors.blue),
                 child: Text("STOP"),
               ),
               HorizontalGap(12),
               ElevatedButton(
                 onPressed: motorSwitchValue
                     ? () async {
-                  setState(() {
-                    if (!isOnPressedAntiClockWiseOne) {
-                      isOnPressedClockwiseOne = false;
-                      isOnPressedStopOne = false;
-                      isOnPressedAntiClockWiseOne = true;
-                    }
-                  });
-                  sendCommandForMotorDriver();
-                }
+                        setState(() {
+                          if (!isOnPressedAntiClockWiseOne) {
+                            isOnPressedClockwiseOne = false;
+                            isOnPressedStopOne = false;
+                            isOnPressedAntiClockWiseOne = true;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                     backgroundColor: isOnPressedAntiClockWiseOne
@@ -2115,53 +2134,53 @@ class OnlineGamePlayScreenState extends BaseClass {
               ElevatedButton(
                 onPressed: motorSwitchValue
                     ? () async {
-                  setState(() {
-                    if (!isOnPressedClockwiseTwo) {
-                      isOnPressedClockwiseTwo = true;
-                      isOnPressedStopTwo = false;
-                      isOnPressedAntiClockWiseTwo = false;
-                    }
-                  });
-                  sendCommandForMotorDriver();
-                }
+                        setState(() {
+                          if (!isOnPressedClockwiseTwo) {
+                            isOnPressedClockwiseTwo = true;
+                            isOnPressedStopTwo = false;
+                            isOnPressedAntiClockWiseTwo = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    isOnPressedClockwiseTwo ? Colors.yellow : Colors.blue),
+                        isOnPressedClockwiseTwo ? Colors.yellow : Colors.blue),
                 child: Text("Clockwise"),
               ),
               HorizontalGap(12),
               ElevatedButton(
                 onPressed: motorSwitchValue
                     ? () async {
-                  setState(() {
-                    if (!isOnPressedStopTwo) {
-                      isOnPressedClockwiseTwo = false;
-                      isOnPressedStopTwo = true;
-                      isOnPressedAntiClockWiseTwo = false;
-                    }
-                  });
-                  sendCommandForMotorDriver();
-                }
+                        setState(() {
+                          if (!isOnPressedStopTwo) {
+                            isOnPressedClockwiseTwo = false;
+                            isOnPressedStopTwo = true;
+                            isOnPressedAntiClockWiseTwo = false;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
-                    isOnPressedStopTwo ? Colors.yellow : Colors.blue),
+                        isOnPressedStopTwo ? Colors.yellow : Colors.blue),
                 child: Text("STOP"),
               ),
               HorizontalGap(12),
               ElevatedButton(
                 onPressed: motorSwitchValue
                     ? () async {
-                  setState(() {
-                    if (!isOnPressedAntiClockWiseTwo) {
-                      isOnPressedClockwiseTwo = false;
-                      isOnPressedStopTwo = false;
-                      isOnPressedAntiClockWiseTwo = true;
-                    }
-                  });
-                  sendCommandForMotorDriver();
-                }
+                        setState(() {
+                          if (!isOnPressedAntiClockWiseTwo) {
+                            isOnPressedClockwiseTwo = false;
+                            isOnPressedStopTwo = false;
+                            isOnPressedAntiClockWiseTwo = true;
+                          }
+                        });
+                        sendCommandForMotorDriver();
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                     backgroundColor: isOnPressedAntiClockWiseTwo
@@ -2313,13 +2332,13 @@ class OnlineGamePlayScreenState extends BaseClass {
       ..then((value) {
         if (value) {
           MySharedPreference.setDouble(
-              MySharedPreference.SERVO1_VALUE, servoOneValue);
+              MySharedPreference.SERVO1_VALUE_I, servoOneValue);
           MySharedPreference.setDouble(
-              MySharedPreference.SERVO2_VALUE, servoTwoValue);
+              MySharedPreference.SERVO2_VALUE_I, servoTwoValue);
           MySharedPreference.setDouble(
-              MySharedPreference.SERVO3_VALUE, servoThreeValue);
+              MySharedPreference.SERVO3_VALUE_I, servoThreeValue);
           MySharedPreference.setDouble(
-              MySharedPreference.SERVO4_VALUE, servoFourValue);
+              MySharedPreference.SERVO4_VALUE_I, servoFourValue);
         }
       });
   }
@@ -2334,11 +2353,11 @@ class OnlineGamePlayScreenState extends BaseClass {
       ..then((value) {
         if (value) {
           MySharedPreference.setDouble(
-              MySharedPreference.RGB_RED_VALUE, rgbRedValue);
+              MySharedPreference.RGB_RED_VALUE_I, rgbRedValue);
           MySharedPreference.setDouble(
-              MySharedPreference.RGB_GREEN_VALUE, rgbGreenValue);
+              MySharedPreference.RGB_GREEN_VALUE_I, rgbGreenValue);
           MySharedPreference.setDouble(
-              MySharedPreference.RGB_BLUE_VALUE, rgbBlueValue);
+              MySharedPreference.RGB_BLUE_VALUE_I, rgbBlueValue);
         }
       });
   }
@@ -2381,5 +2400,21 @@ class OnlineGamePlayScreenState extends BaseClass {
         sensorvalue2 = data[1];
       }
     });
+  }
+
+  void stopTimer() {
+    if (commandTimer != null) {
+      commandTimer!.cancel();
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    if (commandTimer != null) {
+      commandTimer!.cancel();
+    }
+
+    super.dispose();
   }
 }

@@ -21,8 +21,12 @@ class BaseClass extends State {
   String appBarSubTitle = "";
   bool appBarLeadingIconVisibility = true;
   bool appBarTitleCenter = false;
+  late Function willPop;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  void setWillPop(Function willPop) {
+    this.willPop = willPop;
+  }
 
   void setIsLoading(bool isLoading) {
     setState(() {
@@ -74,7 +78,9 @@ class BaseClass extends State {
   }
 
   Widget? setBody() {}
+
   void showBottomSheet(BuildContext context, Widget wg) {}
+
   void makeFavourite(String msg) {
     //setAppBarIcon(Assets.redStar);
   }
@@ -179,6 +185,13 @@ class BaseClass extends State {
     return isLoading;
   }
 
+  void onBackPressed() {}
+  Future<bool> onWillPop() {
+    print("inside wil pop scope");
+    onBackPressed();
+    return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -186,39 +199,42 @@ class BaseClass extends State {
       DeviceOrientation.landscapeRight,
     ]);
 
-    return Scaffold(
-      primary: false,
-      key: scaffoldKey,
-      body: SafeArea(
-          child: Stack(
-        children: [
-          if (isLoading)
-            Container(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        color: Colors.black12,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.0,
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        primary: false,
+        key: scaffoldKey,
+        body: SafeArea(
+            child: Stack(
+          children: [
+            if (isLoading)
+              Container(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: Colors.black12,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-            )
-          else
-            setBody()!
-        ],
-      )),
-      appBar: appBarVisibility ? getAppBar() : null,
-      drawer: drawerVisibility
-          ? DrawerScreen(drawerSeletedOptionIndex, this)
-          : null,
+                    ]),
+              )
+            else
+              setBody()!
+          ],
+        )),
+        appBar: appBarVisibility ? getAppBar() : null,
+        drawer: drawerVisibility
+            ? DrawerScreen(drawerSeletedOptionIndex, this)
+            : null,
+      ),
     );
   }
 }

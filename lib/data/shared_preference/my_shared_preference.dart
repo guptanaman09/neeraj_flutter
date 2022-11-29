@@ -70,7 +70,76 @@ class MySharedPreference {
   static const String RGB_RED_VALUE = "rgb_red";
   static const String RGB_GREEN_VALUE = "rgb_green";
   static const String RGB_BLUE_VALUE = "rgb_blue";
+//===================online==============================
+  static const String SMARTDUSTBINSWITCH_I = "smart_dustbin_switch_I";
+  static const String SMARTDUSTBINSENSING_I = "smart_dustbin_sensing_I";
+  static const String SMARTDUSTBINOPEN_I = "smart_dustbin_open_I";
+  static const String IRONMAN_SWITCH_I = "iron_man_switch_I";
+  static const String IRONMAN_RED_I = "iron_man_red_I";
+  static const String IRONMAN_GREEN_I = "iron_man_green_I";
+  static const String IRONMAN_BLUE_I = "iron_man_blue_I";
+  static const String SMART_IRRIGATION_SWITCH_I = "smart_irrigation_switch_I";
+  static const String SMART_IRRIGATION_THRESHOLD_I =
+      "smart_irrigation_threshold_I";
+  static const String SMART_IRRIGATION_DISPENSE_I =
+      "smart_irrigation_dispense_I";
+  static const String SMART_ALARM_SWITCH_I = "smart_alarm_switch_I";
+  static const String SMART_ALARM_DARKNESS_I = "smart_alarm_darkness_I";
+  static const String SMART_ALARM_DISTANCE_I = "smart_alarm_distance_I";
+  static const String BURGLAR_ALARM_SWITCH_I = "burglar_alarm_switch_I";
+  static const String BURGLAR_ALARM_DISTANCE_I = "burglar_alarm_distance_I";
+  static const String SOAP_DISPENSER_SWITCH_I = "soap_dispenser_switch_I";
+  static const String SOAP_DISPENSER_DISTANCE_I = "soap_dispenser_distance_I";
+  static const String SOAP_DISPENSER_PERIOD_I = "soap_dispenser_period_I";
+  static const String PET_FEDDER_SWITCH_I = "pet_switch_I";
+  static const String PET_FEDDER_DISTANCE_I = "pet_distance_I";
+  static const String PET_FEDDER_PERIOD_I = "pet_period_I";
+  static const String AIRGUITAR_SWITCH_I = "air_switch_I";
+  static const String DOORBELL_SWITCH_I = "doorbell_switch_I";
+  static const String DOORBELL_VALUE_I = "doorbell_value_I";
+  static const String LIGHTBASED_SWITCH_I = "light_based_switch_I";
+  static const String LIGHTBASED_DARKNEDD_I = "light_based_darkness_I";
+  static const String LIGHTBASED_RED_I = "light_based_red_I";
+  static const String LIGHTBASED_GREEN_I = "light_based_green_I";
+  static const String LIGHTBASED_BLUE_I = "light_based_blue_I";
+  static const String GESTUREBASED_SWITCH_I = "gesture_based_switch_I";
+  static const String GESTUREBASED_DARKNEDD_I = "gesture_based_darkness_I";
+  static const String GESTUREBASED_RED_I = "gesture_based_red_I";
+  static const String GESTUREBASED_GREEN_I = "gesture_based_green_I";
+  static const String GESTUREBASED_BLUE_I = "gesture_based_blue_I";
 
+  static const String SWITCHBASED_SWITCH_I = "switch_based_switch_I";
+  static const String SWITCHBASED_RED_I = "switch_based_red_I";
+  static const String SWITCHBASED_GREEN_I = "switch_based_green_I";
+  static const String SWITCHBASED_BLUE_I = "switch_based_blue_I";
+
+  static const String CLAPBASED_SWITCH_I = "clap_based_switch_I";
+  static const String CLAPBASED_DARKNEDD_I = "clap_based_darkness_I";
+  static const String CLAPBASED_RED_I = "clap_based_red_I";
+  static const String CLAPBASED_GREEN_I = "clap_based_green_I";
+  static const String CLAPBASED_BLUE_I = "clap_based_blue_I";
+
+  static const String MOBILEBASED_SWITCH_I = "mobile_based_switch_I";
+  static const String MOBILEBASED_RED_I = "mobile_based_red_I";
+  static const String MOBILEBASED_GREEN_I = "mobile_based_green_I";
+  static const String MOBILEBASED_BLUE_I = "mobile_based_blue_I";
+
+  static const String BUZZER_SWITCH_I = "buzzer_switch_I";
+  static const String AC_SWITCH_I = "ac_switch_I";
+  static const String PUMP_SWITCH_I = "pump_switch_I";
+
+  static const String SERVO_SWITCH_I = "servo_switch_I";
+  static const String SERVO1_VALUE_I = "servoone_value_I";
+  static const String SERVO2_VALUE_I = "servotwo_value_I";
+  static const String SERVO3_VALUE_I = "servothree_value_I";
+  static const String SERVO4_VALUE_I = "servofour_value_I";
+
+  static const String RGB_SWITCH_I = "rgb_switch_I";
+  static const String RGB_RED_VALUE_I = "rgb_red_I";
+  static const String RGB_GREEN_VALUE_I = "rgb_green_I";
+  static const String RGB_BLUE_VALUE_I = "rgb_blue_I";
+
+  static const String CONNECTEDWIFINAME = "connected_wifi_name";
   static setDouble(String key, double value) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.setDouble(key, value);
@@ -86,9 +155,9 @@ class MySharedPreference {
     instance.setString(key, value);
   }
 
-  static Future<String?> getString(String key) async {
+  static Future<String> getString(String key) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
-    return instance.getString(key);
+    return instance.getString(key) ?? "intellecto";
   }
 
   static setBoolean(String key, bool value) async {

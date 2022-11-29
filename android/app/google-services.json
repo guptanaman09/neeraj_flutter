@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "802003028872",
+    "firebase_url": "https://iot-cloud-02-default-rtdb.firebaseio.com",
+    "project_id": "iot-cloud-02",
+    "storage_bucket": "iot-cloud-02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802003028872:android:52d672125089e63fe3483d",
+        "android_client_info": {
+          "package_name": "com.IOT_cloud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802003028872-0nag0h22l1npmcitc7fsho7i3q7nr2di.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPYWtHSLSlrcWcrJj9waKwN90rcl8eB64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802003028872-0nag0h22l1npmcitc7fsho7i3q7nr2di.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802003028872:android:1d199aae5f0f4a2ce3483d",
+        "android_client_info": {
+          "package_name": "com.learningbox.bixchamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802003028872-0nag0h22l1npmcitc7fsho7i3q7nr2di.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPYWtHSLSlrcWcrJj9waKwN90rcl8eB64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802003028872-0nag0h22l1npmcitc7fsho7i3q7nr2di.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

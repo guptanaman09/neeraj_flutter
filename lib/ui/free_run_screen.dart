@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:typed_data';
 
@@ -68,6 +69,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   bool armyTankShootSwap = false;
   bool armyTankSwingSwap = false;
   int outputObstaceleavoider = 0;
+  int proximityOne = 0;
+  int proximityTwo = 0;
   int obstacleAvoiderThreShold = -1;
   String outputAvoidoValue = "";
 
@@ -76,7 +79,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   late final TextEditingController prox_2_black_controller;
   late final TextEditingController prox_2_white_controller;
-
+  double prox_2_black = 0;
+  double prox_2_average = 0;
+  double prox_2_white = 0;
+  double prox_1_black = 0;
+  double prox_1_average = 0;
+  double prox_1_white = 0;
+  bool isLineFollowerPlay = false;
   @override
   void initState() {
     _animationController = new AnimationController(
@@ -104,8 +113,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   @override
   Widget? setBody() {
-
-    if(subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER){
+    if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
       return SingleChildScrollView(
         child: Container(
           height: DeviceUtils.getScreenHeight(context),
@@ -121,171 +129,6 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     Container(
                       width: DeviceUtils.getScreenWidtht(context),
                       margin: EdgeInsets.only(left: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              child: Image.asset(
-                                Assets.BACK_BUTTON,
-                                height: 50,
-                                width: 50,
-                              ),
-                            ),
-                          ),
-                          Image.asset(
-                            Assets.BLUETOOTH_SIGN,
-                            height: 50,
-                            width: 50,
-                          ),
-                        ],
-                      ),
-                    ),
-                    VerticalGap(12),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(child: proximity_1()),
-                          HorizontalGap(24),
-                          Expanded(child: proximity_2())
-                        ],
-                      ),
-                    )
-                  ]),
-              Positioned(
-                child: FadeTransition(
-                  opacity: _animationController,
-                  child: Image.asset(
-                    Assets.RED_DOT,
-                    height: 25,
-                    width: 25,
-                  ),
-                ),
-                top: 32,
-                right: 150,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  child: Text("Play"),
-                  onPressed: () {},
-                ),
-              )
-            ],
-          ),
-        ),
-      );;
-    }
-    else return Container(
-      height: DeviceUtils.getScreenHeight(context),
-      width: DeviceUtils.getScreenWidtht(context),
-      decoration: BoxDecoration(color: Colors.lightBlueAccent),
-      child: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Positioned(
-                left: 50,
-                child: Container(
-                  height: DeviceUtils.getScreenHeight(context),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      ClipRRect(
-                        clipBehavior: Clip.none,
-                        borderRadius: BorderRadius.circular(10),
-                        child: Material(
-                          elevation: 0,
-                          color: Colors.transparent,
-                          child: Ink.image(image: AssetImage(Assets.UP_ARROW), fit: BoxFit.cover,
-                            width: 100.0,
-                            height: 100.0, child: InkWell(
-                              onTapDown: (event) {
-                                writeToBLuetooth([0XB0]);
-                              },
-                              onTapUp: (event) {
-                                writeToBLuetooth([0XB4]);
-                              },
-                            ),),
-
-                        ),
-                      ),
-                      VerticalGap(32),
-                      InkWell(
-                        onTapDown: (event) {
-                          writeToBLuetooth([0XB1]);
-                        },
-                        onTapUp: (event) {
-                          writeToBLuetooth([0XB4]);
-                        },
-                        child: Image.asset(
-                          Assets.DOWN_ARROW,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-            Positioned(
-                right: 50,
-                child: Container(
-                  height: DeviceUtils.getScreenHeight(context),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      InkWell(
-                        onTapDown: (event) {
-                          writeToBLuetooth([0XB2]);
-                        },
-                        onTapUp: (event) {
-                          writeToBLuetooth([0XB4]);
-                        },
-                        child: Image.asset(
-                          Assets.LEFTOW,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                      HorizontalGap(8),
-                      InkWell(
-                        onTapDown: (event) {
-                          writeToBLuetooth([0XB3]);
-                        },
-                        onTapUp: (event) {
-                          writeToBLuetooth([0XB4]);
-                        },
-                        child: Image.asset(
-                          Assets.RIGHT_ARROW,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                height: DeviceUtils.getScreenHeight(context),
-                margin: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: DeviceUtils.getScreenWidtht(context),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -325,34 +168,234 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       ),
                     ),
                     VerticalGap(12),
-                    getCenterLayout(subCategoryDetail.title),
-                  ],
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(child: proximity_1()),
+                          HorizontalGap(24),
+                          Expanded(child: proximity_2())
+                        ],
+                      ),
+                    )
+                  ]),
+              Positioned(
+                child: FadeTransition(
+                  opacity: _animationController,
+                  child: Image.asset(
+                    isAnyBluetoothConnected ? Assets.GREEN_DOT : Assets.RED_DOT,
+                    height: 25,
+                    width: 25,
+                  ),
                 ),
+                top: 32,
+                right: 150,
               ),
-            ),
-            Positioned(
-              child: FadeTransition(
-                opacity: _animationController,
-                child: Image.asset(
-                  isAnyBluetoothConnected ? Assets.GREEN_DOT : Assets.RED_DOT,
-                  height: 25,
-                  width: 25,
-                ),
-              ),
-              top: 32,
-              right: 150,
-            ),
-            (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER)
-                ? Positioned(
-                    left: 80,
-                    top: 10,
-                    child: getSwitchForObstacleAvoider(),
-                  )
-                : Container()
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                    child: Text(isLineFollowerPlay ? "STOP" : "Play"),
+                    onPressed: () {
+                      if (!isLineFollowerPlay) {
+                        //start play send command d5
+                        writeToBLuetooth([0XD5]);
+                        setState(() {
+                          isLineFollowerPlay = true;
+                          shouldStopLine = true;
+                        });
+                      } else {
+                        setState(() {
+                          isLineFollowerPlay = false;
+                          shouldStopLine = false;
+                        });
+                        startSendingLineFollowerCommand();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isLineFollowerPlay ? Colors.red : Colors.blue)),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+      ;
+    } else
+      return Container(
+        height: DeviceUtils.getScreenHeight(context),
+        width: DeviceUtils.getScreenWidtht(context),
+        decoration: BoxDecoration(color: Colors.lightBlueAccent),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Positioned(
+                  left: 50,
+                  child: Container(
+                    height: DeviceUtils.getScreenHeight(context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        ClipRRect(
+                          clipBehavior: Clip.none,
+                          borderRadius: BorderRadius.circular(10),
+                          child: Material(
+                            elevation: 0,
+                            color: Colors.transparent,
+                            child: Ink.image(
+                              image: AssetImage(Assets.UP_ARROW),
+                              fit: BoxFit.cover,
+                              width: 100.0,
+                              height: 100.0,
+                              child: InkWell(
+                                onTapDown: (event) {
+                                  writeToBLuetooth([0XB0]);
+                                },
+                                onTapUp: (event) {
+                                  writeToBLuetooth([0XB4]);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        VerticalGap(32),
+                        InkWell(
+                          onTapDown: (event) {
+                            writeToBLuetooth([0XB1]);
+                          },
+                          onTapUp: (event) {
+                            writeToBLuetooth([0XB4]);
+                          },
+                          child: Image.asset(
+                            Assets.DOWN_ARROW,
+                            width: 100,
+                            height: 100,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Positioned(
+                  right: 50,
+                  child: Container(
+                    height: DeviceUtils.getScreenHeight(context),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        InkWell(
+                          onTapDown: (event) {
+                            writeToBLuetooth([0XB2]);
+                          },
+                          onTapUp: (event) {
+                            writeToBLuetooth([0XB4]);
+                          },
+                          child: Image.asset(
+                            Assets.LEFTOW,
+                            width: 100,
+                            height: 100,
+                          ),
+                        ),
+                        HorizontalGap(8),
+                        InkWell(
+                          onTapDown: (event) {
+                            writeToBLuetooth([0XB3]);
+                          },
+                          onTapUp: (event) {
+                            writeToBLuetooth([0XB4]);
+                          },
+                          child: Image.asset(
+                            Assets.RIGHT_ARROW,
+                            width: 100,
+                            height: 100,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: DeviceUtils.getScreenHeight(context),
+                  margin: EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: DeviceUtils.getScreenWidtht(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                onOkayPressed();
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                child: Image.asset(
+                                  Assets.BACK_BUTTON,
+                                  height: 30,
+                                  width: 30,
+                                ),
+                              ),
+                            ),
+                            CustomText(
+                                isAnyBluetoothConnected
+                                    ? "Connected"
+                                    : "Not Connected",
+                                TextStyle(
+                                    color: isAnyBluetoothConnected
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600)),
+                            InkWell(
+                              onTap: onTapBluetoothIcon,
+                              child: Image.asset(
+                                Assets.BLUETOOTH_SIGN,
+                                height: 30,
+                                width: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      VerticalGap(12),
+                      getCenterLayout(subCategoryDetail.title),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                child: FadeTransition(
+                  opacity: _animationController,
+                  child: Image.asset(
+                    isAnyBluetoothConnected ? Assets.GREEN_DOT : Assets.RED_DOT,
+                    height: 25,
+                    width: 25,
+                  ),
+                ),
+                top: 32,
+                right: 150,
+              ),
+              (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER)
+                  ? Positioned(
+                      left: 80,
+                      top: 10,
+                      child: getSwitchForObstacleAvoider(),
+                    )
+                  : Container()
+            ],
+          ),
+        ),
+      );
   }
 
   void onRedSliderChange(double val) {
@@ -1224,8 +1267,19 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     });
     if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER) {
       startObstacle();
-    } else {
+    } else if (subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
       startEdge();
+    } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
+      if (d1) {
+        setState(() {
+          proximityOne = data.first;
+        });
+      } else {
+        setState(() {
+          proximityTwo = data.first;
+        });
+      }
+      startSendingLineFollowerCommand();
     }
   }
 
@@ -1235,8 +1289,19 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     });
     if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER) {
       startObstacle();
-    } else {
+    } else if (subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
       startEdge();
+    } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
+      if (d1) {
+        setState(() {
+          proximityOne = data.first;
+        });
+      } else {
+        setState(() {
+          proximityTwo = data.first;
+        });
+      }
+      startSendingLineFollowerCommand();
     }
   }
 
@@ -1255,12 +1320,14 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         startSendingObstacleAvoiderCommandToRecvValues();
+      } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
+        startSendingLineFollowerCommand();
       }
     } else {
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         stopSendingObstacleAvoiderCommandToRecvValues();
-      }
+      } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {}
     }
   }
 
@@ -1278,6 +1345,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   Timer? timer;
+  bool d1 = false;
+  bool shouldStopLine = false;
+  void startSendingLineFollowerCommand() {
+    if (shouldStopLine) {
+      return;
+    }
+    if (!d1) {
+      d1 = true;
+      writeToBLuetooth([0XD1]);
+    } else {
+      d1 = false;
+      writeToBLuetooth([0XD2]);
+    }
+  }
+
   void startSendingObstacleAvoiderCommandToRecvValues() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       writeToBLuetooth([0XD0]);
@@ -1418,6 +1500,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         startSendingObstacleAvoiderCommandToRecvValues();
+      } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
+        startSendingLineFollowerCommand();
       }
       setState(() {
         isAnyBluetoothConnected = true;
@@ -1507,7 +1591,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           Container(
             color: Colors.greenAccent,
             padding: EdgeInsets.all(8),
-            child: CustomText("Proximity 1 :-    0",
+            child: CustomText("Proximity 1 :-   $proximityOne",
                 TextStyle(fontSize: 14, color: Colors.black)),
           ),
           VerticalGap(4),
@@ -1525,11 +1609,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     width: 100,
                     padding:EdgeInsets.symmetric(horizontal: 4),
                     color: Colors.white,
-                    child: CustomTextField(
-                        prox_1_black_controller,
-                        TextInputType.number,
-                        InputDecoration(border: InputBorder.none),
-                        TextStyle(color: Colors.black)),
+                    child: TextField(
+                        controller: prox_1_black_controller,
+                        keyboardType: TextInputType.number,
+                        maxLength: 3,
+                        decoration: InputDecoration(border: InputBorder.none),
+                        style: TextStyle(color: Colors.black)),
                   )
                 ],
               )),
@@ -1548,16 +1633,25 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     padding:EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
-                    child: CustomTextField(
-                        prox_1_white_controller,
-                        TextInputType.number,
-                        InputDecoration(border: InputBorder.none),
-                        TextStyle(color: Colors.black)),
+                    child: TextField(
+                        controller: prox_1_white_controller,
+                        keyboardType: TextInputType.number,
+                        maxLength: 3,
+                        decoration: InputDecoration(border: InputBorder.none),
+                        style: TextStyle(color: Colors.black)),
                   ),
                 ],
               )),
           ElevatedButton(
-              onPressed: () {}, child: CustomText("Set", TextStyle())),
+              onPressed: () {
+                setState(() {
+                  prox_1_white = double.parse(prox_1_white_controller.text);
+                  prox_1_black = double.parse(prox_1_black_controller.text);
+                  prox_1_average = (prox_1_white + prox_1_black) / 2;
+                });
+                writeToBLuetooth([0XD3, prox_1_average.toInt()]);
+              },
+              child: CustomText("Set", TextStyle())),
           VerticalGap(4),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
@@ -1567,11 +1661,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText("Black Value:-   ",
+                CustomText("Black Value:-   " + prox_1_black.toString(),
                     TextStyle(fontSize: 14, color: Colors.black)),
-                CustomText("White Value:-   ",
+                CustomText("White Value:-   " + prox_1_white.toString(),
                     TextStyle(fontSize: 14, color: Colors.black)),
-                CustomText("Threshold Value:-   ",
+                CustomText("Threshold Value:-   " + prox_1_average.toString(),
                     TextStyle(fontSize: 14, color: Colors.black)),
               ],
             ),
@@ -1590,7 +1684,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           Container(
             color: Colors.greenAccent,
             padding: EdgeInsets.all(8),
-            child: CustomText("Proximity 2 :-    0",
+            child: CustomText("Proximity 2 :-    $proximityTwo",
                 TextStyle(fontSize: 14, color: Colors.black)),
           ),
           VerticalGap(4),
@@ -1608,11 +1702,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     padding:EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
-                    child: CustomTextField(
-                        prox_2_black_controller,
-                        TextInputType.number,
-                        InputDecoration(border: InputBorder.none),
-                        TextStyle(color: Colors.black)),
+                    child: TextField(
+                        controller: prox_2_black_controller,
+                        keyboardType: TextInputType.number,
+                        maxLength: 3,
+                        decoration: InputDecoration(border: InputBorder.none),
+                        style: TextStyle(color: Colors.black)),
                   )
                 ],
               )),
@@ -1631,16 +1726,25 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     padding:EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
-                    child: CustomTextField(
-                        prox_2_white_controller,
-                        TextInputType.number,
-                        InputDecoration(border: InputBorder.none),
-                        TextStyle(color: Colors.black)),
+                    child: TextField(
+                        controller: prox_2_white_controller,
+                        keyboardType: TextInputType.number,
+                        maxLength: 3,
+                        decoration: InputDecoration(border: InputBorder.none),
+                        style: TextStyle(color: Colors.black)),
                   )
                 ],
               )),
           ElevatedButton(
-              onPressed: () {}, child: CustomText("Set", TextStyle())),
+              onPressed: () {
+                setState(() {
+                  prox_2_white = double.parse(prox_2_white_controller.text);
+                  prox_2_black = double.parse(prox_2_black_controller.text);
+                  prox_2_average = (prox_2_white + prox_2_black) / 2;
+                });
+                writeToBLuetooth([0XD4, prox_2_average.toInt()]);
+              },
+              child: CustomText("Set", TextStyle())),
           VerticalGap(4),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
@@ -1650,11 +1754,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText("Black Value:-   ",
+                CustomText("Black Value:-   " + prox_2_black.toString(),
                     TextStyle(fontSize: 14, color: Colors.black)),
-                CustomText("White Value:-   ",
+                CustomText("White Value:-   " + prox_2_white.toString(),
                     TextStyle(fontSize: 14, color: Colors.black)),
-                CustomText("Threshold Value:-   ",
+                CustomText("Threshold Value:-   " + prox_2_average.toString(),
                     TextStyle(fontSize: 14, color: Colors.black)),
               ],
             ),
