@@ -60,7 +60,7 @@ class Routing {
       case Classes.smartLampCategoryScreen:
         {
           return MaterialPageRoute(
-              builder: (_) => SmartLampCategoryScreen(),
+              builder: (_) => SmartLampCategoryScreen(settings.arguments as OfflineGamePlayType),
               settings: RouteSettings(name: settings.name));
         }
       case Classes.offlineSubCategoryScreen:

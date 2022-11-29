@@ -5,22 +5,34 @@ import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
+import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/offline_sub_card_widget.dart';
 
 class SmartLampCategoryScreen extends StatefulWidget {
+  OfflineGamePlayType offlineGamePlayType;
+
+  SmartLampCategoryScreen(this.offlineGamePlayType);
+
   @override
   State<StatefulWidget> createState() {
-    return SmartLampCategoryScreenState();
+    return SmartLampCategoryScreenState(this.offlineGamePlayType);
   }
 }
 
 class SmartLampCategoryScreenState extends BaseClass {
+
+  OfflineGamePlayType offlineGamePlayType;
+
   late List<OfflineSubCategoryDetail> dataList;
+
+  SmartLampCategoryScreenState(this.offlineGamePlayType);
 
   @override
   void initState() {
     super.initState();
+
+    print("type got in smart lamp is >>> ${offlineGamePlayType}");
 
     dataList = SmartLampData().getData();
   }
@@ -42,7 +54,7 @@ class SmartLampCategoryScreenState extends BaseClass {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                           Classes.offLineGamePlayScreen,
-                          arguments: e);
+                          arguments: [e,offlineGamePlayType]);
                     },
                     child: OfflineSubCardWidget(e, Colors.green)))
                 .toList(),

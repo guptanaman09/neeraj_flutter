@@ -55,7 +55,7 @@ class OfflineSubCategoryScreenState extends BaseClass {
                     onTap: () {
                       if (e.title == OfflineSubCategoryData.SMART_LAMP)
                         Navigator.of(context)
-                            .pushNamed(Classes.smartLampCategoryScreen);
+                            .pushNamed(Classes.smartLampCategoryScreen, arguments: model[1]);
                       else {
                         if(model[1] == OfflineGamePlayType.OFFLINE)
                         Navigator.of(context).pushNamed(
