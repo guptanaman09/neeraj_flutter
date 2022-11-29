@@ -11,6 +11,7 @@ import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/my_text_styles.dart';
+import 'package:neeraj_flutter_app/data/shared_preference/my_shared_preference.dart';
 import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_button.dart';
@@ -41,8 +42,6 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
     connectivity!.start(context, onRecvValue);
     textEditingControllerUserName = TextEditingController();
     textEditingControllerPaswword = TextEditingController();
-    FirebaseConnctivity conn = FirebaseConnctivity();
-    conn.start();
   }
 
   void onRecvValue(List<int> data) {}
@@ -206,6 +205,8 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
       data.addAll(utf8.encode(userPass));
       connectivity!.sendData(data).then((value) {
         if (value) {
+          MySharedPreference.setString(
+              MySharedPreference.CONNECTEDWIFINAME, connectivity!.wifiName!);
           onSkip();
         }
       });

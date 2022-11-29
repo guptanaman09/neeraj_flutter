@@ -16,6 +16,7 @@ class UdpConnectivity {
   UDP? conn;
   late BuildContext context;
   late Function onRecvValue;
+  String? wifiName;
   void showAlertMessage(String message, BuildContext context) {
     showDialog(
       context: context,
@@ -76,7 +77,7 @@ class UdpConnectivity {
       }
       if (isOn) {
         NetworkInfo info = NetworkInfo();
-        String? wifiName = await info.getWifiName();
+        wifiName = await info.getWifiName();
         print(wifiName ?? "wifi name not found");
         if (!wifiName!.toLowerCase().contains("intellecto")) {
           //show alert here and
