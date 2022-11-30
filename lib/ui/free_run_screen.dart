@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:typed_data';
 
@@ -11,16 +10,15 @@ import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/connectivity/bluetooth_serial_connectivty.dart';
 import 'package:neeraj_flutter_app/connectivity/bluettoth_coneectivty.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
-import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/button_style.dart';
 import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/main_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
-import 'package:neeraj_flutter_app/widgets/custom_text_field.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 ///Created by Naman Gupta on 9/11/22.
 
@@ -420,6 +418,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   Widget getCenterLayout(String gameName) {
+    print("game name is >>> ${gameName}");
     if (gameName == SubCategoryData.FREE_RUN &&
         subCategoryDetail.mainCategoryTitle == CategoryData.ACCELEREO)
       return Column(
@@ -587,7 +586,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    } else if (gameName == SubCategoryData.DUMPER) {
+    }
+    else if (gameName == SubCategoryData.DUMPER) {
       return Align(
         alignment: Alignment.center,
         child: Column(
@@ -1154,7 +1154,87 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    } else {
+    }
+    else if(gameName == SubCategoryData.RADAR){
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Angle:- ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.black)),
+                Container(
+                  width: 70,
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white
+                  ),
+                  child: Text("dsf"),
+                ),
+                HorizontalGap(16),
+                Text("Distance:- ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.black)),
+                Container(
+                  width: 70,
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      color: Colors.white
+                  ),
+                  child: Text("dsf"),
+                ),
+              ],
+            ),
+            VerticalGap(32),
+            Container(
+              height: 250,
+              width: 200,
+              color: Colors.white,
+              child: SfRadialGauge(
+                enableLoadingAnimation: true,
+                backgroundColor: Colors.transparent,
+                axes: <RadialAxis>[
+                  RadialAxis(
+                    maximum: 180,
+                    minimum: 0,
+                    ranges: <GaugeRange>[
+                      GaugeRange(startValue: 0, endValue: 180, color: Colors.black12,)
+                    ],
+                    interval: 50.0,
+                    axisLineStyle: AxisLineStyle(
+                        cornerStyle: CornerStyle.bothCurve,
+                        color: Colors.black12,
+                        thickness: 10),
+                    pointers: const [
+                      RangePointer(
+                          value: 100,
+                          cornerStyle: CornerStyle.bothCurve,
+                          width: 10,
+                          sizeUnit: GaugeSizeUnit.logicalPixel,
+                          gradient: SweepGradient(
+                              colors: <Color>[
+                                Color(0xFFCC2B5E),
+                                Color(0xFF753A88)
+                              ],
+                          ),),
+                        NeedlePointer(
+                          enableDragging: false,
+                          value: 100,
+                          needleStartWidth: 1,
+                          needleEndWidth: 5,
+                          needleLength: 40,
+                        )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    else {
       return Container();
     }
   }
@@ -1163,6 +1243,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     setState(() {
       ultrasonicValue = val;
     });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void onDumpValueChange(double val) {
