@@ -131,7 +131,7 @@ class OnlineGamePlayScreenState extends BaseClass {
   void initState() {
     print("online game play screen");
     connectivity = FirebaseConnctivity();
-    connectivity!.start();
+    connectivity!.start(onRecvValue);
 
     loadPrefsValues();
     super.initState();
@@ -2391,6 +2391,7 @@ class OnlineGamePlayScreenState extends BaseClass {
         connectivity!.sendData(command);
       }
     });
+    startListeningSensoData();
   }
 
   void onRecvValue(List<int> data) {
@@ -2414,7 +2415,16 @@ class OnlineGamePlayScreenState extends BaseClass {
     if (commandTimer != null) {
       commandTimer!.cancel();
     }
+    if (connectivity != null) {
+      connectivity!.stopStream();
+    }
 
     super.dispose();
+  }
+
+  void startListeningSensoData() {
+    Future.delayed(Duration(milliseconds: 800), () {
+      connectivity!.startListeningSensorValue();
+    });
   }
 }

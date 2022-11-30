@@ -13,7 +13,6 @@ class SmartLampCategoryScreen extends StatefulWidget {
   OfflineGamePlayType offlineGamePlayType;
 
   SmartLampCategoryScreen(this.offlineGamePlayType);
-
   @override
   State<StatefulWidget> createState() {
     return SmartLampCategoryScreenState(this.offlineGamePlayType);
@@ -21,7 +20,6 @@ class SmartLampCategoryScreen extends StatefulWidget {
 }
 
 class SmartLampCategoryScreenState extends BaseClass {
-
   OfflineGamePlayType offlineGamePlayType;
 
   late List<OfflineSubCategoryDetail> dataList;
@@ -52,9 +50,15 @@ class SmartLampCategoryScreenState extends BaseClass {
             children: dataList
                 .map((e) => GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                          Classes.offLineGamePlayScreen,
-                          arguments: [e,offlineGamePlayType]);
+                      if (offlineGamePlayType == OfflineGamePlayType.OFFLINE) {
+                        Navigator.of(context).pushNamed(
+                            Classes.offLineGamePlayScreen,
+                            arguments: [e, offlineGamePlayType]);
+                      } else {
+                        Navigator.of(context).pushNamed(
+                            Classes.onlineGamePlayScreen,
+                            arguments: e);
+                      }
                     },
                     child: OfflineSubCardWidget(e, Colors.green)))
                 .toList(),

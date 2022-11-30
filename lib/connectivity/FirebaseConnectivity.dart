@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,10 +12,13 @@ class FirebaseConnctivity {
   FirebaseDatabase instance = FirebaseDatabase.instance;
   late String wifiName;
   late DatabaseReference ref;
-
-  void start() async {
+  late Function onRecvValue;
+  void start(Function onRecvValue) async {
+    this.onRecvValue = onRecvValue;
     wifiName = await MySharedPreference.getString(
         MySharedPreference.CONNECTEDWIFINAME);
+    wifiName = wifiName.replaceAll("\"", "");
+    print("wifi name=" + wifiName);
     ref = instance
         .refFromURL("https://iot-cloud-02-default-rtdb.firebaseio.com/");
   }
@@ -94,5 +99,24 @@ class FirebaseConnctivity {
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  StreamSubscription<DatabaseEvent>? subscription;
+  void startListeningSensorValue() {
+    Stream<DatabaseEvent> eventStream =
+        ref.child(wifiName).child("sensor").onChildChanged;
+    subscription = eventStream!.listen((event) {
+      if (event.snapshot.exists) {
+        String value = event.snapshot.child("sensor_value").value.toString();
+        if (value != null && !value.isEmpty) {
+          print("Sensor value=" + value);
+          onRecvValue([int.parse(value)]);
+        }
+      }
+    });
+  }
+
+  void stopStream() {
+    subscription!.cancel();
   }
 }
