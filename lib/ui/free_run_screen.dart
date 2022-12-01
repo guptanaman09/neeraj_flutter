@@ -84,6 +84,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   double prox_1_average = 0;
   double prox_1_white = 0;
   bool isLineFollowerPlay = false;
+  double radarAngle = 0;
+  bool shouldIncrease = true;
   @override
   void initState() {
     _animationController = new AnimationController(
@@ -586,8 +588,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    }
-    else if (gameName == SubCategoryData.DUMPER) {
+    } else if (gameName == SubCategoryData.DUMPER) {
       return Align(
         alignment: Alignment.center,
         child: Column(
@@ -1154,8 +1155,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    }
-    else if(gameName == SubCategoryData.RADAR){
+    } else if (gameName == SubCategoryData.RADAR) {
       return Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -1165,24 +1165,28 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Angle:- ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.black)),
+                Text("Angle:- ",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black)),
                 Container(
                   width: 70,
                   padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white
-                  ),
-                  child: Text("dsf"),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(radarAngle.toString()),
                 ),
                 HorizontalGap(16),
-                Text("Distance:- ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.black)),
+                Text("Distance:- ",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black)),
                 Container(
                   width: 70,
                   padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text("dsf"),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(outputObstaceleavoider.toString()),
                 ),
               ],
             ),
@@ -1190,7 +1194,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             Container(
               height: 250,
               width: 200,
-              color: Colors.white,
+              color: Colors.transparent,
               child: SfRadialGauge(
                 enableLoadingAnimation: true,
                 backgroundColor: Colors.transparent,
@@ -1199,32 +1203,34 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     maximum: 180,
                     minimum: 0,
                     ranges: <GaugeRange>[
-                      GaugeRange(startValue: 0, endValue: 180, color: Colors.black12,)
+                      GaugeRange(
+                        startValue: 0,
+                        endValue: 180,
+                        color: Colors.black12,
+                      )
                     ],
-                    interval: 50.0,
+                    interval: 20.0,
                     axisLineStyle: AxisLineStyle(
                         cornerStyle: CornerStyle.bothCurve,
                         color: Colors.black12,
                         thickness: 10),
-                    pointers: const [
+                    pointers: [
                       RangePointer(
-                          value: 100,
-                          cornerStyle: CornerStyle.bothCurve,
-                          width: 10,
-                          sizeUnit: GaugeSizeUnit.logicalPixel,
-                          gradient: SweepGradient(
-                              colors: <Color>[
-                                Color(0xFFCC2B5E),
-                                Color(0xFF753A88)
-                              ],
-                          ),),
-                        NeedlePointer(
-                          enableDragging: false,
-                          value: 100,
-                          needleStartWidth: 1,
-                          needleEndWidth: 5,
-                          needleLength: 40,
-                        )
+                        value: radarAngle,
+                        cornerStyle: CornerStyle.bothCurve,
+                        width: 10,
+                        sizeUnit: GaugeSizeUnit.logicalPixel,
+                        gradient: SweepGradient(
+                          colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
+                        ),
+                      ),
+                      NeedlePointer(
+                        enableDragging: false,
+                        value: radarAngle,
+                        needleStartWidth: 1,
+                        needleEndWidth: 5,
+                        needleLength: 40,
+                      )
                     ],
                   )
                 ],
@@ -1233,8 +1239,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           ],
         ),
       );
-    }
-    else {
+    } else {
       return Container();
     }
   }
@@ -1366,6 +1371,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         });
       }
       startSendingLineFollowerCommand();
+    } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
+      setState(() {
+        if (radarAngle <= 178 && shouldIncrease) {
+          radarAngle = radarAngle + 2;
+          shouldIncrease = true;
+        } else {
+          radarAngle = radarAngle - 2;
+          if (radarAngle <= 0) {
+            shouldIncrease = true;
+          } else {
+            shouldIncrease = false;
+          }
+        }
+      });
+      writeToBLuetooth([0XBB, radarAngle.toInt()]);
     }
   }
 
@@ -1388,6 +1408,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         });
       }
       startSendingLineFollowerCommand();
+    } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
+      setState(() {
+        if (radarAngle <= 180 && shouldIncrease) {
+          radarAngle = radarAngle + 2;
+          shouldIncrease = true;
+        } else {
+          radarAngle = radarAngle - 2;
+          if (radarAngle <= 0) {
+            shouldIncrease = true;
+          } else {
+            shouldIncrease = false;
+          }
+        }
+      });
+      writeToBLuetooth([0XBB, radarAngle.toInt()]);
     }
   }
 
@@ -1408,12 +1443,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         startSendingObstacleAvoiderCommandToRecvValues();
       } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
         startSendingLineFollowerCommand();
+      } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
+        startSendingRadarCommand([0XD0]);
       }
     } else {
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         stopSendingObstacleAvoiderCommandToRecvValues();
-      } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {}
+      } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
+      } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
+        stopSendingRadarCommand();
+      }
     }
   }
 
@@ -1588,6 +1628,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         startSendingObstacleAvoiderCommandToRecvValues();
       } else if (subCategoryDetail.title == SubCategoryData.LINE_FOLLOWER) {
         startSendingLineFollowerCommand();
+      } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
+        startSendingRadarCommand([0XD0]);
       }
       setState(() {
         isAnyBluetoothConnected = true;
@@ -1597,6 +1639,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         stopSendingObstacleAvoiderCommandToRecvValues();
+      } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
+        stopSendingRadarCommand();
       }
       setState(() {
         isAnyBluetoothConnected = false;
@@ -1662,10 +1706,25 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   Timer? commandTimer;
   void runCommandTimer(List<int> command) {
-    commandTimer?.cancel();
+    if (commandTimer != null) {
+      commandTimer?.cancel();
+    }
     commandTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       writeToBLuetooth(command);
     });
+  }
+
+  void startSendingRadarCommand(List<int> command) {
+    commandTimer?.cancel();
+    commandTimer = Timer.periodic(Duration(milliseconds: 600), (timer) {
+      writeToBLuetooth(command);
+    });
+  }
+
+  void stopSendingRadarCommand() {
+    if (commandTimer != null) {
+      commandTimer?.cancel();
+    }
   }
 
   Widget proximity_1() {
@@ -1693,7 +1752,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   HorizontalGap(16),
                   Container(
                     width: 100,
-                    padding:EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 4),
                     color: Colors.white,
                     child: TextField(
                         controller: prox_1_black_controller,
@@ -1716,7 +1775,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    padding:EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
                     child: TextField(
@@ -1785,7 +1844,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    padding:EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
                     child: TextField(
@@ -1809,7 +1868,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 14)),
                   HorizontalGap(16),
                   Container(
-                    padding:EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 4),
                     width: 100,
                     color: Colors.white,
                     child: TextField(
