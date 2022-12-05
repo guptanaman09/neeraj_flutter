@@ -25,4 +25,5 @@ class DemoLocalizations {
       locale.languageCode]!['please_check_your_internt_connection'];
 
   String? get cancel => _localizedValues[locale.languageCode]?['cancel'];
+  String? get welcome => _localizedValues[locale.languageCode]?['welcome'];
 }

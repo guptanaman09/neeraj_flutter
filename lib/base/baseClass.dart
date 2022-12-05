@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
 import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
@@ -19,8 +21,12 @@ class BaseClass extends State {
   String appBarSubTitle = "";
   bool appBarLeadingIconVisibility = true;
   bool appBarTitleCenter = false;
+  late Function willPop;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  void setWillPop(Function willPop) {
+    this.willPop = willPop;
+  }
 
   void setIsLoading(bool isLoading) {
     setState(() {
@@ -29,19 +35,19 @@ class BaseClass extends State {
   }
 
   static void logout(context) {
-    MySharedPreference.clearAllData();
-    Navigator.pushNamedAndRemoveUntil(
-        context, Classes.splashScreen, (route) => false);
+    // MySharedPreference.clearAllData();
+    // Navigator.pushNamedAndRemoveUntil(
+    //     context, Classes.splashScreen, (route) => false);
   }
 
   void showInfoBar(String title) {
-    scaffoldKey.currentState!.showSnackBar(SnackBar(
+    /*  scaffoldKey.currentState!.showSnackBar(SnackBar(
       duration: Duration(seconds: 3),
       backgroundColor: AppColors.secondaryColor,
       content: Text(
         title,
       ),
-    ));
+    ));*/
   }
 
   void setDrawerVisibility(bool drawerVisibility,
@@ -73,6 +79,8 @@ class BaseClass extends State {
 
   Widget? setBody() {}
 
+  void showBottomSheet(BuildContext context, Widget wg) {}
+
   void makeFavourite(String msg) {
     //setAppBarIcon(Assets.redStar);
   }
@@ -83,12 +91,11 @@ class BaseClass extends State {
 
   PreferredSizeWidget getAppBar() {
     return AppBar(
+      primary: true,
       toolbarHeight: 80,
-      title: !backButtonVisibility
-          ? Text(
-              "Flutter",
-            )
-          : Text(""),
+      title: Text(
+        appBarTitle,
+      ),
       centerTitle: true,
       backgroundColor: backgroundColor,
       leading: backButtonVisibility
@@ -104,13 +111,52 @@ class BaseClass extends State {
                   padding: EdgeInsets.all(Dimensions.size_4),
                   child: Icon(
                     Icons.keyboard_backspace,
-                    color: AppColors.secondaryColor,
+                    color: AppColors.white,
                     size: Dimensions.size_28,
                   )),
             )
           : Container(),
       elevation: 0,
     );
+  }
+
+  void showAlertOkayMessage(String message, Function onOkayPressed) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Alert",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+                onOkayPressed();
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "okay",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   void showAlert(String title, String subTitle,
@@ -139,41 +185,56 @@ class BaseClass extends State {
     return isLoading;
   }
 
+  void onBackPressed() {}
+  Future<bool> onWillPop() {
+    print("inside wil pop scope");
+    onBackPressed();
+    return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      body: SafeArea(
-          child: Stack(
-        overflow: Overflow.visible,
-        children: [
-          if (isLoading)
-            Container(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        color: Colors.black12,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.0,
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        primary: false,
+        key: scaffoldKey,
+        body: SafeArea(
+            child: Stack(
+          children: [
+            if (isLoading)
+              Container(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: Colors.black12,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ]),
-            )
-          else
-            setBody()!
-        ],
-      )),
-      appBar: appBarVisibility ? getAppBar() : null,
-      drawer: drawerVisibility
-          ? DrawerScreen(drawerSeletedOptionIndex, this)
-          : null,
+                    ]),
+              )
+            else
+              setBody()!
+          ],
+        )),
+        appBar: appBarVisibility ? getAppBar() : null,
+        drawer: drawerVisibility
+            ? DrawerScreen(drawerSeletedOptionIndex, this)
+            : null,
+      ),
     );
   }
 }
