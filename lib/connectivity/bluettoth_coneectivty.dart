@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:location/location.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:neeraj_flutter_app/widgets/vertical_gap.dart';
+import 'package:permission_handler/permission_handler.dart' as myHandler;
 import 'package:permission_handler/permission_handler.dart';
 
 class BleConnectivity {
@@ -102,14 +106,68 @@ class BleConnectivity {
     // Permission.bluetoothAdvertise,
     // Permission.bluetooth,
     showToast("Ask permission");
-    Map<Permission, PermissionStatus> statuses =
-        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
-    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted ||
-        statuses[Permission.bluetoothScan] == PermissionStatus.granted) {
-      showToast("permission granted");
-      print(statuses[Permission.bluetoothConnect]);
-      listenState(context);
-      //showBottomDialog(context);
+    if (Platform.isAndroid) {
+      showToast("yes platform is android");
+      Map<Permission, myHandler.PermissionStatus> statuses = await [
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
+      ].request();
+      if (statuses[Permission.bluetoothConnect] ==
+              myHandler.PermissionStatus.granted ||
+          statuses[Permission.bluetoothScan] ==
+              myHandler.PermissionStatus.granted) {
+        showToast("permission granted");
+        print(statuses[Permission.bluetoothConnect]);
+        print(statuses[Permission.bluetoothScan]);
+        Map<Permission, myHandler.PermissionStatus> statuses1 =
+            await [Permission.location].request();
+        if (statuses1[Permission.location] ==
+            myHandler.PermissionStatus.granted) {
+          print(statuses[Permission.location]);
+          //showBottomDialog(context);
+          Location location = new Location();
+          bool isOn = await location.serviceEnabled();
+          if (!isOn) {
+            isOn = await location.requestService();
+          }
+          if (isOn) {
+            listenState(context);
+          }
+        }
+
+        //showBottomDialog(context);
+      }
+    } else {
+      Map<Permission, myHandler.PermissionStatus> statuses = await [
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
+        Permission.bluetooth
+      ].request();
+      if (statuses[Permission.bluetoothConnect] ==
+              myHandler.PermissionStatus.granted ||
+          statuses[Permission.bluetoothScan] ==
+              myHandler.PermissionStatus.granted ||
+          statuses[Permission.bluetooth] ==
+              myHandler.PermissionStatus.granted) {
+        showToast("permission granted");
+        print(statuses[Permission.bluetoothConnect]);
+        Map<Permission, myHandler.PermissionStatus> statuses1 =
+            await [Permission.location].request();
+        if (statuses1[Permission.location] ==
+            myHandler.PermissionStatus.granted) {
+          print(statuses[Permission.location]);
+          //showBottomDialog(context);
+          Location location = new Location();
+          bool isOn = await location.serviceEnabled();
+          if (!isOn) {
+            isOn = await location.requestService();
+          }
+          if (isOn) {
+            listenState(context);
+          }
+        }
+        //showBottomDialog(context);
+      }
     }
   }
 
@@ -171,7 +229,7 @@ class BleConnectivity {
 
   void startScanning(BuildContext context) {
     showToast("start scanning");
-    flutterBlue.startScan(timeout: Duration(seconds: 5));
+    flutterBlue.startScan(timeout: Duration(seconds: 30));
 // Listen to scan results
     showBottomDialog(flutterBlue.scanResults);
     // var subscription = flutterBlue.scanResults.listen((results) {
@@ -183,6 +241,6 @@ class BleConnectivity {
     // });
 
 // Stop scanning
-    flutterBlue.stopScan();
+    // flutterBlue.stopScan();
   }
 }
