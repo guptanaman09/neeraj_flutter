@@ -52,6 +52,7 @@ class SubCategoryScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
+                padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               SubCategoryDetail detailModel =
                   model.subCategoryDetailList.elementAt(index);

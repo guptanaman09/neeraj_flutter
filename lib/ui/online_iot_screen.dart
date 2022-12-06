@@ -58,9 +58,36 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          primary: true,
+          toolbarHeight: 40,
+          title: Text(
+            "",
+          ),
+          centerTitle: true,
+          leading: true
+              ? GestureDetector(
+            onTap: () {
+              try {
+                if (Navigator.canPop(context)) {
+                  Navigator.of(context).pop("result");
+                }
+              } catch (error) {}
+            },
+            child: Container(
+                padding: EdgeInsets.all(Dimensions.size_4),
+                child: Icon(
+                  Icons.keyboard_backspace,
+                  color: AppColors.white,
+                  size: Dimensions.size_28,
+                )),
+          )
+              : Container(),
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(Dimensions.size_16),
             height: DeviceUtils.getScreenHeight(context),
@@ -107,19 +134,21 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
                       decoration: BoxDecoration(
                           border:
                               Border.all(color: AppColors.black, width: 2.0)),
-                      child: CustomTextField(
-                          textEditingControllerUserName,
-                          TextInputType.visiblePassword,
-                          const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Enter SSID",
-                            hintStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: Dimensions.size_14,
-                                fontWeight: Dimensions.fontWeight_800),
-                          ),
-                          const TextStyle(),
-                          onChanged: onUserNameChanged),
+                      child: Center(
+                        child: CustomTextField(
+                            textEditingControllerUserName,
+                            TextInputType.visiblePassword,
+                            const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Enter SSID",
+                              hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: Dimensions.size_14,
+                                  fontWeight: Dimensions.fontWeight_800),
+                            ),
+                            const TextStyle(),
+                            onChanged: onUserNameChanged),
+                      ),
                     ),
                   ],
                 ),

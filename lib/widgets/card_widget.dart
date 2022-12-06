@@ -22,6 +22,7 @@ class CardWidget extends StatelessWidget {
       elevation: Dimensions.size_4,
       child: Container(
         decoration: const BoxDecoration(
+            color: AppColors.secondaryColor,
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(Dimensions.size_4),
                 topLeft: Radius.circular(Dimensions.size_4))),
@@ -36,7 +37,7 @@ class CardWidget extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(Dimensions.size_4),
                       topLeft: Radius.circular(Dimensions.size_4))),
-              padding: const EdgeInsets.all(Dimensions.size_8),
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: Center(
                 child: CustomText(
                   detailModel.title,

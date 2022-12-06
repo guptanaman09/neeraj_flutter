@@ -1510,6 +1510,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               if (snapshot.data != null) {
                 return Container(
                   child: ListView.builder(
+                      padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       itemCount: (snapshot.data as List<dynamic>)!.length,
                       itemBuilder: (context, index) {

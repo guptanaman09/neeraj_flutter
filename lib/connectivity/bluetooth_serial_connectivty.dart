@@ -108,6 +108,7 @@ class ArduinoSerialConnectivity {
         builder: (context) {
           return Container(
             child: ListView.builder(
+              padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: list.length,
                 itemBuilder: (context, index) {
