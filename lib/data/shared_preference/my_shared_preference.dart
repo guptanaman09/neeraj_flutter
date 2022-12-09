@@ -70,6 +70,11 @@ class MySharedPreference {
   static const String RGB_RED_VALUE = "rgb_red";
   static const String RGB_GREEN_VALUE = "rgb_green";
   static const String RGB_BLUE_VALUE = "rgb_blue";
+
+  static const String PERSON_COUNTER_SWITCH = "person_counter_switch";
+  static const String PERSONCOUNTER_SLIDER_VALUE =
+      "person_counter_slider_value";
+  static const String PERSON_COUNT = "person_count";
 //===================online==============================
   static const String SMARTDUSTBINSWITCH_I = "smart_dustbin_switch_I";
   static const String SMARTDUSTBINSENSING_I = "smart_dustbin_sensing_I";
@@ -138,8 +143,23 @@ class MySharedPreference {
   static const String RGB_RED_VALUE_I = "rgb_red_I";
   static const String RGB_GREEN_VALUE_I = "rgb_green_I";
   static const String RGB_BLUE_VALUE_I = "rgb_blue_I";
-
+  static const String PERSON_COUNTER_SWITCH_I = "person_counter_switch_I";
+  static const String PERSONCOUNTER_SLIDER_VALUE_I =
+      "person_counter_slider_value_I";
+  static const String PERSON_COUNT_I = "person_count_I";
   static const String CONNECTEDWIFINAME = "connected_wifi_name";
+
+  static const String SERIALRSSID = "serial_rssi";
+  static setInt(String key, int value) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    instance.setInt(key, value);
+  }
+
+  static Future<int> getInt(String key) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    return instance.getInt(key) ?? 0;
+  }
+
   static setDouble(String key, double value) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.setDouble(key, value);
@@ -157,7 +177,7 @@ class MySharedPreference {
 
   static Future<String> getString(String key) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
-    return instance.getString(key) ?? "intellecto";
+    return instance.getString(key) ?? "";
   }
 
   static setBoolean(String key, bool value) async {

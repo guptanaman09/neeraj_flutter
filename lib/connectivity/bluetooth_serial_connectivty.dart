@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/button_style.dart';
+import 'package:neeraj_flutter_app/data/shared_preference/my_shared_preference.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -18,7 +20,9 @@ class ArduinoSerialConnectivity {
   late BluetoothConnection blConnection;
   late final Function nonBleIsConnected;
   late final Function dataRecieved;
+
   ArduinoSerialConnectivity(this.nonBleIsConnected, this.dataRecieved);
+
   void start(BuildContext context) async {
     print("inside start");
     Map<Permission, PermissionStatus> statuses =
@@ -68,24 +72,32 @@ class ArduinoSerialConnectivity {
         await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
     if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
       print(statuses[Permission.bluetoothConnect]);
-      //showBottomDialog(context);
-      await instance.requestDiscoverable(60);
-      ProgressDialog pd = ProgressDialog(context: context);
-      pd.show(max: 80, msg: "Loading devices");
-      instance.startDiscovery().listen((event) {
-        print("device found in discovery=" + event.device.address);
-        if (event.device.bondState.isBonded) {
-          print(
-              "device found in discovery with bonded=" + event.device.address);
 
-          list.add(event.device);
+      // await instance.requestDiscoverable(5);
+      // ProgressDialog pd = ProgressDialog(context: context);
+      // pd.show(max: 5, msg: "Loading devices");
+      instance.getBondedDevices().then((value) {
+        for (BluetoothDevice d in value) {
+          print("found bonded device:" + d.address);
+          list.add(d);
         }
-      }, onDone: () {
-        pd.close();
         showBottomDialog(context);
-      }, onError: (handleError) {
-        pd.close();
       });
+
+      // instance.startDiscovery().listen((event) {
+      //   print("device found in discovery=" + event.device.address);
+      //   if (event.device.bondState.isBonded) {
+      //     print(
+      //         "device found in discovery with bonded=" + event.device.address);
+      //
+      //
+      //   }
+      // }, onDone: () {
+      //   pd.close();
+      //   showBottomDialog(context);
+      // }, onError: (handleError) {
+      //   pd.close();
+      // });
       // instance
       //     .getBondedDevices()
       //     .then((value) => () {
@@ -108,7 +120,7 @@ class ArduinoSerialConnectivity {
         builder: (context) {
           return Container(
             child: ListView.builder(
-              padding: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: list.length,
                 itemBuilder: (context, index) {
@@ -180,25 +192,69 @@ class ArduinoSerialConnectivity {
     }
   }
 
+  void autoConnectBluetooth(String rssid) async {
+    print("inside auto connect $rssid");
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+      print("permission granted");
+      if (instance.isEnabled == true) {
+        autoConnection(rssid);
+      } else {
+        instance.requestEnable().then((value) => {
+              if (value == true) {autoConnection(rssid)}
+            });
+      }
+      instance.onStateChanged().listen((event) async {
+        _state = event;
+        print("adapter state=" + event.stringValue);
+        if (_state == BluetoothState.STATE_OFF) {
+          nonBleIsConnected(false);
+        } else if (_state == BluetoothState.STATE_ON) {
+          // bluetooth is enabled
+          autoConnection(rssid);
+        }
+      });
+    }
+  }
+
+  void autoConnection(String rssid) async {
+    print("inside connecting to $rssid");
+    try {
+      blConnection = await BluetoothConnection.toAddress(rssid);
+      if (blConnection.isConnected) {
+        MySharedPreference.setString(MySharedPreference.SERIALRSSID, rssid);
+        nonBleIsConnected(true);
+        blConnection.input!.listen((event) {
+          dataRecieved(event);
+
+          print("recv value=" + event.first.toString());
+        });
+      }
+    } on PlatformException catch (err) {}
+  }
+
   void connectToBluetooth(BluetoothDevice d) async {
     if (d.isConnected) {
       disconnecToBluetooth();
       return;
     }
-    blConnection = await BluetoothConnection.toAddress(d.address);
+    try {
+      blConnection = await BluetoothConnection.toAddress(d.address);
+      if (blConnection.isConnected) {
+        MySharedPreference.setString(MySharedPreference.SERIALRSSID, d.address);
+        nonBleIsConnected(true);
+        blConnection.input!.listen((event) {
+          dataRecieved(event);
 
-    if (blConnection.isConnected) {
-      nonBleIsConnected(true);
-      blConnection.input!.listen((event) {
-        dataRecieved(event);
-
-        print("recv value=" + event.first.toString());
-      });
-      // Uint8List data = Uint8List(2);
-      // data[0] = (0xC2);
-      // data[1] = (0x64);
-      // writeToConnection(data);
-    }
+          print("recv value=" + event.first.toString());
+        });
+        // Uint8List data = Uint8List(2);
+        // data[0] = (0xC2);
+        // data[1] = (0x64);
+        // writeToConnection(data);
+      }
+    } on PlatformException catch (err) {}
   }
 
   void writeToConnection(Uint8List data) async {
