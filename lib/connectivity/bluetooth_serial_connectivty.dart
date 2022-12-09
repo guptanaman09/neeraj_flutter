@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/button_style.dart';
+import 'package:neeraj_flutter_app/data/shared_preference/my_shared_preference.dart';
 import 'package:neeraj_flutter_app/widgets/custom_text.dart';
 import 'package:neeraj_flutter_app/widgets/horizontal_gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -69,7 +70,7 @@ class ArduinoSerialConnectivity {
     if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
       print(statuses[Permission.bluetoothConnect]);
       //showBottomDialog(context);
-      await instance.requestDiscoverable(60);
+      await instance.requestDiscoverable(5);
       ProgressDialog pd = ProgressDialog(context: context);
       pd.show(max: 80, msg: "Loading devices");
       instance.startDiscovery().listen((event) {
@@ -108,7 +109,7 @@ class ArduinoSerialConnectivity {
         builder: (context) {
           return Container(
             child: ListView.builder(
-              padding: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: list.length,
                 itemBuilder: (context, index) {
@@ -180,6 +181,46 @@ class ArduinoSerialConnectivity {
     }
   }
 
+  void autoConnectBluetooth(String rssid) async {
+    print("inside auto connect $rssid");
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.bluetoothConnect, Permission.bluetoothScan].request();
+    if (statuses[Permission.bluetoothConnect] == PermissionStatus.granted) {
+      print("permission granted");
+      if (instance.isEnabled == true) {
+        autoConnection(rssid);
+      } else {
+        instance.requestEnable().then((value) => {
+              if (value == true) {autoConnection(rssid)}
+            });
+      }
+      instance.onStateChanged().listen((event) async {
+        _state = event;
+        print("adapter state=" + event.stringValue);
+        if (_state == BluetoothState.STATE_OFF) {
+          nonBleIsConnected(false);
+        } else if (_state == BluetoothState.STATE_ON) {
+          // bluetooth is enabled
+          autoConnection(rssid);
+        }
+      });
+    }
+  }
+
+  void autoConnection(String rssid) async{
+    print("inside connecting to $rssid");
+    blConnection = await BluetoothConnection.toAddress(rssid);
+    if (blConnection.isConnected) {
+      MySharedPreference.setString(MySharedPreference.SERIALRSSID, rssid);
+      nonBleIsConnected(true);
+      blConnection.input!.listen((event) {
+        dataRecieved(event);
+
+        print("recv value=" + event.first.toString());
+      });
+    }
+  }
+
   void connectToBluetooth(BluetoothDevice d) async {
     if (d.isConnected) {
       disconnecToBluetooth();
@@ -188,6 +229,7 @@ class ArduinoSerialConnectivity {
     blConnection = await BluetoothConnection.toAddress(d.address);
 
     if (blConnection.isConnected) {
+      MySharedPreference.setString(MySharedPreference.SERIALRSSID, d.address);
       nonBleIsConnected(true);
       blConnection.input!.listen((event) {
         dataRecieved(event);

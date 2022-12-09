@@ -23,8 +23,8 @@ class BleConnectivity {
     return flutterBlue;
   }
 
-  void connectToBluetooth(ScanResult r) {
-    r.device.connect().then((value) => r.device.state.listen((event) {
+  void connectToBluetooth(ScanResult r) async {
+    await r.device.connect().then((value) => r.device.state.listen((event) {
           print("device connection state=$event");
           _deviceState = event;
           connectBluetoothBle(event, r);
