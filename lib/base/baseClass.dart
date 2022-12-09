@@ -92,7 +92,7 @@ class BaseClass extends State {
   PreferredSizeWidget getAppBar() {
     return AppBar(
       primary: true,
-      toolbarHeight: 80,
+      toolbarHeight: 55,
       title: Text(
         appBarTitle,
       ),
@@ -207,27 +207,27 @@ class BaseClass extends State {
           key: scaffoldKey,
           body: Stack(
             children: [
-          if (isLoading)
-            Container(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        color: Colors.black12,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.0,
+              if (isLoading)
+                Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.black12,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ]),
-            )
-          else
-            setBody()!
+                      ]),
+                )
+              else
+                setBody()!
             ],
           ),
           appBar: appBarVisibility ? getAppBar() : null,

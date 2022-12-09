@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/constants/dimensions.dart';
 import 'package:neeraj_flutter_app/constants/styling/card_title_text_style.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
@@ -31,15 +32,20 @@ class OfflineSubCardWidget extends StatelessWidget {
             Expanded(
                 child: Image.asset(
               detailModel.image,
-              fit: BoxFit.cover,
+              height: 80,
+              width: 80,
+              fit: BoxFit.contain,
               alignment: Alignment.center,
             )),
             Container(
-              padding: EdgeInsets.all(Dimensions.size_8),
+              padding: EdgeInsets.all(Dimensions.size_4),
               child: Center(
                 child: CustomText(
                   detailModel.title,
-                  CardTitleTextStyle.getStyle(),
+                  TextStyle(
+                      fontSize: Dimensions.size_15,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
                 ),
               ),

@@ -52,7 +52,7 @@ class SubCategoryScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.zero,
+            padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               SubCategoryDetail detailModel =
                   model.subCategoryDetailList.elementAt(index);
@@ -95,6 +95,6 @@ class SubCategoryScreenState extends BaseClass {
 
   void onPlayButtonClick(SubCategoryDetail model) {
     print("play game clicked  ${model.title}");
-      Navigator.of(context).pushNamed(Classes.freeRunScreen, arguments: model);
+    Navigator.of(context).pushNamed(Classes.freeRunScreen, arguments: model);
   }
 }
