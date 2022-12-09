@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
@@ -1757,9 +1758,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     color: Colors.white,
                     child: TextField(
                         controller: prox_1_black_controller,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(3),
+                        ],
                         keyboardType: TextInputType.number,
-                        maxLength: 3,
-                        decoration: InputDecoration(border: InputBorder.none),
+                        decoration: InputDecoration(border: InputBorder.none,constraints: BoxConstraints(), contentPadding: EdgeInsets.zero),
                         style: TextStyle(color: Colors.black)),
                   )
                 ],
@@ -1782,7 +1785,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     child: TextField(
                         controller: prox_1_white_controller,
                         keyboardType: TextInputType.number,
-                        maxLength: 3,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(3),
+                        ],
                         decoration: InputDecoration(border: InputBorder.none),
                         style: TextStyle(color: Colors.black)),
                   ),
@@ -1800,7 +1805,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               child: CustomText("Set", TextStyle())),
           VerticalGap(4),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 8),
             color: Colors.yellow,
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -1851,7 +1856,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     child: TextField(
                         controller: prox_2_black_controller,
                         keyboardType: TextInputType.number,
-                        maxLength: 3,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(3),
+                        ],
                         decoration: InputDecoration(border: InputBorder.none),
                         style: TextStyle(color: Colors.black)),
                   )
@@ -1875,7 +1882,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     child: TextField(
                         controller: prox_2_white_controller,
                         keyboardType: TextInputType.number,
-                        maxLength: 3,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(3),
+                        ],
                         decoration: InputDecoration(border: InputBorder.none),
                         style: TextStyle(color: Colors.black)),
                   )
@@ -1893,7 +1902,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               child: CustomText("Set", TextStyle())),
           VerticalGap(4),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 8),
             color: Colors.yellow,
             child: Column(
               mainAxisSize: MainAxisSize.max,
