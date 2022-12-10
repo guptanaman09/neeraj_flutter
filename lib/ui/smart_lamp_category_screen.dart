@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
+import 'package:neeraj_flutter_app/constants/colors.dart';
 import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
 import 'package:neeraj_flutter_app/models/offline_screen_data.dart';
@@ -31,7 +32,11 @@ class SmartLampCategoryScreenState extends BaseClass {
     super.initState();
 
     print("type got in smart lamp is >>> ${offlineGamePlayType}");
-
+    setAppBarVisibility(true,
+        backgroundColor: AppColors.secondaryColor,
+        appBarTitleCenter: true,
+        appBarTitle: "Smart Lamp",
+        backButtonVisibility: true);
     dataList = SmartLampData().getData();
   }
 
