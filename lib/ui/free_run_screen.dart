@@ -1560,7 +1560,6 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     }
   }
 
-  Timer? timer;
   bool d1 = false;
   bool shouldStopLine = false;
   void startSendingLineFollowerCommand() {
@@ -1577,13 +1576,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   void startSendingObstacleAvoiderCommandToRecvValues() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    commandTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       writeToBLuetooth([0XD0]);
     });
   }
 
   void stopSendingObstacleAvoiderCommandToRecvValues() {
-    timer!.cancel();
     commandTimer?.cancel();
     if (obstacleAvoiderThreShold != -1) {
       writeToBLuetooth([0XB4]);
@@ -1727,6 +1725,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   void connectBleDevice(BluetoothDeviceState state, ScanResult result) {
     this.scanResult = result;
     if (state == BluetoothDeviceState.connected) {
+      setState(() {
+        isAnyBluetoothConnected = true;
+        ifBleConnected = true;
+      });
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         startSendingObstacleAvoiderCommandToRecvValues();
@@ -1735,21 +1737,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
         startSendingRadarCommand([0XD0]);
       }
-      setState(() {
-        isAnyBluetoothConnected = true;
-        ifBleConnected = true;
-      });
     } else if (state == BluetoothDeviceState.disconnected) {
+      setState(() {
+        isAnyBluetoothConnected = false;
+        ifBleConnected = false;
+      });
       if (subCategoryDetail.title == SubCategoryData.OBSTACLE_AVOIDER ||
           subCategoryDetail.title == SubCategoryData.EDGE_DETECTOR) {
         stopSendingObstacleAvoiderCommandToRecvValues();
       } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
         stopSendingRadarCommand();
       }
-      setState(() {
-        isAnyBluetoothConnected = false;
-        ifBleConnected = false;
-      });
     }
   }
 

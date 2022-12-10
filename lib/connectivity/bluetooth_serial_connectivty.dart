@@ -17,7 +17,7 @@ class ArduinoSerialConnectivity {
   FlutterBluetoothSerial instance = FlutterBluetoothSerial.instance;
   BluetoothState _state = BluetoothState.UNKNOWN;
   List<BluetoothDevice> list = [];
-  late BluetoothConnection blConnection;
+  late BluetoothConnection? blConnection;
   late final Function nonBleIsConnected;
   late final Function dataRecieved;
 
@@ -186,9 +186,10 @@ class ArduinoSerialConnectivity {
   }
 
   void disconnecToBluetooth() {
-    if (blConnection.isConnected) {
-      blConnection.close();
-      nonBleIsConnected(false);
+    nonBleIsConnected(false);
+
+    if (blConnection != null && blConnection!.isConnected) {
+      blConnection!.close();
     }
   }
 
@@ -222,10 +223,10 @@ class ArduinoSerialConnectivity {
     print("inside connecting to $rssid");
     try {
       blConnection = await BluetoothConnection.toAddress(rssid);
-      if (blConnection.isConnected) {
+      if (blConnection!.isConnected) {
         MySharedPreference.setString(MySharedPreference.SERIALRSSID, rssid);
         nonBleIsConnected(true);
-        blConnection.input!.listen((event) {
+        blConnection!.input!.listen((event) {
           dataRecieved(event);
 
           print("recv value=" + event.first.toString());
@@ -241,10 +242,10 @@ class ArduinoSerialConnectivity {
     }
     try {
       blConnection = await BluetoothConnection.toAddress(d.address);
-      if (blConnection.isConnected) {
+      if (blConnection!.isConnected) {
         MySharedPreference.setString(MySharedPreference.SERIALRSSID, d.address);
         nonBleIsConnected(true);
-        blConnection.input!.listen((event) {
+        blConnection!.input!.listen((event) {
           dataRecieved(event);
 
           print("recv value=" + event.first.toString());
@@ -259,8 +260,8 @@ class ArduinoSerialConnectivity {
 
   void writeToConnection(Uint8List data) async {
     if (blConnection!.isConnected) {
-      blConnection.output.add(data);
-      await blConnection.output.allSent;
+      blConnection!.output.add(data);
+      await blConnection!.output.allSent;
     } else {
       nonBleIsConnected(false);
     }
