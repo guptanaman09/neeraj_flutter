@@ -194,7 +194,29 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           Expanded(child: proximity_2())
                         ],
                       ),
-                    )
+                    ),
+                    VerticalGap(1),
+                    ElevatedButton(
+                        child: Text(isLineFollowerPlay ? "STOP" : "Play"),
+                        onPressed: () {
+                          if (!isLineFollowerPlay) {
+                            //start play send command d5
+                            writeToBLuetooth([0XD5]);
+                            setState(() {
+                              isLineFollowerPlay = true;
+                              shouldStopLine = true;
+                            });
+                          } else {
+                            setState(() {
+                              isLineFollowerPlay = false;
+                              shouldStopLine = false;
+                            });
+                            startSendingLineFollowerCommand();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                isLineFollowerPlay ? Colors.red : Colors.blue)),
                   ]),
               Positioned(
                 child: FadeTransition(
@@ -208,30 +230,30 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 top: 10,
                 right: 150,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                    child: Text(isLineFollowerPlay ? "STOP" : "Play"),
-                    onPressed: () {
-                      if (!isLineFollowerPlay) {
-                        //start play send command d5
-                        writeToBLuetooth([0XD5]);
-                        setState(() {
-                          isLineFollowerPlay = true;
-                          shouldStopLine = true;
-                        });
-                      } else {
-                        setState(() {
-                          isLineFollowerPlay = false;
-                          shouldStopLine = false;
-                        });
-                        startSendingLineFollowerCommand();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            isLineFollowerPlay ? Colors.red : Colors.blue)),
-              )
+              // Align(
+              //   alignment: Alignment.bottomCenter,
+              //   child: ElevatedButton(
+              //       child: Text(isLineFollowerPlay ? "STOP" : "Play"),
+              //       onPressed: () {
+              //         if (!isLineFollowerPlay) {
+              //           //start play send command d5
+              //           writeToBLuetooth([0XD5]);
+              //           setState(() {
+              //             isLineFollowerPlay = true;
+              //             shouldStopLine = true;
+              //           });
+              //         } else {
+              //           setState(() {
+              //             isLineFollowerPlay = false;
+              //             shouldStopLine = false;
+              //           });
+              //           startSendingLineFollowerCommand();
+              //         }
+              //       },
+              //       style: ElevatedButton.styleFrom(
+              //           backgroundColor:
+              //               isLineFollowerPlay ? Colors.red : Colors.blue)),
+              // )
             ],
           ),
         ),
@@ -1848,7 +1870,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           LengthLimitingTextInputFormatter(3),
                         ],
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(border: InputBorder.none,constraints: BoxConstraints(), contentPadding: EdgeInsets.zero),
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            constraints: BoxConstraints(),
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero),
                         style: TextStyle(color: Colors.black)),
                   )
                 ],
@@ -1874,7 +1900,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(3),
                         ],
-                        decoration: InputDecoration(border: InputBorder.none),
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero),
                         style: TextStyle(color: Colors.black)),
                   ),
                 ],
@@ -1945,8 +1974,15 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(3),
                         ],
-                        decoration: InputDecoration(border: InputBorder.none),
-                        style: TextStyle(color: Colors.black)),
+                        maxLines: 1,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(0),
+                            isDense: true),
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
                   )
                 ],
               )),
@@ -1971,7 +2007,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(3),
                         ],
-                        decoration: InputDecoration(border: InputBorder.none),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(0),
+                        ),
                         style: TextStyle(color: Colors.black)),
                   )
                 ],
