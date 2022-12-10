@@ -288,12 +288,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               width: 100.0,
                               height: 100.0,
                               child: InkWell(
-                                onTap: () {
+                                onTapUp: (event) {
+                                  writeToBLuetooth([0XB4]);
+                                },
+                                onTapDown: (event) {
                                   writeToBLuetooth([0XB0]);
-                                  Future.delayed(Duration(milliseconds: 100),
-                                      () {
-                                    writeToBLuetooth([0XB4]);
-                                  });
                                 },
                               ),
                             ),
@@ -307,12 +306,18 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 elevation: 0,
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () {
+                                  onTapUp: (event) {
+                                    writeToBLuetooth([0XB4]);
+                                  },
+                                  onTapDown: (event) {
                                     writeToBLuetooth([0XB1]);
-                                    Future.delayed(Duration(milliseconds: 100),
-                                        () {
-                                      writeToBLuetooth([0XB4]);
-                                    });
+                                  },
+                                  onTap: () {
+                                    // writeToBLuetooth([0XB1]);
+                                    // Future.delayed(Duration(milliseconds: 100),
+                                    //     () {
+                                    //   writeToBLuetooth([0XB4]);
+                                    // });
                                   },
                                   child: Image.asset(
                                     Assets.DOWN_ARROW,
@@ -339,12 +344,18 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 elevation: 0,
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () {
+                                  onTapUp: (event) {
+                                    writeToBLuetooth([0XB4]);
+                                  },
+                                  onTapDown: (event) {
                                     writeToBLuetooth([0XB2]);
-                                    Future.delayed(Duration(milliseconds: 100),
-                                        () {
-                                      writeToBLuetooth([0XB4]);
-                                    });
+                                  },
+                                  onTap: () {
+                                    // writeToBLuetooth([0XB2]);
+                                    // Future.delayed(Duration(milliseconds: 100),
+                                    //     () {
+                                    //   writeToBLuetooth([0XB4]);
+                                    // });
                                   },
                                   child: Image.asset(
                                     Assets.LEFTOW,
@@ -360,12 +371,18 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 elevation: 0,
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () {
+                                  onTapUp: (event) {
+                                    writeToBLuetooth([0XB4]);
+                                  },
+                                  onTapDown: (event) {
                                     writeToBLuetooth([0XB3]);
-                                    Future.delayed(Duration(milliseconds: 100),
-                                        () {
-                                      writeToBLuetooth([0XB4]);
-                                    });
+                                  },
+                                  onTap: () {
+                                    // writeToBLuetooth([0XB3]);
+                                    // Future.delayed(Duration(milliseconds: 100),
+                                    //     () {
+                                    //   writeToBLuetooth([0XB4]);
+                                    // });
                                   },
                                   child: Image.asset(
                                     Assets.RIGHT_ARROW,
