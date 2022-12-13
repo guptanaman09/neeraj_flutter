@@ -44,7 +44,7 @@ class BleConnectivity {
             isWriting = false;
           });
         } else {
-          Future.delayed(Duration(milliseconds: 200), () {
+          Future.delayed(Duration(milliseconds: 50), () {
             writeToBle(value);
           });
         }

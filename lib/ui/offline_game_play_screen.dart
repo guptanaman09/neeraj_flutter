@@ -490,7 +490,7 @@ class OfflineGamePlayScreenState extends BaseClass {
         break;
       case SmartLampDetailData.MOBILE_CONTROLLED:
         text =
-            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3";
+            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3\nProximty Sensor at Port 2";
         break;
     }
 
@@ -1691,7 +1691,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   });
                 } else {
                   connectivity!.sendData([
-                    0XCD,
+                    0XCE,
                     clapBasedDarknessValue.toInt(),
                     clapBasedRedValue.toInt(),
                     clapBasedGreenValue.toInt(),

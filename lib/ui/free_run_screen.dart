@@ -99,6 +99,15 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     prox_2_black_controller = TextEditingController();
     prox_2_white_controller = TextEditingController();
     autoConnectInit();
+    pointers.add(RangePointer(
+      value: radarAngle,
+      cornerStyle: CornerStyle.bothCurve,
+      width: 10,
+      sizeUnit: GaugeSizeUnit.logicalPixel,
+      gradient: SweepGradient(
+        colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
+      ),
+    ));
     super.initState();
   }
 
@@ -1298,8 +1307,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               width: 200,
               color: Colors.transparent,
               child: SfRadialGauge(
-                enableLoadingAnimation: true,
-                backgroundColor: Colors.transparent,
+                enableLoadingAnimation: false,
+                backgroundColor: Colors.white,
                 axes: <RadialAxis>[
                   RadialAxis(
                     maximum: 180,
@@ -1316,24 +1325,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                         cornerStyle: CornerStyle.bothCurve,
                         color: Colors.black12,
                         thickness: 10),
-                    pointers: [
-                      RangePointer(
-                        value: radarAngle,
-                        cornerStyle: CornerStyle.bothCurve,
-                        width: 10,
-                        sizeUnit: GaugeSizeUnit.logicalPixel,
-                        gradient: SweepGradient(
-                          colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
-                        ),
-                      ),
-                      NeedlePointer(
-                        enableDragging: false,
-                        value: radarAngle,
-                        needleStartWidth: 1,
-                        needleEndWidth: 5,
-                        needleLength: 40,
-                      )
-                    ],
+                    pointers: pointers,
                   )
                 ],
               ),
@@ -1344,6 +1336,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     } else {
       return Container();
     }
+  }
+
+  List<GaugePointer> pointers = [];
+  void addNeedleWidget(double value) {
+    setState(() {
+      pointers.add(NeedlePointer(
+        enableDragging: false,
+        value: value,
+        needleStartWidth: 0.5,
+        needleEndWidth: 0.5,
+        needleLength: 100,
+        needleColor: outputObstaceleavoider == 0 ? Colors.green : Colors.red,
+      ));
+    });
+    print("pointers data length=" + pointers.length.toString());
   }
 
   void onUltrasonicValueChange(double val) {
@@ -1477,11 +1484,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       startSendingLineFollowerCommand();
     } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
       setState(() {
+        if (radarAngle == 180 || radarAngle == 0) {
+          pointers.removeRange(1, pointers.length);
+        }
         if (radarAngle <= 178 && shouldIncrease) {
           radarAngle = radarAngle + 2;
+          addNeedleWidget(radarAngle);
           shouldIncrease = true;
         } else {
           radarAngle = radarAngle - 2;
+          addNeedleWidget(radarAngle);
+
           if (radarAngle <= 0) {
             shouldIncrease = true;
           } else {
@@ -1514,11 +1527,18 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       startSendingLineFollowerCommand();
     } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
       setState(() {
+        if (radarAngle == 180 || radarAngle == 0) {
+          pointers.removeRange(1, pointers.length);
+        }
         if (radarAngle <= 178 && shouldIncrease) {
           radarAngle = radarAngle + 2;
+          addNeedleWidget(radarAngle);
+
           shouldIncrease = true;
         } else {
           radarAngle = radarAngle - 2;
+          addNeedleWidget(radarAngle);
+
           if (radarAngle <= 0) {
             shouldIncrease = true;
           } else {

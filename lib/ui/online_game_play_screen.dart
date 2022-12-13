@@ -1579,7 +1579,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   });
                 } else {
                   connectivity!.sendData([
-                    0XCD,
+                    0XCE,
                     clapBasedDarknessValue.toInt(),
                     clapBasedRedValue.toInt(),
                     clapBasedGreenValue.toInt(),
