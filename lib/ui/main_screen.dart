@@ -61,13 +61,14 @@ class MainScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
+                padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               MainCategoryDetail detailModel =
                   mainCategoryModel.getMainCategoryModel().elementAt(index);
               return Container(
                 width: DeviceUtils.getScreenWidtht(context) * 0.40,
                 height: DeviceUtils.getScreenHeight(context) * 0.50,
-                margin: EdgeInsets.all(Dimensions.size_20),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: InkWell(
                     onTap: () => onSelectCategory(detailModel, index),
                     borderRadius: BorderRadius.circular(Dimensions.size_12),

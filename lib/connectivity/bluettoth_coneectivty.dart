@@ -23,8 +23,8 @@ class BleConnectivity {
     return flutterBlue;
   }
 
-  void connectToBluetooth(ScanResult r) {
-    r.device.connect().then((value) => r.device.state.listen((event) {
+  void connectToBluetooth(ScanResult r) async {
+    await r.device.connect().then((value) => r.device.state.listen((event) {
           print("device connection state=$event");
           _deviceState = event;
           connectBluetoothBle(event, r);
@@ -34,10 +34,20 @@ class BleConnectivity {
         }));
   }
 
-  void writeToBle(List<int> value) {
+  bool isWriting = false;
+  void writeToBle(List<int> value) async {
     if (_deviceState == BluetoothDeviceState.connected) {
       if (writeCharacterstics != null) {
-        writeCharacterstics.write(value);
+        if (!isWriting) {
+          isWriting = true;
+          await writeCharacterstics.write(value).then((value) {
+            isWriting = false;
+          });
+        } else {
+          Future.delayed(Duration(milliseconds: 50), () {
+            writeToBle(value);
+          });
+        }
       }
     }
   }
@@ -64,12 +74,6 @@ class BleConnectivity {
             print("character uuid found");
             readCharacterstics = c;
             writeCharacterstics = c;
-
-            // if (c.properties.read) {
-            //   readCharacterstics = c;
-            // } else if (c.properties.write) {
-            //   writeCharacterstics = c;
-            // }
           }
         }
       }

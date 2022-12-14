@@ -17,17 +17,16 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: ContinuousRectangleBorder(
-          borderRadius: BorderRadius.circular(Dimensions.size_12)),
       elevation: Dimensions.size_4,
       child: Container(
         decoration: const BoxDecoration(
+            color: AppColors.secondaryColor,
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(Dimensions.size_4),
                 topLeft: Radius.circular(Dimensions.size_4))),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
@@ -36,7 +35,7 @@ class CardWidget extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(Dimensions.size_4),
                       topLeft: Radius.circular(Dimensions.size_4))),
-              padding: const EdgeInsets.all(Dimensions.size_8),
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: Center(
                 child: CustomText(
                   detailModel.title,
@@ -46,18 +45,20 @@ class CardWidget extends StatelessWidget {
               ),
             ),
             Expanded(
+                flex: 1,
                 child: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                AppColors.secondaryColorLight,
-                AppColors.secondaryColorLight
-              ])),
-              child: Image.asset(
-                detailModel.image,
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
-              ),
-            ))
+                  padding: EdgeInsets.zero,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                    AppColors.secondaryColorLight,
+                    AppColors.secondaryColorLight
+                  ])),
+                  child: Image.asset(
+                    detailModel.image,
+                    fit: BoxFit.contain,
+                    alignment: Alignment.center,
+                  ),
+                ))
           ],
         ),
       ),

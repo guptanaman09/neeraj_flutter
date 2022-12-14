@@ -22,7 +22,7 @@ class OfflineGamePlayScreen extends StatefulWidget {
   late List<dynamic> main_data;
   late OfflineSubCategoryDetail data;
 
-  OfflineGamePlayScreen(this.main_data){
+  OfflineGamePlayScreen(this.main_data) {
     data = main_data[0] as OfflineSubCategoryDetail;
   }
 
@@ -37,7 +37,7 @@ class OfflineGamePlayScreenState extends BaseClass {
 
   late OfflineSubCategoryDetail data;
 
-  OfflineGamePlayScreenState(this.main_data){
+  OfflineGamePlayScreenState(this.main_data) {
     data = main_data[0] as OfflineSubCategoryDetail;
   }
 
@@ -87,6 +87,9 @@ class OfflineGamePlayScreenState extends BaseClass {
   double switchControlledRedValue = 0;
   double switchControlledGreenValue = 0;
   double switchControlledBlueValue = 0;
+  bool personCounterSwitchValue = false;
+  double personCounterValue = 0;
+  int personCount = 0;
 
   double servoOneValue = 0;
   double servoTwoValue = 0;
@@ -279,7 +282,12 @@ class OfflineGamePlayScreenState extends BaseClass {
         await MySharedPreference.getDouble(MySharedPreference.RGB_GREEN_VALUE);
     rgbBlueValue =
         await MySharedPreference.getDouble(MySharedPreference.RGB_BLUE_VALUE);
-
+    personCounterSwitchValue = await MySharedPreference.getBoolean(
+        MySharedPreference.PERSON_COUNTER_SWITCH);
+    personCounterValue = await MySharedPreference.getDouble(
+        MySharedPreference.PERSONCOUNTER_SLIDER_VALUE);
+    personCount =
+        await MySharedPreference.getInt(MySharedPreference.PERSON_COUNT);
     setState(() {});
   }
 
@@ -361,7 +369,7 @@ class OfflineGamePlayScreenState extends BaseClass {
         break;
       case OfflineSubCategoryData.SMART_DUSTBIN:
         text =
-            "Put the trash inside the Dustbin without touching it, just by placing your hand in front of the sensor.\nCircuit blocks needed-Servo driver and sonar sensor \nConnection with CPU- \nServo driver at Port 3 \nSONAR Sensor at Port 1";
+            "Put the trash inside the Dustbin without touching it, just by placing your hand in front of the sensor.\nCircuit blocks needed-Servo driver and sonar sensor \nConnection with CPU- \nServo driver at Port 3 \nSONAR Sensor at Port 1 \nSERVO Motor at Pin M1";
         break;
       case OfflineSubCategoryData.IRON_MAN_HAND:
         text =
@@ -385,7 +393,7 @@ class OfflineGamePlayScreenState extends BaseClass {
         break;
       case OfflineSubCategoryData.SMART_ALARM:
         text =
-            "Place the alarm near the window from where sunlight is coming. the alarm will be raised when there is light and will get off when you get in front of it.\nCircuit Blocks Needed-Light Sensor and SONAR Sensor \nConnections with CPU-\nLight Sensor at Port 2\nSONAR Sensor at Port1";
+            "Place the alarm near the window from where sunlight is coming. the alarm will be raised when there is light and will get off when you get in front of it.\nCircuit Blocks Needed-Light Sensor and SONAR Sensor \nConnections with CPU-\nLight Sensor at Port 2\nBuzzer at Port 3\nSONAR Sensor at Port1";
         break;
       case OfflineSubCategoryData.BURGLAR_ALARM:
         text =
@@ -482,7 +490,7 @@ class OfflineGamePlayScreenState extends BaseClass {
         break;
       case SmartLampDetailData.MOBILE_CONTROLLED:
         text =
-            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3";
+            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3\nProximty Sensor at Port 2";
         break;
     }
 
@@ -1185,6 +1193,99 @@ class OfflineGamePlayScreenState extends BaseClass {
           ),
         ],
       );
+    else if (data.title == OfflineSubCategoryData.PERSON_COUNTER)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("OFF/ON"),
+          Switch(
+              value: personCounterSwitchValue,
+              onChanged: (val) {
+                setState(() {
+                  personCounterSwitchValue = val;
+                });
+                if (!val) {
+                  connectivity!.sendData([0XE2]).then((value) {
+                    if (value) {
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.PERSON_COUNTER_SWITCH, val);
+                    }
+                  });
+                } else {
+                  connectivity!.sendData([
+                    0XC8,
+                    personCounterValue.toInt(),
+                  ]).then((value) {
+                    if (value) {
+                      print("data send storing in prefs");
+                      MySharedPreference.setBoolean(
+                          MySharedPreference.PERSON_COUNTER_SWITCH, val);
+                      MySharedPreference.setDouble(
+                          MySharedPreference.PERSONCOUNTER_SLIDER_VALUE,
+                          personCounterValue);
+                    }
+                  });
+                }
+              }),
+          VerticalGap(8),
+          Text("Sensing Distance (cm):- ${personCounterValue.round()}"),
+          Slider(
+            value: personCounterValue,
+            onChanged: personCounterSwitchValue
+                ? null
+                : (val) {
+                    setState(() {
+                      personCounterValue = val;
+                    });
+                  },
+            label: personCounterValue.round().toString(),
+            max: 100,
+            divisions: 100,
+            activeColor: Colors.yellow,
+            inactiveColor: Colors.black,
+          ),
+          VerticalGap(4),
+          Text("Person Count:- ${personCount.round()}"),
+          VerticalGap(4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: !personCounterSwitchValue
+                    ? null
+                    : () async {
+                        connectivity!.sendData([0XD2]);
+                        setState(() {
+                          personCount++;
+                        });
+                        MySharedPreference.setInt(
+                            MySharedPreference.PERSON_COUNT, personCount);
+                      },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                child: Text("Check"),
+              ),
+              HorizontalGap(24),
+              ElevatedButton(
+                onPressed: !personCounterSwitchValue
+                    ? null
+                    : () async {
+                        setState(() {
+                          personCount = 0;
+                        });
+                        MySharedPreference.setInt(
+                            MySharedPreference.PERSON_COUNT, personCount);
+                      },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isOffPressedAppliance ? Colors.yellow : Colors.blue),
+                child: Text("Reset"),
+              ),
+            ],
+          )
+        ],
+      );
     else if (data.title == OfflineSubCategoryData.MAGIC_DANCING_DOLL)
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1590,7 +1691,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   });
                 } else {
                   connectivity!.sendData([
-                    0XCD,
+                    0XCE,
                     clapBasedDarknessValue.toInt(),
                     clapBasedRedValue.toInt(),
                     clapBasedGreenValue.toInt(),

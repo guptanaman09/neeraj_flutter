@@ -59,7 +59,8 @@ class OfflineMainCategoryScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
-            itemBuilder: (context, index) {
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
               OfflineMainCategoryDetail detailModel = offlineMainCategoryModel
                   .getMainCategoryModel()
                   .elementAt(index);
