@@ -35,21 +35,25 @@ class BleConnectivity {
   }
 
   bool isWriting = false;
+  int counter = 0;
   void writeToBle(List<int> value) async {
     if (_deviceState == BluetoothDeviceState.connected) {
       if (writeCharacterstics != null) {
-        if (!isWriting) {
+        if (!isWriting || counter > 2) {
           isWriting = true;
+          counter = 0;
           await writeCharacterstics.write(value).then((value) {
             isWriting = false;
           });
         } else {
+          counter++;
           Future.delayed(Duration(milliseconds: 50), () {
             writeToBle(value);
           });
         }
       }
     }
+    print("counter value=" + counter.toString());
   }
 
   void readFromBle() async {

@@ -277,7 +277,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           child: Stack(
             children: [
               Positioned(
-                  left: 50,
+                  left: 70,
                   child: Container(
                     height: DeviceUtils.getScreenHeight(context),
                     child: Column(
@@ -517,13 +517,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           Container(
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             child: Slider(
-              onChanged: (val) {
-                setState(() {
-                  redSliderValue = val;
-                });
-              },
               value: redSliderValue,
-              onChangeEnd: onRedSliderChange,
+              onChanged: onRedSliderChange,
               max: 255,
               label: redSliderValue.round().toString(),
               divisions: 255,
@@ -537,13 +532,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           Container(
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             child: Slider(
-              onChanged: (val) {
-                setState(() {
-                  greenSliderValue = val;
-                });
-              },
               value: greenSliderValue,
-              onChangeEnd: onGreenSliderChange,
+              onChanged: onGreenSliderChange,
               max: 255,
               label: greenSliderValue.round().toString(),
               divisions: 255,
@@ -558,12 +548,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             width: DeviceUtils.getScreenWidtht(context) * 0.30,
             child: Slider(
               value: blueSliderValue,
-              onChanged: (val) {
-                setState(() {
-                  blueSliderValue = val;
-                });
-              },
-              onChangeEnd: onBlueSliderChange,
+              onChanged: onBlueSliderChange,
               max: 255,
               label: blueSliderValue.round().toString(),
               divisions: 255,
@@ -598,49 +583,53 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-                clipBehavior: Clip.none,
-                borderRadius: BorderRadius.circular(10),
-                child: Material(
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        writeToBLuetooth([0XBC, 80]);
-                        Future.delayed(Duration(milliseconds: 3000), () {
-                          writeToBLuetooth([0XBC, 0]);
-                          Future.delayed(Duration(milliseconds: 3000), () {
+            gameName == SubCategoryData.SOCCER
+                ? ClipRRect(
+                    clipBehavior: Clip.none,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Material(
+                        elevation: 0,
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
                             writeToBLuetooth([0XBC, 80]);
-                          });
-                        });
-                      },
-                      child: Image.asset(
-                        Assets.SOCCER,
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.fill,
-                      ),
-                    ))),
+                            Future.delayed(Duration(milliseconds: 3000), () {
+                              writeToBLuetooth([0XBC, 0]);
+                              Future.delayed(Duration(milliseconds: 3000), () {
+                                writeToBLuetooth([0XBC, 80]);
+                              });
+                            });
+                          },
+                          child: Image.asset(
+                            Assets.SOCCER,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        )))
+                : Container(),
             VerticalGap(12),
-            ClipRRect(
-                clipBehavior: Clip.none,
-                borderRadius: BorderRadius.circular(10),
-                child: Material(
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        writeToBLuetooth([0XBB, 0]);
-                        Future.delayed(Duration(milliseconds: 3000), () {
-                          writeToBLuetooth([0XBB, 90]);
-                          Future.delayed(Duration(milliseconds: 3000), () {
+            gameName == SubCategoryData.THOR_HAMMER
+                ? ClipRRect(
+                    clipBehavior: Clip.none,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Material(
+                        elevation: 0,
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
                             writeToBLuetooth([0XBB, 0]);
-                          });
-                        });
-                      },
-                      child: Image.asset(Assets.THOR_HAMMER,
-                          height: 100, width: 100, fit: BoxFit.fill),
-                    ))),
+                            Future.delayed(Duration(milliseconds: 3000), () {
+                              writeToBLuetooth([0XBB, 90]);
+                              Future.delayed(Duration(milliseconds: 3000), () {
+                                writeToBLuetooth([0XBB, 0]);
+                              });
+                            });
+                          },
+                          child: Image.asset(Assets.THOR_HAMMER,
+                              height: 100, width: 100, fit: BoxFit.fill),
+                        )))
+                : Container(),
           ],
         ),
       );
@@ -1340,14 +1329,28 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   List<GaugePointer> pointers = [];
   void addNeedleWidget(double value) {
+    final List<Color> gradient = [
+      Colors.green,
+      Colors.green,
+      Colors.red,
+      Colors.red,
+    ];
+    final double fillPercent = (outputObstaceleavoider / 255) *
+        100.toDouble(); // fills 56.23% for container from bottom
+    final double fillStop = (100 - fillPercent) / 100;
+    final List<double> stops = [0.0, fillStop, fillStop, 1.0];
     setState(() {
       pointers.add(NeedlePointer(
         enableDragging: false,
         value: value,
-        needleStartWidth: 0.5,
-        needleEndWidth: 0.5,
+        needleStartWidth: 1,
+        needleEndWidth: 1,
         needleLength: 100,
-        needleColor: outputObstaceleavoider == 0 ? Colors.green : Colors.red,
+        gradient: LinearGradient(
+            stops: stops,
+            colors: gradient,
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter),
       ));
     });
     print("pointers data length=" + pointers.length.toString());
@@ -1378,7 +1381,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     return Container(
       child: Row(
         children: [
-          CustomText("Manual", TextStyle(color: Colors.black, fontSize: 12)),
+          CustomText("Automatic", TextStyle(color: Colors.black, fontSize: 12)),
           HorizontalGap(2),
           Switch(
               value: ultrasonicSwitchValue,
@@ -1386,7 +1389,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               activeColor: Colors.white70,
               activeTrackColor: Colors.green),
           HorizontalGap(2),
-          CustomText("Automatic", TextStyle(color: Colors.black, fontSize: 12))
+          CustomText("Manual", TextStyle(color: Colors.black, fontSize: 12))
         ],
       ),
     );

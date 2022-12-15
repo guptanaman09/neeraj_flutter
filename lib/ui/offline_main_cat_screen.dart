@@ -17,7 +17,6 @@ import 'package:neeraj_flutter_app/widgets/offline_card_widget.dart';
 ///Created by Naman Gupta on 6/11/22.
 
 class OfflineMainCategoryScreen extends StatefulWidget {
-
   OfflineGamePlayType data;
 
   OfflineMainCategoryScreen(this.data);
@@ -29,7 +28,6 @@ class OfflineMainCategoryScreen extends StatefulWidget {
 }
 
 class OfflineMainCategoryScreenState extends BaseClass {
-
   OfflineGamePlayType data;
 
   late OfflineCategoryModel offlineMainCategoryModel;
@@ -40,7 +38,7 @@ class OfflineMainCategoryScreenState extends BaseClass {
   void initState() {
     super.initState();
 
-    offlineMainCategoryModel = OfflineCategoryModel();
+    offlineMainCategoryModel = OfflineCategoryModel(data);
 
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,
@@ -59,8 +57,8 @@ class OfflineMainCategoryScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
               OfflineMainCategoryDetail detailModel = offlineMainCategoryModel
                   .getMainCategoryModel()
                   .elementAt(index);

@@ -4,17 +4,20 @@ import 'package:neeraj_flutter_app/constants/assets.dart';
 import 'package:neeraj_flutter_app/models/category_data.dart';
 import 'package:neeraj_flutter_app/models/offline_data.dart';
 
+import 'offline_screen_data.dart';
+
 ///Created by Naman Gupta on 5/11/22.
 
 class OfflineCategoryModel {
   late List<OfflineMainCategoryDetail> mainCategoryList;
 
-  OfflineCategoryModel() {
+  OfflineCategoryModel(OfflineGamePlayType data) {
     mainCategoryList = [];
-    createMainModel();
+    createMainModel(data);
   }
 
-  static List<OfflineSubCategoryDetail> getStructureBasedSubCategory() {
+  static List<OfflineSubCategoryDetail> getStructureBasedSubCategory(
+      OfflineGamePlayType data) {
     List<OfflineSubCategoryDetail> list = [];
     OfflineSubCategoryDetail model_1 = OfflineSubCategoryDetail(
         OfflineSubCategoryData.APPLIANCE_CONTROL,
@@ -79,7 +82,10 @@ class OfflineCategoryModel {
     list.add(model_4);
     list.add(model_5);
     list.add(model_6);
-    list.add(model_7);
+    if (data == OfflineGamePlayType.OFFLINE) {
+      list.add(model_7);
+    }
+
     list.add(model_8);
     list.add(model_9);
     list.add(model_10);
@@ -177,11 +183,11 @@ class OfflineCategoryModel {
     return list;
   }
 
-  void createMainModel() {
+  void createMainModel(OfflineGamePlayType data) {
     OfflineMainCategoryDetail accelero = OfflineMainCategoryDetail(
         OfflineData.STRUCTURED_BASED_ACTIVTIES,
         Assets.STRUCTURED_BASED_ACTIVITY,
-        OfflineCategoryModel.getStructureBasedSubCategory());
+        OfflineCategoryModel.getStructureBasedSubCategory(data));
     mainCategoryList.add(accelero);
 
     OfflineMainCategoryDetail spaceRover = OfflineMainCategoryDetail(

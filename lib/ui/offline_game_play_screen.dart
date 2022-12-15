@@ -297,7 +297,7 @@ class OfflineGamePlayScreenState extends BaseClass {
       padding: EdgeInsets.symmetric(horizontal: 16),
       height: DeviceUtils.getScreenHeight(context),
       width: DeviceUtils.getScreenWidtht(context),
-      color: Colors.pinkAccent,
+      color: Colors.greenAccent,
       child: SingleChildScrollView(
         child: Container(
           height: DeviceUtils.getScreenHeight(context),
