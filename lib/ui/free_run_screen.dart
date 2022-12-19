@@ -98,6 +98,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     prox_1_white_controller = TextEditingController();
     prox_2_black_controller = TextEditingController();
     prox_2_white_controller = TextEditingController();
+
     autoConnectInit();
     pointers.add(RangePointer(
       value: radarAngle,
@@ -108,7 +109,29 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
       ),
     ));
+    getPrefsValues();
     super.initState();
+  }
+
+  void getPrefsValues() async {
+    prox_1_black =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_1_BLACK);
+    prox_1_white =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_1_WHITE);
+    prox_1_average =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_1_AVERAGE);
+    prox_2_black =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_2_BLACK);
+    prox_2_white =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_2_WHITE);
+    prox_2_average =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_2_AVERAGE);
+    prox_1_black_controller.text = prox_1_black.toString();
+    prox_1_white_controller.text = prox_1_white.toString();
+    prox_2_black_controller.text = prox_2_black.toString();
+    prox_2_white_controller.text = prox_2_white.toString();
+
+    setState(() {});
   }
 
   void autoConnectInit() async {
@@ -1972,6 +1995,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   prox_1_average = (prox_1_white + prox_1_black) / 2;
                 });
                 writeToBLuetooth([0XD3, prox_1_average.toInt()]);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_1_BLACK, prox_1_black);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_1_WHITE, prox_1_white);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_1_AVERAGE, prox_1_average);
               },
               child: CustomText("Set", TextStyle())),
           VerticalGap(4),
@@ -2080,6 +2109,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   prox_2_average = (prox_2_white + prox_2_black) / 2;
                 });
                 writeToBLuetooth([0XD4, prox_2_average.toInt()]);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_2_BLACK, prox_2_black);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_2_WHITE, prox_2_white);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_2_AVERAGE, prox_2_average);
               },
               child: CustomText("Set", TextStyle())),
           VerticalGap(4),
