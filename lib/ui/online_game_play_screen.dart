@@ -309,7 +309,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                       data.title,
                       TextStyle(
                           color: Colors.white,
-                          fontSize: 15,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600)),
                 ],
               ),

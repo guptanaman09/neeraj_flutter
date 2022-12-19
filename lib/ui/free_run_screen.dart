@@ -303,6 +303,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 onTapDown: (event) {
                                   writeToBLuetooth([0XB0]);
                                 },
+                                onTapCancel: () {
+                                  writeToBLuetooth([0XB4]);
+                                },
                               ),
                             ),
                           ),
@@ -320,6 +323,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                   },
                                   onTapDown: (event) {
                                     writeToBLuetooth([0XB1]);
+                                  },
+                                  onTapCancel: () {
+                                    writeToBLuetooth([0XB4]);
                                   },
                                   onTap: () {
                                     // writeToBLuetooth([0XB1]);
@@ -359,6 +365,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                   onTapDown: (event) {
                                     writeToBLuetooth([0XB2]);
                                   },
+                                  onTapCancel: () {
+                                    writeToBLuetooth([0XB4]);
+                                  },
                                   onTap: () {
                                     // writeToBLuetooth([0XB2]);
                                     // Future.delayed(Duration(milliseconds: 100),
@@ -385,6 +394,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                   },
                                   onTapDown: (event) {
                                     writeToBLuetooth([0XB3]);
+                                  },
+                                  onTapCancel: () {
+                                    writeToBLuetooth([0XB4]);
                                   },
                                   onTap: () {
                                     // writeToBLuetooth([0XB3]);
@@ -756,29 +768,29 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
-              child: InkWell(
-                onTapDown: (event) {
-                  if (forkLiftSwap) {
-                    writeToBLuetooth([0XB5]);
-                  } else {
-                    writeToBLuetooth([0XB6]);
-                  }
-                },
-                onTapUp: (event) {
-                  writeToBLuetooth([0XB7]);
-                },
-                child: Image.asset(
-                  Assets.LIFT,
-                  height: 80,
-                  width: 80,
-                ),
+              child: Image.asset(
+                Assets.LIFT,
+                height: 80,
+                width: 80,
               ),
             ),
             VerticalGap(16),
-            Image.asset(
-              Assets.DROP,
-              height: 80,
-              width: 80,
+            InkWell(
+              onTapDown: (event) {
+                if (forkLiftSwap) {
+                  writeToBLuetooth([0XB5]);
+                } else {
+                  writeToBLuetooth([0XB6]);
+                }
+              },
+              onTapUp: (event) {
+                writeToBLuetooth([0XB7]);
+              },
+              child: Image.asset(
+                Assets.DROP,
+                height: 80,
+                width: 80,
+              ),
             ),
           ],
         )),
@@ -1139,40 +1151,46 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Swap(Shoot)",
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic)),
-                Switch(
-                    value: armyTankShootSwap,
-                    activeTrackColor: Colors.lightGreenAccent,
-                    activeColor: Colors.white,
-                    onChanged: (val) {
-                      setState(() {
-                        armyTankShootSwap = val;
-                      });
-                    })
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Swap(Swing)",
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic)),
-                Switch(
-                    value: armyTankSwingSwap,
-                    activeTrackColor: Colors.lightGreenAccent,
-                    activeColor: Colors.white,
-                    onChanged: (val) {
-                      setState(() {
-                        armyTankSwingSwap = val;
-                      });
-                    })
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Swap(Shoot)",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic)),
+                    Switch(
+                        value: armyTankShootSwap,
+                        activeTrackColor: Colors.lightGreenAccent,
+                        activeColor: Colors.white,
+                        onChanged: (val) {
+                          setState(() {
+                            armyTankShootSwap = val;
+                          });
+                        })
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Swap(Swing)",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic)),
+                    Switch(
+                        value: armyTankSwingSwap,
+                        activeTrackColor: Colors.lightGreenAccent,
+                        activeColor: Colors.white,
+                        onChanged: (val) {
+                          setState(() {
+                            armyTankSwingSwap = val;
+                          });
+                        })
+                  ],
+                )
               ],
             ),
             InkWell(
@@ -1330,10 +1348,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   List<GaugePointer> pointers = [];
   void addNeedleWidget(double value) {
     final List<Color> gradient = [
-      Colors.green,
-      Colors.green,
       Colors.red,
       Colors.red,
+      Colors.green,
+      Colors.green,
     ];
     final double fillPercent = (outputObstaceleavoider / 255) *
         100.toDouble(); // fills 56.23% for container from bottom
