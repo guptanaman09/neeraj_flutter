@@ -88,6 +88,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   bool isLineFollowerPlay = false;
   double radarAngle = 0;
   bool shouldIncrease = true;
+
   @override
   void initState() {
     _animationController = new AnimationController(
@@ -239,11 +240,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               shouldStopLine = true;
                             });
                           } else {
+                            writeToBLuetooth([0XD6]);
+
                             setState(() {
                               isLineFollowerPlay = false;
                               shouldStopLine = false;
                             });
-                            startSendingLineFollowerCommand();
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -543,131 +545,223 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     print("game name is >>> ${gameName}");
     if (gameName == SubCategoryData.FREE_RUN &&
         subCategoryDetail.mainCategoryTitle == CategoryData.ACCELEREO)
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CustomText("RED:- ${redSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 12)),
-          Container(
-            width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            child: Slider(
-              value: redSliderValue,
-              onChanged: onRedSliderChange,
-              max: 255,
-              label: redSliderValue.round().toString(),
-              divisions: 255,
-              thumbColor: Colors.grey,
-              activeColor: Colors.red,
-              inactiveColor: Colors.grey,
-            ),
-          ),
-          CustomText("GREEN:- ${greenSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 12)),
-          Container(
-            width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            child: Slider(
-              value: greenSliderValue,
-              onChanged: onGreenSliderChange,
-              max: 255,
-              label: greenSliderValue.round().toString(),
-              divisions: 255,
-              thumbColor: Colors.grey,
-              activeColor: Colors.green,
-              inactiveColor: Colors.grey,
-            ),
-          ),
-          CustomText("BLUE:- ${blueSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 12)),
-          Container(
-            width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            child: Slider(
-              value: blueSliderValue,
-              onChanged: onBlueSliderChange,
-              max: 255,
-              label: blueSliderValue.round().toString(),
-              divisions: 255,
-              thumbColor: Colors.grey,
-              activeColor: Colors.blue,
-              inactiveColor: Colors.grey,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                isHorn = !isHorn;
-              });
-              if (isHorn) {
-                writeToBLuetooth([0XC0]);
-              } else {
-                writeToBLuetooth([0XC1]);
-              }
-            },
-            child: Image.asset(
-              isHorn ? Assets.CAR_HORN_ON : Assets.CAR_HORN_OFF,
-              height: 60,
-              width: 110,
-            ),
-          )
-        ],
-      );
-    else if (gameName == SubCategoryData.THOR_HAMMER ||
-        gameName == SubCategoryData.SOCCER) {
       return Container(
+        width: DeviceUtils.getScreenWidtht(context) * 0.30,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            gameName == SubCategoryData.SOCCER
-                ? ClipRRect(
-                    clipBehavior: Clip.none,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Material(
-                        elevation: 0,
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            writeToBLuetooth([0XBC, 80]);
-                            Future.delayed(Duration(milliseconds: 3000), () {
-                              writeToBLuetooth([0XBC, 0]);
-                              Future.delayed(Duration(milliseconds: 3000), () {
-                                writeToBLuetooth([0XBC, 80]);
-                              });
-                            });
-                          },
-                          child: Image.asset(
-                            Assets.SOCCER,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.fill,
-                          ),
-                        )))
-                : Container(),
-            VerticalGap(12),
-            gameName == SubCategoryData.THOR_HAMMER
-                ? ClipRRect(
-                    clipBehavior: Clip.none,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Material(
-                        elevation: 0,
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            writeToBLuetooth([0XBB, 0]);
-                            Future.delayed(Duration(milliseconds: 3000), () {
-                              writeToBLuetooth([0XBB, 90]);
-                              Future.delayed(Duration(milliseconds: 3000), () {
-                                writeToBLuetooth([0XBB, 0]);
-                              });
-                            });
-                          },
-                          child: Image.asset(Assets.THOR_HAMMER,
-                              height: 100, width: 100, fit: BoxFit.fill),
-                        )))
-                : Container(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    if (redSliderValue > 0) {
+                      redSliderValue = redSliderValue - 5;
+                      onRedSliderChange(redSliderValue);
+                    } else if (redSliderValue <= 0) {
+                      redSliderValue = 0;
+                      onRedSliderChange(redSliderValue);
+                    }
+                  },
+                  icon: Image.asset(Assets.MINUS),
+                  iconSize: 18,
+                ),
+                CustomText("RED:- ${redSliderValue.round()}",
+                    TextStyle(color: Colors.black, fontSize: 12)),
+                IconButton(
+                  onPressed: () {
+                    if (redSliderValue < 255) {
+                      redSliderValue = redSliderValue + 5;
+                      onRedSliderChange(redSliderValue);
+                    } else if (redSliderValue >= 255) {
+                      redSliderValue = 255;
+                      onRedSliderChange(redSliderValue);
+                    }
+                  },
+                  icon: Image.asset(Assets.PLUS),
+                  iconSize: 18,
+                ),
+              ],
+            ),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: redSliderValue,
+            //     onChanged: onRedSliderChange,
+            //     max: 255,
+            //     label: redSliderValue.round().toString(),
+            //     divisions: 255,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.red,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // ),
+            VerticalGap(4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    if (greenSliderValue > 0) {
+                      greenSliderValue = greenSliderValue - 5;
+                      onGreenSliderChange(greenSliderValue);
+                    } else if (greenSliderValue <= 0) {
+                      greenSliderValue = 0;
+                      onGreenSliderChange(greenSliderValue);
+                    }
+                  },
+                  icon: Image.asset(Assets.MINUS),
+                  iconSize: 18,
+                ),
+                CustomText("Green:- ${greenSliderValue.round()}",
+                    TextStyle(color: Colors.black, fontSize: 12)),
+                IconButton(
+                  onPressed: () {
+                    if (greenSliderValue < 255) {
+                      greenSliderValue = greenSliderValue + 5;
+                      onGreenSliderChange(greenSliderValue);
+                    } else if (greenSliderValue >= 255) {
+                      greenSliderValue = 255;
+                      onGreenSliderChange(greenSliderValue);
+                    }
+                  },
+                  icon: Image.asset(Assets.PLUS),
+                  iconSize: 18,
+                ),
+              ],
+            ),
+            VerticalGap(4),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: greenSliderValue,
+            //     onChanged: onGreenSliderChange,
+            //     max: 255,
+            //     label: greenSliderValue.round().toString(),
+            //     divisions: 255,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.green,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    if (blueSliderValue > 0) {
+                      blueSliderValue = blueSliderValue - 5;
+                      onBlueSliderChange(blueSliderValue);
+                    } else if (blueSliderValue <= 0) {
+                      blueSliderValue = 0;
+                      onBlueSliderChange(blueSliderValue);
+                    }
+                  },
+                  icon: Image.asset(Assets.MINUS),
+                  iconSize: 18,
+                ),
+                CustomText("Blue:- ${blueSliderValue.round()}",
+                    TextStyle(color: Colors.black, fontSize: 12)),
+                IconButton(
+                  onPressed: () {
+                    if (blueSliderValue < 255) {
+                      blueSliderValue = blueSliderValue + 5;
+                      onBlueSliderChange(blueSliderValue);
+                    } else if (blueSliderValue >= 255) {
+                      blueSliderValue = 255;
+                      onBlueSliderChange(blueSliderValue);
+                    }
+                  },
+                  icon: Image.asset(Assets.PLUS),
+                  iconSize: 18,
+                ),
+              ],
+            ),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: blueSliderValue,
+            //     onChanged: onBlueSliderChange,
+            //     max: 255,
+            //     label: blueSliderValue.round().toString(),
+            //     divisions: 255,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.blue,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isHorn = !isHorn;
+                });
+                if (isHorn) {
+                  writeToBLuetooth([0XC0]);
+                } else {
+                  writeToBLuetooth([0XC1]);
+                }
+              },
+              child: Image.asset(
+                isHorn ? Assets.CAR_HORN_ON : Assets.CAR_HORN_OFF,
+                height: 60,
+                width: 110,
+              ),
+            )
           ],
         ),
       );
+    else if (gameName == SubCategoryData.SOCCER) {
+      return Expanded(
+        child: Center(
+          child: ClipRRect(
+              clipBehavior: Clip.none,
+              borderRadius: BorderRadius.circular(10),
+              child: Material(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      writeToBLuetooth([0XBC, 80]);
+                      Future.delayed(Duration(milliseconds: 3000), () {
+                        writeToBLuetooth([0XBC, 0]);
+                        Future.delayed(Duration(milliseconds: 3000), () {
+                          writeToBLuetooth([0XBC, 80]);
+                        });
+                      });
+                    },
+                    child: Image.asset(
+                      Assets.SOCCER,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.fill,
+                    ),
+                  ))),
+        ),
+      );
+    } else if (gameName == SubCategoryData.THOR_HAMMER) {
+      return Expanded(
+          child: Center(
+        child: ClipRRect(
+            clipBehavior: Clip.none,
+            borderRadius: BorderRadius.circular(10),
+            child: Material(
+                elevation: 0,
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    writeToBLuetooth([0XBB, 0]);
+                    Future.delayed(Duration(milliseconds: 3000), () {
+                      writeToBLuetooth([0XBB, 90]);
+                      Future.delayed(Duration(milliseconds: 3000), () {
+                        writeToBLuetooth([0XBB, 0]);
+                      });
+                    });
+                  },
+                  child: Image.asset(Assets.THOR_HAMMER,
+                      height: 100, width: 100, fit: BoxFit.fill),
+                ))),
+      ));
     } else if (gameName == SubCategoryData.OBSTACLE_AVOIDER ||
         gameName == SubCategoryData.EDGE_DETECTOR ||
         gameName == SubCategoryData.OBSTACLE_AVOIDER) {
@@ -739,16 +833,53 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             VerticalGap(8),
             Container(
               width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: dumpValue,
-                onChanged: onDumpValueChange,
-                max: 50,
-                divisions: 50,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (dumpValue > 0) {
+                        dumpValue = dumpValue - 5;
+                        onDumpValueChange(dumpValue);
+                      } else if (dumpValue <= 0) {
+                        dumpValue = 0;
+                        onDumpValueChange(dumpValue);
+                      }
+                    },
+                    icon: Image.asset(Assets.MINUS),
+                    iconSize: 18,
+                  ),
+                  CustomText("Dump:- ${dumpValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  IconButton(
+                    onPressed: () {
+                      if (dumpValue < 50) {
+                        dumpValue = dumpValue + 5;
+                        onDumpValueChange(dumpValue);
+                      } else if (dumpValue >= 50) {
+                        dumpValue = 50;
+                        onDumpValueChange(dumpValue);
+                      }
+                    },
+                    icon: Image.asset(Assets.PLUS),
+                    iconSize: 18,
+                  ),
+                ],
               ),
-            )
+            ),
+
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: dumpValue,
+            //     onChanged: onDumpValueChange,
+            //     max: 50,
+            //     divisions: 50,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.yellow,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // )
           ],
         ),
       );
@@ -828,7 +959,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Swap(Lift)",
+                Text("Swap(Swing)",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -848,7 +979,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Swap(Swing)",
+                Text("Swap(Lift)",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -1085,82 +1216,258 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Swing",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             Container(
               width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorSwingValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorSwingValue = val;
-                  });
-                  writeToBLuetooth([0XBB, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorSwingValue > 0) {
+                        setState(() {
+                          exacavtorSwingValue = exacavtorSwingValue - 5;
+                        });
+                        writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                      } else if (exacavtorSwingValue <= 0) {
+                        setState(() {
+                          exacavtorSwingValue = 0;
+                        });
+                        writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.MINUS),
+                    iconSize: 18,
+                  ),
+                  CustomText("Swing:- ${exacavtorSwingValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorSwingValue < 180) {
+                        setState(() {
+                          exacavtorSwingValue = exacavtorSwingValue + 5;
+                        });
+                        writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                      } else if (exacavtorSwingValue >= 180) {
+                        setState(() {
+                          exacavtorSwingValue = 180;
+                        });
+                        writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.PLUS),
+                    iconSize: 18,
+                  ),
+                ],
               ),
             ),
-            Text("Bucket",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: exacavtorSwingValue,
+            //     onChanged: (val) {
+            //       setState(() {
+            //         exacavtorSwingValue = val;
+            //       });
+            //       writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+            //     },
+            //     max: 180,
+            //     divisions: 180,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.yellow,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // ),
             Container(
               width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorBucketValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorBucketValue = val;
-                  });
-                  writeToBLuetooth([0XBC, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorBucketValue > 0) {
+                        setState(() {
+                          exacavtorBucketValue = exacavtorBucketValue - 5;
+                        });
+                        writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                      } else if (exacavtorBucketValue <= 0) {
+                        setState(() {
+                          exacavtorBucketValue = 0;
+                        });
+                        writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.MINUS),
+                    iconSize: 18,
+                  ),
+                  CustomText("Bucket:- ${exacavtorBucketValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorBucketValue < 180) {
+                        setState(() {
+                          exacavtorBucketValue = exacavtorBucketValue + 5;
+                        });
+                        writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                      } else if (exacavtorBucketValue >= 180) {
+                        setState(() {
+                          exacavtorBucketValue = 180;
+                        });
+                        writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.PLUS),
+                    iconSize: 18,
+                  ),
+                ],
               ),
             ),
-            Text("Boon",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+
+            // Text("Bucket",
+            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: exacavtorBucketValue,
+            //     onChanged: (val) {
+            //       setState(() {
+            //         exacavtorBucketValue = val;
+            //       });
+            //       writeToBLuetooth([0XBC, val.toInt()]);
+            //     },
+            //     max: 180,
+            //     divisions: 180,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.yellow,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // ),
             Container(
               width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorBoomValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorBoomValue = val;
-                  });
-                  writeToBLuetooth([0XBD, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorBoomValue > 0) {
+                        setState(() {
+                          exacavtorBoomValue = exacavtorBoomValue - 5;
+                        });
+                        writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                      } else if (exacavtorBoomValue <= 0) {
+                        setState(() {
+                          exacavtorBoomValue = 0;
+                        });
+                        writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.MINUS),
+                    iconSize: 18,
+                  ),
+                  CustomText("Boon:- ${exacavtorBoomValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorBoomValue < 180) {
+                        setState(() {
+                          exacavtorBoomValue = exacavtorBoomValue + 5;
+                        });
+                        writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                      } else if (exacavtorBoomValue >= 180) {
+                        setState(() {
+                          exacavtorBoomValue = 180;
+                        });
+                        writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.PLUS),
+                    iconSize: 18,
+                  ),
+                ],
               ),
             ),
-            Text("Arm",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            // Text("Boon",
+            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: exacavtorBoomValue,
+            //     onChanged: (val) {
+            //       setState(() {
+            //         exacavtorBoomValue = val;
+            //       });
+            //       writeToBLuetooth([0XBD, val.toInt()]);
+            //     },
+            //     max: 180,
+            //     divisions: 180,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.yellow,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // ),
             Container(
               width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorArmValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorArmValue = val;
-                  });
-                  writeToBLuetooth([0XBE, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorArmValue > 0) {
+                        setState(() {
+                          exacavtorArmValue = exacavtorArmValue - 5;
+                        });
+                        writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                      } else if (exacavtorArmValue <= 0) {
+                        setState(() {
+                          exacavtorArmValue = 0;
+                        });
+                        writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.MINUS),
+                    iconSize: 18,
+                  ),
+                  CustomText("Arm:- ${exacavtorArmValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  IconButton(
+                    onPressed: () {
+                      if (exacavtorArmValue < 180) {
+                        setState(() {
+                          exacavtorArmValue = exacavtorArmValue + 5;
+                        });
+                        writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                      } else if (exacavtorArmValue >= 180) {
+                        setState(() {
+                          exacavtorArmValue = 180;
+                        });
+                        writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                      }
+                    },
+                    icon: Image.asset(Assets.PLUS),
+                    iconSize: 18,
+                  ),
+                ],
               ),
-            )
+            ),
+
+            // Text("Arm",
+            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: exacavtorArmValue,
+            //     onChanged: (val) {
+            //       setState(() {
+            //         exacavtorArmValue = val;
+            //       });
+            //       writeToBLuetooth([0XBE, val.toInt()]);
+            //     },
+            //     max: 180,
+            //     divisions: 180,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.yellow,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // )
           ],
         )),
       );
@@ -1369,6 +1676,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   List<GaugePointer> pointers = [];
+
   void addNeedleWidget(double value) {
     final List<Color> gradient = [
       Colors.red,
@@ -1525,7 +1833,6 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           proximityTwo = data.first;
         });
       }
-      startSendingLineFollowerCommand();
     } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
       setState(() {
         if (radarAngle == 180 || radarAngle == 0) {
@@ -1568,7 +1875,6 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           proximityTwo = data.first;
         });
       }
-      startSendingLineFollowerCommand();
     } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
       setState(() {
         if (radarAngle == 180 || radarAngle == 0) {
@@ -1643,17 +1949,22 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   bool d1 = false;
   bool shouldStopLine = false;
+
   void startSendingLineFollowerCommand() {
-    if (shouldStopLine) {
-      return;
+    if (commandTimer != null) {
+      commandTimer!.cancel();
     }
-    if (!d1) {
-      d1 = true;
-      writeToBLuetooth([0XD1]);
-    } else {
-      d1 = false;
-      writeToBLuetooth([0XD2]);
-    }
+    commandTimer = Timer.periodic(Duration(milliseconds: 600), (timer) {
+      if (!shouldStopLine) {
+        if (!d1) {
+          d1 = true;
+          writeToBLuetooth([0XD1]);
+        } else {
+          d1 = false;
+          writeToBLuetooth([0XD2]);
+        }
+      }
+    });
   }
 
   void startSendingObstacleAvoiderCommandToRecvValues() {
@@ -1846,20 +2157,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           setState(() {
             outputAvoidoValue = "Backward";
           });
-          runCommandTimer([0XB1]);
+          writeToBLuetooth([0XB1]);
           isBackward = true;
         } else {
           setState(() {
             outputAvoidoValue = "Left";
           });
           isBackward = false;
-          runCommandTimer([0XB2]);
+          writeToBLuetooth([0XB2]);
         }
       }
     }
   }
 
   bool isBackward = false;
+
   void startEdge() {
     if (obstacleAvoiderThreShold != -1) {
       if (outputObstaceleavoider < obstacleAvoiderThreShold) {
@@ -1874,20 +2186,21 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           setState(() {
             outputAvoidoValue = "Backward";
           });
-          runCommandTimer([0XB1]);
+          writeToBLuetooth([0XB1]);
           isBackward = true;
         } else {
           setState(() {
             outputAvoidoValue = "Left";
           });
           isBackward = false;
-          runCommandTimer([0XB2]);
+          writeToBLuetooth([0XB2]);
         }
       }
     }
   }
 
   Timer? commandTimer;
+
   void runCommandTimer(List<int> command) {
     if (commandTimer != null) {
       commandTimer?.cancel();
