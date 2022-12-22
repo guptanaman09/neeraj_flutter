@@ -919,6 +919,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB5]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
@@ -936,6 +939,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 } else {
                   writeToBLuetooth([0XB6]);
                 }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
               },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
@@ -1004,6 +1010,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB8]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XBA]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XBA]);
               },
@@ -1026,6 +1035,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       writeToBLuetooth([0XB6]);
                     }
                   },
+                  onTapCancel: () {
+                    writeToBLuetooth([0XB7]);
+                  },
                   onTapUp: (event) {
                     writeToBLuetooth([0XB7]);
                   },
@@ -1043,6 +1055,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     } else {
                       writeToBLuetooth([0XB5]);
                     }
+                  },
+                  onTapCancel: () {
+                    writeToBLuetooth([0XB7]);
                   },
                   onTapUp: (event) {
                     writeToBLuetooth([0XB7]);
@@ -1063,6 +1078,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 } else {
                   writeToBLuetooth([0XB9]);
                 }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XBA]);
               },
               onTapUp: (event) {
                 writeToBLuetooth([0XBA]);
@@ -1112,6 +1130,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB5]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
@@ -1130,6 +1151,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 } else {
                   writeToBLuetooth([0XB6]);
                 }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
               },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
@@ -1179,6 +1203,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB5]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
@@ -1196,6 +1223,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 } else {
                   writeToBLuetooth([0XB6]);
                 }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
               },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
@@ -2153,19 +2183,16 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         writeToBLuetooth([0XB0]);
       } else {
         //left turn
-        if (!isBackward) {
-          setState(() {
-            outputAvoidoValue = "Backward";
-          });
-          writeToBLuetooth([0XB1]);
-          isBackward = true;
-        } else {
+        setState(() {
+          outputAvoidoValue = "Backward";
+        });
+        writeToBLuetooth([0XB1]);
+        Future.delayed(Duration(milliseconds: 150), () {
           setState(() {
             outputAvoidoValue = "Left";
           });
-          isBackward = false;
           writeToBLuetooth([0XB2]);
-        }
+        });
       }
     }
   }
@@ -2182,19 +2209,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         writeToBLuetooth([0XB0]);
       } else {
         //left turn
-        if (!isBackward) {
-          setState(() {
-            outputAvoidoValue = "Backward";
-          });
-          writeToBLuetooth([0XB1]);
-          isBackward = true;
-        } else {
+
+        setState(() {
+          outputAvoidoValue = "Backward";
+        });
+        writeToBLuetooth([0XB1]);
+        Future.delayed(Duration(milliseconds: 150), () {
           setState(() {
             outputAvoidoValue = "Left";
           });
-          isBackward = false;
           writeToBLuetooth([0XB2]);
-        }
+        });
       }
     }
   }
