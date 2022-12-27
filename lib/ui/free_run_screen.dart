@@ -145,6 +145,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         MySharedPreference.FREERUN_ARMSLIDER);
     exacavtorBoomValue = await MySharedPreference.getDouble(
         MySharedPreference.FREERUN_BOONSLIDER);
+    if (exacavtorBoomValue == 0) {
+      exacavtorBoomValue = 105;
+    }
     exacavtorBucketValue = await MySharedPreference.getDouble(
         MySharedPreference.FREERUN_BUCKETSLIDER);
     setState(() {});
@@ -562,174 +565,344 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         MySharedPreference.FREERUN_BLUESLIDER, blueSliderValue);
   }
 
+  Timer? longPressTimer;
+
   Widget getCenterLayout(String gameName) {
     print("game name is >>> ${gameName}");
     if (gameName == SubCategoryData.FREE_RUN &&
         subCategoryDetail.mainCategoryTitle == CategoryData.ACCELEREO)
-      return Container(
-        width: DeviceUtils.getScreenWidtht(context) * 0.30,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (redSliderValue > 0) {
-                      redSliderValue = redSliderValue - 5;
-                      onRedSliderChange(redSliderValue);
-                    } else if (redSliderValue <= 0) {
-                      redSliderValue = 0;
-                      onRedSliderChange(redSliderValue);
-                    }
-                  },
-                  icon: Image.asset(Assets.MINUS),
-                  iconSize: 18,
-                ),
-                CustomText("RED:- ${redSliderValue.round()}",
-                    TextStyle(color: Colors.black, fontSize: 12)),
-                IconButton(
-                  onPressed: () {
-                    if (redSliderValue < 255) {
-                      redSliderValue = redSliderValue + 5;
-                      onRedSliderChange(redSliderValue);
-                    } else if (redSliderValue >= 255) {
-                      redSliderValue = 255;
-                      onRedSliderChange(redSliderValue);
-                    }
-                  },
-                  icon: Image.asset(Assets.PLUS),
-                  iconSize: 18,
-                ),
-              ],
-            ),
-            // Container(
-            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            //   child: Slider(
-            //     value: redSliderValue,
-            //     onChanged: onRedSliderChange,
-            //     max: 255,
-            //     label: redSliderValue.round().toString(),
-            //     divisions: 255,
-            //     thumbColor: Colors.grey,
-            //     activeColor: Colors.red,
-            //     inactiveColor: Colors.grey,
-            //   ),
-            // ),
-            VerticalGap(4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (greenSliderValue > 0) {
-                      greenSliderValue = greenSliderValue - 5;
-                      onGreenSliderChange(greenSliderValue);
-                    } else if (greenSliderValue <= 0) {
-                      greenSliderValue = 0;
-                      onGreenSliderChange(greenSliderValue);
-                    }
-                  },
-                  icon: Image.asset(Assets.MINUS),
-                  iconSize: 18,
-                ),
-                CustomText("Green:- ${greenSliderValue.round()}",
-                    TextStyle(color: Colors.black, fontSize: 12)),
-                IconButton(
-                  onPressed: () {
-                    if (greenSliderValue < 255) {
-                      greenSliderValue = greenSliderValue + 5;
-                      onGreenSliderChange(greenSliderValue);
-                    } else if (greenSliderValue >= 255) {
-                      greenSliderValue = 255;
-                      onGreenSliderChange(greenSliderValue);
-                    }
-                  },
-                  icon: Image.asset(Assets.PLUS),
-                  iconSize: 18,
-                ),
-              ],
-            ),
-            VerticalGap(4),
-            // Container(
-            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            //   child: Slider(
-            //     value: greenSliderValue,
-            //     onChanged: onGreenSliderChange,
-            //     max: 255,
-            //     label: greenSliderValue.round().toString(),
-            //     divisions: 255,
-            //     thumbColor: Colors.grey,
-            //     activeColor: Colors.green,
-            //     inactiveColor: Colors.grey,
-            //   ),
-            // ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (blueSliderValue > 0) {
-                      blueSliderValue = blueSliderValue - 5;
-                      onBlueSliderChange(blueSliderValue);
-                    } else if (blueSliderValue <= 0) {
-                      blueSliderValue = 0;
-                      onBlueSliderChange(blueSliderValue);
-                    }
-                  },
-                  icon: Image.asset(Assets.MINUS),
-                  iconSize: 18,
-                ),
-                CustomText("Blue:- ${blueSliderValue.round()}",
-                    TextStyle(color: Colors.black, fontSize: 12)),
-                IconButton(
-                  onPressed: () {
-                    if (blueSliderValue < 255) {
-                      blueSliderValue = blueSliderValue + 5;
-                      onBlueSliderChange(blueSliderValue);
-                    } else if (blueSliderValue >= 255) {
-                      blueSliderValue = 255;
-                      onBlueSliderChange(blueSliderValue);
-                    }
-                  },
-                  icon: Image.asset(Assets.PLUS),
-                  iconSize: 18,
-                ),
-              ],
-            ),
-            // Container(
-            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            //   child: Slider(
-            //     value: blueSliderValue,
-            //     onChanged: onBlueSliderChange,
-            //     max: 255,
-            //     label: blueSliderValue.round().toString(),
-            //     divisions: 255,
-            //     thumbColor: Colors.grey,
-            //     activeColor: Colors.blue,
-            //     inactiveColor: Colors.grey,
-            //   ),
-            // ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  isHorn = !isHorn;
-                });
-                if (isHorn) {
-                  writeToBLuetooth([0XC0]);
-                } else {
-                  writeToBLuetooth([0XC1]);
-                }
-              },
-              child: Image.asset(
-                isHorn ? Assets.CAR_HORN_ON : Assets.CAR_HORN_OFF,
-                height: 60,
-                width: 110,
+      return Expanded(
+        child: Container(
+          width: DeviceUtils.getScreenWidtht(context) * 0.30,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (redSliderValue > 0) {
+                        redSliderValue = redSliderValue - 5;
+                        onRedSliderChange(redSliderValue);
+                      } else if (redSliderValue <= 0) {
+                        redSliderValue = 0;
+                        onRedSliderChange(redSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (redSliderValue > 0) {
+                          redSliderValue = redSliderValue - 5;
+                          onRedSliderChange(redSliderValue);
+                        } else if (redSliderValue <= 0) {
+                          redSliderValue = 0;
+                          onRedSliderChange(redSliderValue);
+                        }
+                      });
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 32,
+                      width: 32,
+                    ),
+                  ),
+                  CustomText("RED:- ${redSliderValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (redSliderValue < 255) {
+                        redSliderValue = redSliderValue + 5;
+                        onRedSliderChange(redSliderValue);
+                      } else if (redSliderValue >= 255) {
+                        redSliderValue = 255;
+                        onRedSliderChange(redSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (redSliderValue < 255) {
+                          redSliderValue = redSliderValue + 5;
+                          onRedSliderChange(redSliderValue);
+                        } else if (redSliderValue >= 255) {
+                          redSliderValue = 255;
+                          onRedSliderChange(redSliderValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 32,
+                      width: 32,
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: redSliderValue,
+              //     onChanged: onRedSliderChange,
+              //     max: 255,
+              //     label: redSliderValue.round().toString(),
+              //     divisions: 255,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.red,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (greenSliderValue > 0) {
+                          greenSliderValue = greenSliderValue - 5;
+                          onGreenSliderChange(greenSliderValue);
+                        } else if (greenSliderValue <= 0) {
+                          greenSliderValue = 0;
+                          onGreenSliderChange(greenSliderValue);
+                        }
+                      });
+                    },
+                    onTap: () {
+                      if (greenSliderValue > 0) {
+                        greenSliderValue = greenSliderValue - 5;
+                        onGreenSliderChange(greenSliderValue);
+                      } else if (greenSliderValue <= 0) {
+                        greenSliderValue = 0;
+                        onGreenSliderChange(greenSliderValue);
+                      }
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 32,
+                      width: 32,
+                    ),
+                  ),
+                  CustomText("Green:- ${greenSliderValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (greenSliderValue < 255) {
+                        greenSliderValue = greenSliderValue + 5;
+                        onGreenSliderChange(greenSliderValue);
+                      } else if (greenSliderValue >= 255) {
+                        greenSliderValue = 255;
+                        onGreenSliderChange(greenSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (greenSliderValue < 255) {
+                          greenSliderValue = greenSliderValue + 5;
+                          onGreenSliderChange(greenSliderValue);
+                        } else if (greenSliderValue >= 255) {
+                          greenSliderValue = 255;
+                          onGreenSliderChange(greenSliderValue);
+                        }
+                      });
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 32,
+                      width: 32,
+                    ),
+                  ),
+                ],
+              ),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: greenSliderValue,
+              //     onChanged: onGreenSliderChange,
+              //     max: 255,
+              //     label: greenSliderValue.round().toString(),
+              //     divisions: 255,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.green,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (blueSliderValue > 0) {
+                        blueSliderValue = blueSliderValue - 5;
+                        onBlueSliderChange(blueSliderValue);
+                      } else if (blueSliderValue <= 0) {
+                        blueSliderValue = 0;
+                        onBlueSliderChange(blueSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (blueSliderValue > 0) {
+                          blueSliderValue = blueSliderValue - 5;
+                          onBlueSliderChange(blueSliderValue);
+                        } else if (blueSliderValue <= 0) {
+                          blueSliderValue = 0;
+                          onBlueSliderChange(blueSliderValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 32,
+                      width: 32,
+                    ),
+                  ),
+                  CustomText("Blue:- ${blueSliderValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (blueSliderValue < 255) {
+                        blueSliderValue = blueSliderValue + 5;
+                        onBlueSliderChange(blueSliderValue);
+                      } else if (blueSliderValue >= 255) {
+                        blueSliderValue = 255;
+                        onBlueSliderChange(blueSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (blueSliderValue < 255) {
+                          blueSliderValue = blueSliderValue + 5;
+                          onBlueSliderChange(blueSliderValue);
+                        } else if (blueSliderValue >= 255) {
+                          blueSliderValue = 255;
+                          onBlueSliderChange(blueSliderValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 32,
+                      width: 32,
+                    ),
+                  ),
+                ],
+              ),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: blueSliderValue,
+              //     onChanged: onBlueSliderChange,
+              //     max: 255,
+              //     label: blueSliderValue.round().toString(),
+              //     divisions: 255,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.blue,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isHorn = !isHorn;
+                  });
+                  if (isHorn) {
+                    writeToBLuetooth([0XC0]);
+                  } else {
+                    writeToBLuetooth([0XC1]);
+                  }
+                },
+                child: Image.asset(
+                  isHorn ? Assets.CAR_HORN_ON : Assets.CAR_HORN_OFF,
+                  height: 60,
+                  width: 110,
+                ),
+              )
+            ],
+          ),
         ),
       );
     else if (gameName == SubCategoryData.SOCCER) {
