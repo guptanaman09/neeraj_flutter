@@ -2485,11 +2485,16 @@ class OnlineGamePlayScreenState extends BaseClass {
 
   void startSendingSensorValue(List<int> command) {
     commandTimer?.cancel();
-    commandTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      if (proximitySwitchValue) {
-        connectivity!.sendData(command);
-      }
-    });
+    if (proximitySwitchValue) {
+      commandTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+        if (proximitySwitchValue) {
+          connectivity!.sendData(command);
+        }
+      });
+    } else {
+      connectivity!.sendData([0XE2]);
+    }
+
     startListeningSensoData();
   }
 

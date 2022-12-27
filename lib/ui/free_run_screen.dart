@@ -55,7 +55,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   double exacavtorSwingValue = 0;
   double exacavtorBucketValue = 0;
-  double exacavtorBoomValue = 0;
+  double exacavtorBoomValue = 105;
   double exacavtorArmValue = 0;
 
   late AnimationController _animationController;
@@ -131,7 +131,22 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     prox_1_white_controller.text = prox_1_white.toString();
     prox_2_black_controller.text = prox_2_black.toString();
     prox_2_white_controller.text = prox_2_white.toString();
-
+    redSliderValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_REDSLIDER);
+    greenSliderValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_GREENSLIDER);
+    blueSliderValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_BLUESLIDER);
+    dumpValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_DUMPSLIDER);
+    exacavtorSwingValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_SWINGSLIDER);
+    exacavtorArmValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_ARMSLIDER);
+    exacavtorBoomValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_BOONSLIDER);
+    exacavtorBucketValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_BUCKETSLIDER);
     setState(() {});
   }
 
@@ -525,6 +540,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       redSliderValue = val;
     });
     writeToBLuetooth([0XC2, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_REDSLIDER, redSliderValue);
   }
 
   void onGreenSliderChange(double val) {
@@ -532,6 +549,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       greenSliderValue = val;
     });
     writeToBLuetooth([0XC3, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_GREENSLIDER, greenSliderValue);
   }
 
   void onBlueSliderChange(double val) {
@@ -539,6 +558,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       blueSliderValue = val;
     });
     writeToBLuetooth([0XC4, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_BLUESLIDER, blueSliderValue);
   }
 
   Widget getCenterLayout(String gameName) {
@@ -853,11 +874,11 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 12)),
                   IconButton(
                     onPressed: () {
-                      if (dumpValue < 50) {
+                      if (dumpValue < 60) {
                         dumpValue = dumpValue + 5;
                         onDumpValueChange(dumpValue);
-                      } else if (dumpValue >= 50) {
-                        dumpValue = 50;
+                      } else if (dumpValue >= 60) {
+                        dumpValue = 60;
                         onDumpValueChange(dumpValue);
                       }
                     },
@@ -1258,11 +1279,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           exacavtorSwingValue = exacavtorSwingValue - 5;
                         });
                         writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_SWINGSLIDER,
+                            exacavtorSwingValue);
                       } else if (exacavtorSwingValue <= 0) {
                         setState(() {
                           exacavtorSwingValue = 0;
                         });
                         writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_SWINGSLIDER,
+                            exacavtorSwingValue);
                       }
                     },
                     icon: Image.asset(Assets.MINUS),
@@ -1277,11 +1304,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           exacavtorSwingValue = exacavtorSwingValue + 5;
                         });
                         writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_SWINGSLIDER,
+                            exacavtorSwingValue);
                       } else if (exacavtorSwingValue >= 180) {
                         setState(() {
                           exacavtorSwingValue = 180;
                         });
                         writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_SWINGSLIDER,
+                            exacavtorSwingValue);
                       }
                     },
                     icon: Image.asset(Assets.PLUS),
@@ -1319,11 +1352,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           exacavtorBucketValue = exacavtorBucketValue - 5;
                         });
                         writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BUCKETSLIDER,
+                            exacavtorBucketValue);
                       } else if (exacavtorBucketValue <= 0) {
                         setState(() {
                           exacavtorBucketValue = 0;
                         });
                         writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BUCKETSLIDER,
+                            exacavtorBucketValue);
                       }
                     },
                     icon: Image.asset(Assets.MINUS),
@@ -1338,11 +1377,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           exacavtorBucketValue = exacavtorBucketValue + 5;
                         });
                         writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BUCKETSLIDER,
+                            exacavtorBucketValue);
                       } else if (exacavtorBucketValue >= 180) {
                         setState(() {
                           exacavtorBucketValue = 180;
                         });
                         writeToBLuetooth([0XBC, exacavtorBucketValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BUCKETSLIDER,
+                            exacavtorBucketValue);
                       }
                     },
                     icon: Image.asset(Assets.PLUS),
@@ -1378,16 +1423,22 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 children: [
                   IconButton(
                     onPressed: () {
-                      if (exacavtorBoomValue > 0) {
+                      if (exacavtorBoomValue > 105) {
                         setState(() {
                           exacavtorBoomValue = exacavtorBoomValue - 5;
                         });
                         writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
-                      } else if (exacavtorBoomValue <= 0) {
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BOONSLIDER,
+                            exacavtorBoomValue);
+                      } else if (exacavtorBoomValue <= 105) {
                         setState(() {
-                          exacavtorBoomValue = 0;
+                          exacavtorBoomValue = 105;
                         });
                         writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BOONSLIDER,
+                            exacavtorBoomValue);
                       }
                     },
                     icon: Image.asset(Assets.MINUS),
@@ -1402,11 +1453,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           exacavtorBoomValue = exacavtorBoomValue + 5;
                         });
                         writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BOONSLIDER,
+                            exacavtorBoomValue);
                       } else if (exacavtorBoomValue >= 180) {
                         setState(() {
                           exacavtorBoomValue = 180;
                         });
                         writeToBLuetooth([0XBD, exacavtorBoomValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_BOONSLIDER,
+                            exacavtorBoomValue);
                       }
                     },
                     icon: Image.asset(Assets.PLUS),
@@ -1446,11 +1503,17 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                           exacavtorArmValue = exacavtorArmValue - 5;
                         });
                         writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_ARMSLIDER,
+                            exacavtorArmValue);
                       } else if (exacavtorArmValue <= 0) {
                         setState(() {
                           exacavtorArmValue = 0;
                         });
                         writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_ARMSLIDER,
+                            exacavtorArmValue);
                       }
                     },
                     icon: Image.asset(Assets.MINUS),
@@ -1460,16 +1523,22 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontSize: 12)),
                   IconButton(
                     onPressed: () {
-                      if (exacavtorArmValue < 180) {
+                      if (exacavtorArmValue < 75) {
                         setState(() {
                           exacavtorArmValue = exacavtorArmValue + 5;
                         });
                         writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
-                      } else if (exacavtorArmValue >= 180) {
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_ARMSLIDER,
+                            exacavtorArmValue);
+                      } else if (exacavtorArmValue >= 75) {
                         setState(() {
-                          exacavtorArmValue = 180;
+                          exacavtorArmValue = 75;
                         });
                         writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                        MySharedPreference.setDouble(
+                            MySharedPreference.FREERUN_ARMSLIDER,
+                            exacavtorArmValue);
                       }
                     },
                     icon: Image.asset(Assets.PLUS),
@@ -1754,6 +1823,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       dumpValue = val;
     });
     writeToBLuetooth([0XBB, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_DUMPSLIDER, dumpValue);
   }
 
   Widget getSwitchForObstacleAvoider() {
