@@ -193,9 +193,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       width: DeviceUtils.getScreenWidtht(context),
                       margin: EdgeInsets.only(left: 8),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          HorizontalGap(30),
                           InkWell(
                             onTap: () {
                               onOkayPressed();
@@ -204,21 +205,24 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             child: Container(
                               child: Image.asset(
                                 Assets.BACK_BUTTON,
-                                height: 30,
-                                width: 30,
+                                height: 40,
+                                width: 40,
                               ),
                             ),
                           ),
-                          CustomText(
-                              isAnyBluetoothConnected
-                                  ? "Connected"
-                                  : "Not Connected",
-                              TextStyle(
-                                  color: isAnyBluetoothConnected
-                                      ? Colors.green
-                                      : Colors.red,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600)),
+                          Expanded(
+                              child: Center(
+                            child: CustomText(
+                                isAnyBluetoothConnected
+                                    ? "Connected"
+                                    : "Not Connected",
+                                TextStyle(
+                                    color: isAnyBluetoothConnected
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600)),
+                          )),
                           InkWell(
                             onTap: onTapBluetoothIcon,
                             child: Image.asset(
@@ -227,6 +231,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               width: 40,
                             ),
                           ),
+                          HorizontalGap(30),
                         ],
                       ),
                     ),
@@ -467,9 +472,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       Container(
                         width: DeviceUtils.getScreenWidtht(context),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            HorizontalGap(30),
                             InkWell(
                               onTap: () {
                                 onOkayPressed();
@@ -478,21 +484,24 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               child: Container(
                                 child: Image.asset(
                                   Assets.BACK_BUTTON,
-                                  height: 30,
-                                  width: 30,
+                                  height: 40,
+                                  width: 40,
                                 ),
                               ),
                             ),
-                            CustomText(
-                                isAnyBluetoothConnected
-                                    ? "Connected"
-                                    : "Not Connected",
-                                TextStyle(
-                                    color: isAnyBluetoothConnected
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600)),
+                            Expanded(
+                                child: Center(
+                              child: CustomText(
+                                  isAnyBluetoothConnected
+                                      ? "Connected"
+                                      : "Not Connected",
+                                  TextStyle(
+                                      color: isAnyBluetoothConnected
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
+                            )),
                             InkWell(
                               onTap: onTapBluetoothIcon,
                               child: Image.asset(
@@ -501,6 +510,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 width: 40,
                               ),
                             ),
+                            HorizontalGap(30),
                           ],
                         ),
                       ),
@@ -582,7 +592,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (redSliderValue > 0) {
-                        redSliderValue = redSliderValue - 5;
+                        redSliderValue = redSliderValue - 10;
                         onRedSliderChange(redSliderValue);
                       } else if (redSliderValue <= 0) {
                         redSliderValue = 0;
@@ -596,7 +606,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (redSliderValue > 0) {
-                          redSliderValue = redSliderValue - 5;
+                          redSliderValue = redSliderValue - 10;
                           onRedSliderChange(redSliderValue);
                         } else if (redSliderValue <= 0) {
                           redSliderValue = 0;
@@ -616,8 +626,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.MINUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                   CustomText("RED:- ${redSliderValue.round()}",
@@ -625,7 +635,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (redSliderValue < 255) {
-                        redSliderValue = redSliderValue + 5;
+                        redSliderValue = redSliderValue + 10;
                         onRedSliderChange(redSliderValue);
                       } else if (redSliderValue >= 255) {
                         redSliderValue = 255;
@@ -639,7 +649,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (redSliderValue < 255) {
-                          redSliderValue = redSliderValue + 5;
+                          redSliderValue = redSliderValue + 10;
                           onRedSliderChange(redSliderValue);
                         } else if (redSliderValue >= 255) {
                           redSliderValue = 255;
@@ -659,8 +669,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.PLUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                 ],
@@ -689,7 +699,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (greenSliderValue > 0) {
-                          greenSliderValue = greenSliderValue - 5;
+                          greenSliderValue = greenSliderValue - 10;
                           onGreenSliderChange(greenSliderValue);
                         } else if (greenSliderValue <= 0) {
                           greenSliderValue = 0;
@@ -699,7 +709,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     onTap: () {
                       if (greenSliderValue > 0) {
-                        greenSliderValue = greenSliderValue - 5;
+                        greenSliderValue = greenSliderValue - 10;
                         onGreenSliderChange(greenSliderValue);
                       } else if (greenSliderValue <= 0) {
                         greenSliderValue = 0;
@@ -718,8 +728,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.MINUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                   CustomText("Green:- ${greenSliderValue.round()}",
@@ -727,7 +737,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (greenSliderValue < 255) {
-                        greenSliderValue = greenSliderValue + 5;
+                        greenSliderValue = greenSliderValue + 10;
                         onGreenSliderChange(greenSliderValue);
                       } else if (greenSliderValue >= 255) {
                         greenSliderValue = 255;
@@ -741,7 +751,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (greenSliderValue < 255) {
-                          greenSliderValue = greenSliderValue + 5;
+                          greenSliderValue = greenSliderValue + 10;
                           onGreenSliderChange(greenSliderValue);
                         } else if (greenSliderValue >= 255) {
                           greenSliderValue = 255;
@@ -761,8 +771,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.PLUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                 ],
@@ -786,7 +796,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (blueSliderValue > 0) {
-                        blueSliderValue = blueSliderValue - 5;
+                        blueSliderValue = blueSliderValue - 10;
                         onBlueSliderChange(blueSliderValue);
                       } else if (blueSliderValue <= 0) {
                         blueSliderValue = 0;
@@ -800,7 +810,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (blueSliderValue > 0) {
-                          blueSliderValue = blueSliderValue - 5;
+                          blueSliderValue = blueSliderValue - 10;
                           onBlueSliderChange(blueSliderValue);
                         } else if (blueSliderValue <= 0) {
                           blueSliderValue = 0;
@@ -820,8 +830,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.MINUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                   CustomText("Blue:- ${blueSliderValue.round()}",
@@ -829,7 +839,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (blueSliderValue < 255) {
-                        blueSliderValue = blueSliderValue + 5;
+                        blueSliderValue = blueSliderValue + 10;
                         onBlueSliderChange(blueSliderValue);
                       } else if (blueSliderValue >= 255) {
                         blueSliderValue = 255;
@@ -843,7 +853,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (blueSliderValue < 255) {
-                          blueSliderValue = blueSliderValue + 5;
+                          blueSliderValue = blueSliderValue + 10;
                           onBlueSliderChange(blueSliderValue);
                         } else if (blueSliderValue >= 255) {
                           blueSliderValue = 255;
@@ -863,8 +873,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.PLUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                 ],
@@ -898,7 +908,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   height: 60,
                   width: 110,
                 ),
-              )
+              ),
+              VerticalGap(10),
             ],
           ),
         ),
@@ -1031,7 +1042,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (dumpValue > 0) {
-                        dumpValue = dumpValue - 5;
+                        dumpValue = dumpValue - 10;
                         onDumpValueChange(dumpValue);
                       } else if (dumpValue <= 0) {
                         dumpValue = 0;
@@ -1045,7 +1056,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (dumpValue > 0) {
-                          dumpValue = dumpValue - 5;
+                          dumpValue = dumpValue - 10;
                           onDumpValueChange(dumpValue);
                         } else if (dumpValue <= 0) {
                           dumpValue = 0;
@@ -1065,8 +1076,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.MINUS,
-                      height: 32,
-                      width: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                   CustomText("Dump:- ${dumpValue.round()}",
@@ -1074,7 +1085,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   InkWell(
                     onTap: () {
                       if (dumpValue < 60) {
-                        dumpValue = dumpValue + 5;
+                        dumpValue = dumpValue + 10;
                         onDumpValueChange(dumpValue);
                       } else if (dumpValue >= 60) {
                         dumpValue = 60;
@@ -1088,7 +1099,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       longPressTimer =
                           Timer.periodic(Duration(milliseconds: 100), (timer) {
                         if (dumpValue < 60) {
-                          dumpValue = dumpValue + 5;
+                          dumpValue = dumpValue + 10;
                           onDumpValueChange(dumpValue);
                         } else if (dumpValue >= 60) {
                           dumpValue = 60;
@@ -1108,8 +1119,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     },
                     child: Image.asset(
                       Assets.PLUS,
-                      width: 32,
-                      height: 32,
+                      height: 40,
+                      width: 40,
                     ),
                   ),
                 ],
@@ -1491,7 +1502,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       return Expanded(
         child: Container(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
@@ -1503,7 +1514,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorSwingValue > 0) {
                           setState(() {
-                            exacavtorSwingValue = exacavtorSwingValue - 5;
+                            exacavtorSwingValue = exacavtorSwingValue - 10;
                           });
                           writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
                           MySharedPreference.setDouble(
@@ -1527,7 +1538,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorSwingValue > 0) {
                             setState(() {
-                              exacavtorSwingValue = exacavtorSwingValue - 5;
+                              exacavtorSwingValue = exacavtorSwingValue - 10;
                             });
                             writeToBLuetooth(
                                 [0XBB, exacavtorSwingValue.toInt()]);
@@ -1558,8 +1569,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.MINUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                     CustomText("Swing:- ${exacavtorSwingValue.round()}",
@@ -1568,7 +1579,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorSwingValue < 180) {
                           setState(() {
-                            exacavtorSwingValue = exacavtorSwingValue + 5;
+                            exacavtorSwingValue = exacavtorSwingValue + 10;
                           });
                           writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
                           MySharedPreference.setDouble(
@@ -1592,7 +1603,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorSwingValue < 180) {
                             setState(() {
-                              exacavtorSwingValue = exacavtorSwingValue + 5;
+                              exacavtorSwingValue = exacavtorSwingValue + 10;
                             });
                             writeToBLuetooth(
                                 [0XBB, exacavtorSwingValue.toInt()]);
@@ -1623,14 +1634,14 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.PLUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ],
                 ),
               ),
-              VerticalGap(10),
+
               // Container(
               //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
               //   child: Slider(
@@ -1657,7 +1668,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorBucketValue > 0) {
                           setState(() {
-                            exacavtorBucketValue = exacavtorBucketValue - 5;
+                            exacavtorBucketValue = exacavtorBucketValue - 10;
                           });
                           writeToBLuetooth(
                               [0XBC, exacavtorBucketValue.toInt()]);
@@ -1683,7 +1694,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorBucketValue > 0) {
                             setState(() {
-                              exacavtorBucketValue = exacavtorBucketValue - 5;
+                              exacavtorBucketValue = exacavtorBucketValue - 10;
                             });
                             writeToBLuetooth(
                                 [0XBC, exacavtorBucketValue.toInt()]);
@@ -1714,8 +1725,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.MINUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                     CustomText("Bucket:- ${exacavtorBucketValue.round()}",
@@ -1724,7 +1735,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorBucketValue < 180) {
                           setState(() {
-                            exacavtorBucketValue = exacavtorBucketValue + 5;
+                            exacavtorBucketValue = exacavtorBucketValue + 10;
                           });
                           writeToBLuetooth(
                               [0XBC, exacavtorBucketValue.toInt()]);
@@ -1750,7 +1761,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorBucketValue < 180) {
                             setState(() {
-                              exacavtorBucketValue = exacavtorBucketValue + 5;
+                              exacavtorBucketValue = exacavtorBucketValue + 10;
                             });
                             writeToBLuetooth(
                                 [0XBC, exacavtorBucketValue.toInt()]);
@@ -1781,14 +1792,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.PLUS,
-                        height: 32,
-                        width: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ],
                 ),
               ),
-              VerticalGap(10),
               // Text("Bucket",
               //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               // Container(
@@ -1817,7 +1827,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorBoomValue > 0) {
                           setState(() {
-                            exacavtorBoomValue = exacavtorBoomValue - 5;
+                            exacavtorBoomValue = exacavtorBoomValue - 10;
                           });
                           writeToBLuetooth(
                               [0XBD, 180 - exacavtorBoomValue.toInt()]);
@@ -1843,7 +1853,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorBoomValue > 0) {
                             setState(() {
-                              exacavtorBoomValue = exacavtorBoomValue - 5;
+                              exacavtorBoomValue = exacavtorBoomValue - 10;
                             });
                             writeToBLuetooth(
                                 [0XBD, 180 - exacavtorBoomValue.toInt()]);
@@ -1874,8 +1884,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.MINUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                     CustomText("Boon:- ${exacavtorBoomValue.round()}",
@@ -1884,7 +1894,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorBoomValue < 180) {
                           setState(() {
-                            exacavtorBoomValue = exacavtorBoomValue + 5;
+                            exacavtorBoomValue = exacavtorBoomValue + 10;
                           });
                           writeToBLuetooth(
                               [0XBD, 180 - exacavtorBoomValue.toInt()]);
@@ -1910,7 +1920,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorBoomValue < 180) {
                             setState(() {
-                              exacavtorBoomValue = exacavtorBoomValue + 5;
+                              exacavtorBoomValue = exacavtorBoomValue + 10;
                             });
                             writeToBLuetooth(
                                 [0XBD, 180 - exacavtorBoomValue.toInt()]);
@@ -1941,14 +1951,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.PLUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ],
                 ),
               ),
-              VerticalGap(10),
               // Text("Boon",
               //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               // Container(
@@ -1977,7 +1986,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorArmValue > 0) {
                           setState(() {
-                            exacavtorArmValue = exacavtorArmValue - 5;
+                            exacavtorArmValue = exacavtorArmValue - 10;
                           });
                           writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
                           MySharedPreference.setDouble(
@@ -2001,7 +2010,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorArmValue > 0) {
                             setState(() {
-                              exacavtorArmValue = exacavtorArmValue - 5;
+                              exacavtorArmValue = exacavtorArmValue - 10;
                             });
                             writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
                             MySharedPreference.setDouble(
@@ -2030,8 +2039,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.MINUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                     CustomText("Arm:- ${exacavtorArmValue.round()}",
@@ -2040,7 +2049,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       onTap: () {
                         if (exacavtorArmValue < 180) {
                           setState(() {
-                            exacavtorArmValue = exacavtorArmValue + 5;
+                            exacavtorArmValue = exacavtorArmValue + 10;
                           });
                           writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
                           MySharedPreference.setDouble(
@@ -2064,7 +2073,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             Duration(milliseconds: 100), (timer) {
                           if (exacavtorArmValue < 180) {
                             setState(() {
-                              exacavtorArmValue = exacavtorArmValue + 5;
+                              exacavtorArmValue = exacavtorArmValue + 10;
                             });
                             writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
                             MySharedPreference.setDouble(
@@ -2093,13 +2102,14 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       },
                       child: Image.asset(
                         Assets.PLUS,
-                        width: 32,
-                        height: 32,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ],
                 ),
               ),
+              VerticalGap(20),
 
               // Text("Arm",
               //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -2493,12 +2503,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         if (radarAngle == 180 || radarAngle == 0) {
           pointers.removeRange(1, pointers.length);
         }
-        if (radarAngle <= 178 && shouldIncrease) {
-          radarAngle = radarAngle + 2;
+        if (radarAngle <= 175 && shouldIncrease) {
+          radarAngle = radarAngle + 5;
           addNeedleWidget(radarAngle);
           shouldIncrease = true;
         } else {
-          radarAngle = radarAngle - 2;
+          radarAngle = radarAngle - 5;
           addNeedleWidget(radarAngle);
 
           if (radarAngle <= 0) {
@@ -2535,13 +2545,13 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         if (radarAngle == 180 || radarAngle == 0) {
           pointers.removeRange(1, pointers.length);
         }
-        if (radarAngle <= 178 && shouldIncrease) {
-          radarAngle = radarAngle + 2;
+        if (radarAngle <= 175 && shouldIncrease) {
+          radarAngle = radarAngle + 5;
           addNeedleWidget(radarAngle);
 
           shouldIncrease = true;
         } else {
-          radarAngle = radarAngle - 2;
+          radarAngle = radarAngle - 5;
           addNeedleWidget(radarAngle);
 
           if (radarAngle <= 0) {
@@ -2556,8 +2566,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   void onSelectNonBle() {
-    connectivity =
-        ArduinoSerialConnectivity(onNondBleConnectvity, onrecvNonBleData);
+    if (connectivity == null) {
+      connectivity =
+          ArduinoSerialConnectivity(onNondBleConnectvity, onrecvNonBleData);
+    }
     connectivity!.start(context);
   }
 
@@ -2668,14 +2680,16 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                         size: 20,
                                       ),
                                       HorizontalGap(10),
-                                      Text(
-                                        (snapshot.data
-                                                as List<ScanResult>)[index]
-                                            .device
-                                            .name,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.lightGreen),
+                                      Expanded(
+                                        child: Text(
+                                          (snapshot.data
+                                                  as List<ScanResult>)[index]
+                                              .device
+                                              .name,
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.lightGreen),
+                                        ),
                                       ),
                                       HorizontalGap(10),
                                       ElevatedButton(

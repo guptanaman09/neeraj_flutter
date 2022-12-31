@@ -138,10 +138,12 @@ class ArduinoSerialConnectivity {
                             size: 20,
                           ),
                           HorizontalGap(10),
-                          Text(
-                            list[index].name!,
-                            style: TextStyle(
-                                fontSize: 15, color: Colors.lightGreen),
+                          Expanded(
+                            child: Text(
+                              list[index].name!,
+                              style: TextStyle(
+                                  fontSize: 15, color: Colors.lightGreen),
+                            ),
                           ),
                           HorizontalGap(10),
                           ElevatedButton(
@@ -187,7 +189,6 @@ class ArduinoSerialConnectivity {
 
   void disconnecToBluetooth() {
     nonBleIsConnected(false);
-
     if (blConnection != null && blConnection!.isConnected) {
       blConnection!.close();
     }

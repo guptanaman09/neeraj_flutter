@@ -316,8 +316,8 @@ class OfflineGamePlayScreenState extends BaseClass {
                     child: Container(
                       child: Image.asset(
                         Assets.BACK_BUTTON,
-                        height: 30,
-                        width: 30,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ),

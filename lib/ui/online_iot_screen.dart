@@ -44,7 +44,9 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
     textEditingControllerPaswword = TextEditingController();
   }
 
-  void onRecvValue(List<int> data) {}
+  void onRecvValue(List<int> data) {
+    //check here if get the value 1 then only move to the next screen
+  }
   void showToast(String message) {
     Fluttertoast.showToast(
         msg: message,
