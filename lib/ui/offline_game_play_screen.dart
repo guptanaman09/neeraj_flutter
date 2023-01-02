@@ -297,7 +297,7 @@ class OfflineGamePlayScreenState extends BaseClass {
       padding: EdgeInsets.symmetric(horizontal: 16),
       height: DeviceUtils.getScreenHeight(context),
       width: DeviceUtils.getScreenWidtht(context),
-      color: Colors.pinkAccent,
+      color: Colors.greenAccent,
       child: SingleChildScrollView(
         child: Container(
           height: DeviceUtils.getScreenHeight(context),
@@ -316,8 +316,8 @@ class OfflineGamePlayScreenState extends BaseClass {
                     child: Container(
                       child: Image.asset(
                         Assets.BACK_BUTTON,
-                        height: 30,
-                        width: 30,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ),
@@ -326,7 +326,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                       data.title,
                       TextStyle(
                           color: Colors.white,
-                          fontSize: 15,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600)),
                 ],
               ),
@@ -490,7 +490,7 @@ class OfflineGamePlayScreenState extends BaseClass {
         break;
       case SmartLampDetailData.MOBILE_CONTROLLED:
         text =
-            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3";
+            "Control the colour and brightness of the lamp from the app.\nCircuit Blocks Needed-RGB LED and Proximity Sensor\nConnection with CPU-RGB LED at Port 3\nProximty Sensor at Port 2";
         break;
     }
 
@@ -1691,7 +1691,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   });
                 } else {
                   connectivity!.sendData([
-                    0XCD,
+                    0XCE,
                     clapBasedDarknessValue.toInt(),
                     clapBasedRedValue.toInt(),
                     clapBasedGreenValue.toInt(),
@@ -2325,7 +2325,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB2]);
                 }),
             VerticalGap(24),
-            Text("RLI(%):-{$sensorvalue}", style: TextStyle(fontSize: 20)),
+            Text("RLI(%):-$sensorvalue", style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.ULTRASONIC_SENSOR)
       return Column(
@@ -2342,7 +2342,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB1]);
                 }),
             VerticalGap(24),
-            Text("Measured Distance(cm):-{$sensorvalue} CM",
+            Text("Measured Distance(cm):-$sensorvalue CM",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.SOIL_MOISTURE_SENSOR)
@@ -2360,7 +2360,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB4]);
                 }),
             VerticalGap(24),
-            Text("Moisture Content(%):-{$sensorvalue} %",
+            Text("Moisture Content(%):-$sensorvalue %",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.SOUND_SENSOR)
@@ -2378,7 +2378,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB5]);
                 }),
             VerticalGap(24),
-            Text("Noise Level(%):-{$sensorvalue} %",
+            Text("Noise Level(%):-$sensorvalue %",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.LIGHT_SENSOR)
@@ -2396,7 +2396,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB6]);
                 }),
             VerticalGap(24),
-            Text("Light Intensity(%):-{$sensorvalue} %",
+            Text("Light Intensity(%):-$sensorvalue %",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.PUSH_SWITCH)
@@ -2414,7 +2414,7 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB7]);
                 }),
             VerticalGap(24),
-            Text("State:-{$sensorvalue} ", style: TextStyle(fontSize: 20)),
+            Text("State:-$sensorvalue ", style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.WEATHOR_SENSOR)
       return Column(
@@ -2431,9 +2431,8 @@ class OfflineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB3]);
                 }),
             VerticalGap(24),
-            Text("Temp (deg C):-{$sensorvalue} ",
-                style: TextStyle(fontSize: 20)),
-            Text("Humidity (%):-{$sensorvalue2} ",
+            Text("Temp (deg C):-$sensorvalue ", style: TextStyle(fontSize: 20)),
+            Text("Humidity (%):-$sensorvalue2 ",
                 style: TextStyle(fontSize: 20)),
           ]);
     return Container();

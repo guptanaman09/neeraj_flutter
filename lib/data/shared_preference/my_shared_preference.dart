@@ -149,7 +149,24 @@ class MySharedPreference {
   static const String PERSON_COUNT_I = "person_count_I";
   static const String CONNECTEDWIFINAME = "connected_wifi_name";
 
+  static const String PROXY_1_BLACK = "proxy_1_black";
+  static const String PROXY_1_WHITE = "proxy_1_white";
+  static const String PROXY_1_AVERAGE = "proxy_1_avg";
+
+  static const String PROXY_2_BLACK = "proxy_2_black";
+  static const String PROXY_2_WHITE = "proxy_2_white";
+  static const String PROXY_2_AVERAGE = "proxy_2_avg";
   static const String SERIALRSSID = "serial_rssi";
+
+  static const String FREERUN_REDSLIDER = "freerun_red_slider";
+  static const String FREERUN_GREENSLIDER = "freerun_green_slider";
+  static const String FREERUN_BLUESLIDER = "freerun_blue_slider";
+
+  static const String FREERUN_DUMPSLIDER = "freerun_dump_slider";
+  static const String FREERUN_SWINGSLIDER = "freerun_swing_slider";
+  static const String FREERUN_BUCKETSLIDER = "freerun_bucket_slider";
+  static const String FREERUN_BOONSLIDER = "freerun_boon_slider";
+  static const String FREERUN_ARMSLIDER = "freerun_arm_slider";
   static setInt(String key, int value) async {
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.setInt(key, value);

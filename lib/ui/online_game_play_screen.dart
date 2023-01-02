@@ -299,8 +299,8 @@ class OnlineGamePlayScreenState extends BaseClass {
                     child: Container(
                       child: Image.asset(
                         Assets.BACK_BUTTON,
-                        height: 30,
-                        width: 30,
+                        height: 40,
+                        width: 40,
                       ),
                     ),
                   ),
@@ -309,7 +309,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                       data.title,
                       TextStyle(
                           color: Colors.white,
-                          fontSize: 15,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600)),
                 ],
               ),
@@ -1579,7 +1579,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   });
                 } else {
                   connectivity!.sendData([
-                    0XCD,
+                    0XCE,
                     clapBasedDarknessValue.toInt(),
                     clapBasedRedValue.toInt(),
                     clapBasedGreenValue.toInt(),
@@ -2214,7 +2214,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB2]);
                 }),
             VerticalGap(24),
-            Text("RLI(%):-{$sensorvalue}", style: TextStyle(fontSize: 20)),
+            Text("RLI(%):-$sensorvalue", style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.ULTRASONIC_SENSOR)
       return Column(
@@ -2231,7 +2231,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB1]);
                 }),
             VerticalGap(24),
-            Text("Measured Distance(cm):-{$sensorvalue} CM",
+            Text("Measured Distance(cm):-$sensorvalue CM",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.SOIL_MOISTURE_SENSOR)
@@ -2249,7 +2249,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB4]);
                 }),
             VerticalGap(24),
-            Text("Moisture Content(%):-{$sensorvalue} %",
+            Text("Moisture Content(%):-$sensorvalue %",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.SOUND_SENSOR)
@@ -2267,7 +2267,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB5]);
                 }),
             VerticalGap(24),
-            Text("Noise Level(%):-{$sensorvalue} %",
+            Text("Noise Level(%):-$sensorvalue %",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.LIGHT_SENSOR)
@@ -2285,7 +2285,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB6]);
                 }),
             VerticalGap(24),
-            Text("Light Intensity(%):-{$sensorvalue} %",
+            Text("Light Intensity(%):-$sensorvalue %",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.PUSH_SWITCH)
@@ -2303,7 +2303,7 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB7]);
                 }),
             VerticalGap(24),
-            Text("State:-{$sensorvalue} ", style: TextStyle(fontSize: 20)),
+            Text("State:-$sensorvalue ", style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.WEATHOR_SENSOR)
       return Column(
@@ -2320,9 +2320,8 @@ class OnlineGamePlayScreenState extends BaseClass {
                   startSendingSensorValue([0XB3]);
                 }),
             VerticalGap(24),
-            Text("Temp (deg C):-{$sensorvalue} ",
-                style: TextStyle(fontSize: 20)),
-            Text("Humidity (%):-{$sensorvalue2} ",
+            Text("Temp (deg C):-$sensorvalue ", style: TextStyle(fontSize: 20)),
+            Text("Humidity (%):-$sensorvalue2 ",
                 style: TextStyle(fontSize: 20)),
           ]);
     else if (data.title == OfflineSubCategoryData.PERSON_COUNTER)
@@ -2486,11 +2485,16 @@ class OnlineGamePlayScreenState extends BaseClass {
 
   void startSendingSensorValue(List<int> command) {
     commandTimer?.cancel();
-    commandTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      if (proximitySwitchValue) {
-        connectivity!.sendData(command);
-      }
-    });
+    if (proximitySwitchValue) {
+      commandTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+        if (proximitySwitchValue) {
+          connectivity!.sendData(command);
+        }
+      });
+    } else {
+      connectivity!.sendData([0XE2]);
+    }
+
     startListeningSensoData();
   }
 

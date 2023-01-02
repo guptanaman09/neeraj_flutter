@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:neeraj_flutter_app/base/baseClass.dart';
 import 'package:neeraj_flutter_app/constants/classes.dart';
@@ -9,11 +8,13 @@ import 'package:neeraj_flutter_app/models/offline_category_model.dart';
 import 'package:neeraj_flutter_app/utils/device_utils.dart';
 import 'package:neeraj_flutter_app/widgets/offline_card_widget.dart';
 
+import '../models/offline_screen_data.dart';
+
 class OnlineMainCategoryScreen extends StatefulWidget {
-@override
-State<StatefulWidget> createState() {
-  return OnlineMainCategoryScreenState();
-}
+  @override
+  State<StatefulWidget> createState() {
+    return OnlineMainCategoryScreenState();
+  }
 }
 
 class OnlineMainCategoryScreenState extends BaseClass {
@@ -23,7 +24,8 @@ class OnlineMainCategoryScreenState extends BaseClass {
   void initState() {
     super.initState();
 
-    offlineMainCategoryModel = OfflineCategoryModel();
+    offlineMainCategoryModel =
+        OfflineCategoryModel(OfflineGamePlayType.OFFLINE);
 
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,
@@ -42,28 +44,28 @@ class OnlineMainCategoryScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  OfflineMainCategoryDetail detailModel = offlineMainCategoryModel
-                      .getMainCategoryModel()
-                      .elementAt(index);
-                  Color color = getColor(index);
-                  return Container(
-                    width: DeviceUtils.getScreenWidtht(context) * 0.40,
-                    height: DeviceUtils.getScreenHeight(context) * 0.50,
-                    margin: EdgeInsets.all(Dimensions.size_20),
-                    child: InkWell(
-                        onTap: () => onSelectCategory(detailModel, index),
-                        borderRadius: BorderRadius.circular(Dimensions.size_12),
-                        splashColor: AppColors.primaryColor,
-                        hoverColor: AppColors.primaryColor,
-                        focusColor: AppColors.primaryColor,
-                        child: OfflineCardWidget(detailModel, color)),
-                  );
-                },
-                itemCount: offlineMainCategoryModel.getMainCategoryModel().length,
-                scrollDirection: Axis.horizontal,
-              ))
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
+              OfflineMainCategoryDetail detailModel = offlineMainCategoryModel
+                  .getMainCategoryModel()
+                  .elementAt(index);
+              Color color = getColor(index);
+              return Container(
+                width: DeviceUtils.getScreenWidtht(context) * 0.40,
+                height: DeviceUtils.getScreenHeight(context) * 0.50,
+                margin: EdgeInsets.all(Dimensions.size_20),
+                child: InkWell(
+                    onTap: () => onSelectCategory(detailModel, index),
+                    borderRadius: BorderRadius.circular(Dimensions.size_12),
+                    splashColor: AppColors.primaryColor,
+                    hoverColor: AppColors.primaryColor,
+                    focusColor: AppColors.primaryColor,
+                    child: OfflineCardWidget(detailModel, color)),
+              );
+            },
+            itemCount: offlineMainCategoryModel.getMainCategoryModel().length,
+            scrollDirection: Axis.horizontal,
+          ))
         ],
       ),
     );

@@ -88,6 +88,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   bool isLineFollowerPlay = false;
   double radarAngle = 0;
   bool shouldIncrease = true;
+
   @override
   void initState() {
     _animationController = new AnimationController(
@@ -98,8 +99,56 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     prox_1_white_controller = TextEditingController();
     prox_2_black_controller = TextEditingController();
     prox_2_white_controller = TextEditingController();
+
     autoConnectInit();
+    pointers.add(RangePointer(
+      value: radarAngle,
+      cornerStyle: CornerStyle.bothCurve,
+      width: 10,
+      sizeUnit: GaugeSizeUnit.logicalPixel,
+      gradient: SweepGradient(
+        colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
+      ),
+    ));
+    getPrefsValues();
     super.initState();
+  }
+
+  void getPrefsValues() async {
+    prox_1_black =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_1_BLACK);
+    prox_1_white =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_1_WHITE);
+    prox_1_average =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_1_AVERAGE);
+    prox_2_black =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_2_BLACK);
+    prox_2_white =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_2_WHITE);
+    prox_2_average =
+        await MySharedPreference.getDouble(MySharedPreference.PROXY_2_AVERAGE);
+    prox_1_black_controller.text = prox_1_black.toString();
+    prox_1_white_controller.text = prox_1_white.toString();
+    prox_2_black_controller.text = prox_2_black.toString();
+    prox_2_white_controller.text = prox_2_white.toString();
+    redSliderValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_REDSLIDER);
+    greenSliderValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_GREENSLIDER);
+    blueSliderValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_BLUESLIDER);
+    dumpValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_DUMPSLIDER);
+    exacavtorSwingValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_SWINGSLIDER);
+    exacavtorArmValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_ARMSLIDER);
+    exacavtorBoomValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_BOONSLIDER);
+
+    exacavtorBucketValue = await MySharedPreference.getDouble(
+        MySharedPreference.FREERUN_BUCKETSLIDER);
+    setState(() {});
   }
 
   void autoConnectInit() async {
@@ -144,9 +193,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       width: DeviceUtils.getScreenWidtht(context),
                       margin: EdgeInsets.only(left: 8),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          HorizontalGap(30),
                           InkWell(
                             onTap: () {
                               onOkayPressed();
@@ -155,21 +205,24 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                             child: Container(
                               child: Image.asset(
                                 Assets.BACK_BUTTON,
-                                height: 30,
-                                width: 30,
+                                height: 40,
+                                width: 40,
                               ),
                             ),
                           ),
-                          CustomText(
-                              isAnyBluetoothConnected
-                                  ? "Connected"
-                                  : "Not Connected",
-                              TextStyle(
-                                  color: isAnyBluetoothConnected
-                                      ? Colors.green
-                                      : Colors.red,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600)),
+                          Expanded(
+                              child: Center(
+                            child: CustomText(
+                                isAnyBluetoothConnected
+                                    ? "Connected"
+                                    : "Not Connected",
+                                TextStyle(
+                                    color: isAnyBluetoothConnected
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600)),
+                          )),
                           InkWell(
                             onTap: onTapBluetoothIcon,
                             child: Image.asset(
@@ -178,6 +231,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               width: 40,
                             ),
                           ),
+                          HorizontalGap(30),
                         ],
                       ),
                     ),
@@ -207,11 +261,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               shouldStopLine = true;
                             });
                           } else {
+                            writeToBLuetooth([0XD6]);
+
                             setState(() {
                               isLineFollowerPlay = false;
                               shouldStopLine = false;
                             });
-                            startSendingLineFollowerCommand();
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -268,7 +323,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           child: Stack(
             children: [
               Positioned(
-                  left: 50,
+                  left: 70,
                   child: Container(
                     height: DeviceUtils.getScreenHeight(context),
                     child: Column(
@@ -294,6 +349,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 onTapDown: (event) {
                                   writeToBLuetooth([0XB0]);
                                 },
+                                onTapCancel: () {
+                                  writeToBLuetooth([0XB4]);
+                                },
                               ),
                             ),
                           ),
@@ -311,6 +369,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                   },
                                   onTapDown: (event) {
                                     writeToBLuetooth([0XB1]);
+                                  },
+                                  onTapCancel: () {
+                                    writeToBLuetooth([0XB4]);
                                   },
                                   onTap: () {
                                     // writeToBLuetooth([0XB1]);
@@ -350,6 +411,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                   onTapDown: (event) {
                                     writeToBLuetooth([0XB2]);
                                   },
+                                  onTapCancel: () {
+                                    writeToBLuetooth([0XB4]);
+                                  },
                                   onTap: () {
                                     // writeToBLuetooth([0XB2]);
                                     // Future.delayed(Duration(milliseconds: 100),
@@ -376,6 +440,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                   },
                                   onTapDown: (event) {
                                     writeToBLuetooth([0XB3]);
+                                  },
+                                  onTapCancel: () {
+                                    writeToBLuetooth([0XB4]);
                                   },
                                   onTap: () {
                                     // writeToBLuetooth([0XB3]);
@@ -405,9 +472,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       Container(
                         width: DeviceUtils.getScreenWidtht(context),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            HorizontalGap(30),
                             InkWell(
                               onTap: () {
                                 onOkayPressed();
@@ -416,21 +484,24 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                               child: Container(
                                 child: Image.asset(
                                   Assets.BACK_BUTTON,
-                                  height: 30,
-                                  width: 30,
+                                  height: 40,
+                                  width: 40,
                                 ),
                               ),
                             ),
-                            CustomText(
-                                isAnyBluetoothConnected
-                                    ? "Connected"
-                                    : "Not Connected",
-                                TextStyle(
-                                    color: isAnyBluetoothConnected
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600)),
+                            Expanded(
+                                child: Center(
+                              child: CustomText(
+                                  isAnyBluetoothConnected
+                                      ? "Connected"
+                                      : "Not Connected",
+                                  TextStyle(
+                                      color: isAnyBluetoothConnected
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
+                            )),
                             InkWell(
                               onTap: onTapBluetoothIcon,
                               child: Image.asset(
@@ -439,6 +510,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                 width: 40,
                               ),
                             ),
+                            HorizontalGap(30),
                           ],
                         ),
                       ),
@@ -479,6 +551,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       redSliderValue = val;
     });
     writeToBLuetooth([0XC2, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_REDSLIDER, redSliderValue);
   }
 
   void onGreenSliderChange(double val) {
@@ -486,6 +560,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       greenSliderValue = val;
     });
     writeToBLuetooth([0XC3, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_GREENSLIDER, greenSliderValue);
   }
 
   void onBlueSliderChange(double val) {
@@ -493,148 +569,402 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       blueSliderValue = val;
     });
     writeToBLuetooth([0XC4, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_BLUESLIDER, blueSliderValue);
   }
+
+  Timer? longPressTimer;
 
   Widget getCenterLayout(String gameName) {
     print("game name is >>> ${gameName}");
     if (gameName == SubCategoryData.FREE_RUN &&
         subCategoryDetail.mainCategoryTitle == CategoryData.ACCELEREO)
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CustomText("RED:- ${redSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 12)),
-          Container(
-            width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            child: Slider(
-              onChanged: (val) {
-                setState(() {
-                  redSliderValue = val;
-                });
-              },
-              value: redSliderValue,
-              onChangeEnd: onRedSliderChange,
-              max: 255,
-              label: redSliderValue.round().toString(),
-              divisions: 255,
-              thumbColor: Colors.grey,
-              activeColor: Colors.red,
-              inactiveColor: Colors.grey,
-            ),
+      return Expanded(
+        child: Container(
+          width: DeviceUtils.getScreenWidtht(context) * 0.30,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (redSliderValue > 0) {
+                        redSliderValue = redSliderValue - 10;
+                        onRedSliderChange(redSliderValue);
+                      } else if (redSliderValue <= 0) {
+                        redSliderValue = 0;
+                        onRedSliderChange(redSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (redSliderValue > 0) {
+                          redSliderValue = redSliderValue - 10;
+                          onRedSliderChange(redSliderValue);
+                        } else if (redSliderValue <= 0) {
+                          redSliderValue = 0;
+                          onRedSliderChange(redSliderValue);
+                        }
+                      });
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                  CustomText("RED:- ${redSliderValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (redSliderValue < 255) {
+                        redSliderValue = redSliderValue + 10;
+                        onRedSliderChange(redSliderValue);
+                      } else if (redSliderValue >= 255) {
+                        redSliderValue = 255;
+                        onRedSliderChange(redSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (redSliderValue < 255) {
+                          redSliderValue = redSliderValue + 10;
+                          onRedSliderChange(redSliderValue);
+                        } else if (redSliderValue >= 255) {
+                          redSliderValue = 255;
+                          onRedSliderChange(redSliderValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                ],
+              ),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: redSliderValue,
+              //     onChanged: onRedSliderChange,
+              //     max: 255,
+              //     label: redSliderValue.round().toString(),
+              //     divisions: 255,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.red,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (greenSliderValue > 0) {
+                          greenSliderValue = greenSliderValue - 10;
+                          onGreenSliderChange(greenSliderValue);
+                        } else if (greenSliderValue <= 0) {
+                          greenSliderValue = 0;
+                          onGreenSliderChange(greenSliderValue);
+                        }
+                      });
+                    },
+                    onTap: () {
+                      if (greenSliderValue > 0) {
+                        greenSliderValue = greenSliderValue - 10;
+                        onGreenSliderChange(greenSliderValue);
+                      } else if (greenSliderValue <= 0) {
+                        greenSliderValue = 0;
+                        onGreenSliderChange(greenSliderValue);
+                      }
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                  CustomText("Green:- ${greenSliderValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (greenSliderValue < 255) {
+                        greenSliderValue = greenSliderValue + 10;
+                        onGreenSliderChange(greenSliderValue);
+                      } else if (greenSliderValue >= 255) {
+                        greenSliderValue = 255;
+                        onGreenSliderChange(greenSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (greenSliderValue < 255) {
+                          greenSliderValue = greenSliderValue + 10;
+                          onGreenSliderChange(greenSliderValue);
+                        } else if (greenSliderValue >= 255) {
+                          greenSliderValue = 255;
+                          onGreenSliderChange(greenSliderValue);
+                        }
+                      });
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                ],
+              ),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: greenSliderValue,
+              //     onChanged: onGreenSliderChange,
+              //     max: 255,
+              //     label: greenSliderValue.round().toString(),
+              //     divisions: 255,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.green,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (blueSliderValue > 0) {
+                        blueSliderValue = blueSliderValue - 10;
+                        onBlueSliderChange(blueSliderValue);
+                      } else if (blueSliderValue <= 0) {
+                        blueSliderValue = 0;
+                        onBlueSliderChange(blueSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (blueSliderValue > 0) {
+                          blueSliderValue = blueSliderValue - 10;
+                          onBlueSliderChange(blueSliderValue);
+                        } else if (blueSliderValue <= 0) {
+                          blueSliderValue = 0;
+                          onBlueSliderChange(blueSliderValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                  CustomText("Blue:- ${blueSliderValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (blueSliderValue < 255) {
+                        blueSliderValue = blueSliderValue + 10;
+                        onBlueSliderChange(blueSliderValue);
+                      } else if (blueSliderValue >= 255) {
+                        blueSliderValue = 255;
+                        onBlueSliderChange(blueSliderValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (blueSliderValue < 255) {
+                          blueSliderValue = blueSliderValue + 10;
+                          onBlueSliderChange(blueSliderValue);
+                        } else if (blueSliderValue >= 255) {
+                          blueSliderValue = 255;
+                          onBlueSliderChange(blueSliderValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                ],
+              ),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: blueSliderValue,
+              //     onChanged: onBlueSliderChange,
+              //     max: 255,
+              //     label: blueSliderValue.round().toString(),
+              //     divisions: 255,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.blue,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isHorn = !isHorn;
+                  });
+                  if (isHorn) {
+                    writeToBLuetooth([0XC0]);
+                  } else {
+                    writeToBLuetooth([0XC1]);
+                  }
+                },
+                child: Image.asset(
+                  isHorn ? Assets.CAR_HORN_ON : Assets.CAR_HORN_OFF,
+                  height: 60,
+                  width: 110,
+                ),
+              ),
+              VerticalGap(10),
+            ],
           ),
-          CustomText("GREEN:- ${greenSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 12)),
-          Container(
-            width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            child: Slider(
-              onChanged: (val) {
-                setState(() {
-                  greenSliderValue = val;
-                });
-              },
-              value: greenSliderValue,
-              onChangeEnd: onGreenSliderChange,
-              max: 255,
-              label: greenSliderValue.round().toString(),
-              divisions: 255,
-              thumbColor: Colors.grey,
-              activeColor: Colors.green,
-              inactiveColor: Colors.grey,
-            ),
-          ),
-          CustomText("BLUE:- ${blueSliderValue.round()}",
-              TextStyle(color: Colors.black, fontSize: 12)),
-          Container(
-            width: DeviceUtils.getScreenWidtht(context) * 0.30,
-            child: Slider(
-              value: blueSliderValue,
-              onChanged: (val) {
-                setState(() {
-                  blueSliderValue = val;
-                });
-              },
-              onChangeEnd: onBlueSliderChange,
-              max: 255,
-              label: blueSliderValue.round().toString(),
-              divisions: 255,
-              thumbColor: Colors.grey,
-              activeColor: Colors.blue,
-              inactiveColor: Colors.grey,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                isHorn = !isHorn;
-              });
-              if (isHorn) {
-                writeToBLuetooth([0XC0]);
-              } else {
-                writeToBLuetooth([0XC1]);
-              }
-            },
-            child: Image.asset(
-              isHorn ? Assets.CAR_HORN_ON : Assets.CAR_HORN_OFF,
-              height: 60,
-              width: 110,
-            ),
-          )
-        ],
-      );
-    else if (gameName == SubCategoryData.THOR_HAMMER ||
-        gameName == SubCategoryData.SOCCER) {
-      return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-                clipBehavior: Clip.none,
-                borderRadius: BorderRadius.circular(10),
-                child: Material(
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        writeToBLuetooth([0XBC, 80]);
-                        Future.delayed(Duration(milliseconds: 3000), () {
-                          writeToBLuetooth([0XBC, 0]);
-                          Future.delayed(Duration(milliseconds: 3000), () {
-                            writeToBLuetooth([0XBC, 80]);
-                          });
-                        });
-                      },
-                      child: Image.asset(
-                        Assets.SOCCER,
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.fill,
-                      ),
-                    ))),
-            VerticalGap(12),
-            ClipRRect(
-                clipBehavior: Clip.none,
-                borderRadius: BorderRadius.circular(10),
-                child: Material(
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        writeToBLuetooth([0XBB, 0]);
-                        Future.delayed(Duration(milliseconds: 3000), () {
-                          writeToBLuetooth([0XBB, 90]);
-                          Future.delayed(Duration(milliseconds: 3000), () {
-                            writeToBLuetooth([0XBB, 0]);
-                          });
-                        });
-                      },
-                      child: Image.asset(Assets.THOR_HAMMER,
-                          height: 100, width: 100, fit: BoxFit.fill),
-                    ))),
-          ],
         ),
       );
+    else if (gameName == SubCategoryData.SOCCER) {
+      return Expanded(
+        child: Center(
+          child: ClipRRect(
+              clipBehavior: Clip.none,
+              borderRadius: BorderRadius.circular(10),
+              child: Material(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      writeToBLuetooth([0XBC, 80]);
+                      Future.delayed(Duration(milliseconds: 3000), () {
+                        writeToBLuetooth([0XBC, 0]);
+                        Future.delayed(Duration(milliseconds: 3000), () {
+                          writeToBLuetooth([0XBC, 80]);
+                        });
+                      });
+                    },
+                    child: Image.asset(
+                      Assets.SOCCER,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.fill,
+                    ),
+                  ))),
+        ),
+      );
+    } else if (gameName == SubCategoryData.THOR_HAMMER) {
+      return Expanded(
+          child: Center(
+        child: ClipRRect(
+            clipBehavior: Clip.none,
+            borderRadius: BorderRadius.circular(10),
+            child: Material(
+                elevation: 0,
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    writeToBLuetooth([0XBB, 0]);
+                    Future.delayed(Duration(milliseconds: 3000), () {
+                      writeToBLuetooth([0XBB, 90]);
+                      Future.delayed(Duration(milliseconds: 3000), () {
+                        writeToBLuetooth([0XBB, 0]);
+                      });
+                    });
+                  },
+                  child: Image.asset(Assets.THOR_HAMMER,
+                      height: 100, width: 100, fit: BoxFit.fill),
+                ))),
+      ));
     } else if (gameName == SubCategoryData.OBSTACLE_AVOIDER ||
         gameName == SubCategoryData.EDGE_DETECTOR ||
         gameName == SubCategoryData.OBSTACLE_AVOIDER) {
@@ -706,16 +1036,109 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
             VerticalGap(8),
             Container(
               width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: dumpValue,
-                onChanged: onDumpValueChange,
-                max: 50,
-                divisions: 50,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (dumpValue > 0) {
+                        dumpValue = dumpValue - 10;
+                        onDumpValueChange(dumpValue);
+                      } else if (dumpValue <= 0) {
+                        dumpValue = 0;
+                        onDumpValueChange(dumpValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (dumpValue > 0) {
+                          dumpValue = dumpValue - 10;
+                          onDumpValueChange(dumpValue);
+                        } else if (dumpValue <= 0) {
+                          dumpValue = 0;
+                          onDumpValueChange(dumpValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.MINUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                  CustomText("Dump:- ${dumpValue.round()}",
+                      TextStyle(color: Colors.black, fontSize: 12)),
+                  InkWell(
+                    onTap: () {
+                      if (dumpValue < 60) {
+                        dumpValue = dumpValue + 10;
+                        onDumpValueChange(dumpValue);
+                      } else if (dumpValue >= 60) {
+                        dumpValue = 60;
+                        onDumpValueChange(dumpValue);
+                      }
+                    },
+                    onTapDown: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                      longPressTimer =
+                          Timer.periodic(Duration(milliseconds: 100), (timer) {
+                        if (dumpValue < 60) {
+                          dumpValue = dumpValue + 10;
+                          onDumpValueChange(dumpValue);
+                        } else if (dumpValue >= 60) {
+                          dumpValue = 60;
+                          onDumpValueChange(dumpValue);
+                        }
+                      });
+                    },
+                    onTapUp: (event) {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    onTapCancel: () {
+                      if (longPressTimer != null) {
+                        longPressTimer!.cancel();
+                      }
+                    },
+                    child: Image.asset(
+                      Assets.PLUS,
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                ],
               ),
-            )
+            ),
+
+            // Container(
+            //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+            //   child: Slider(
+            //     value: dumpValue,
+            //     onChanged: onDumpValueChange,
+            //     max: 50,
+            //     divisions: 50,
+            //     thumbColor: Colors.grey,
+            //     activeColor: Colors.yellow,
+            //     inactiveColor: Colors.grey,
+            //   ),
+            // )
           ],
         ),
       );
@@ -755,32 +1178,38 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB5]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
-              child: InkWell(
-                onTapDown: (event) {
-                  if (forkLiftSwap) {
-                    writeToBLuetooth([0XB5]);
-                  } else {
-                    writeToBLuetooth([0XB6]);
-                  }
-                },
-                onTapUp: (event) {
-                  writeToBLuetooth([0XB7]);
-                },
-                child: Image.asset(
-                  Assets.LIFT,
-                  height: 80,
-                  width: 80,
-                ),
+              child: Image.asset(
+                Assets.LIFT,
+                height: 80,
+                width: 80,
               ),
             ),
             VerticalGap(16),
-            Image.asset(
-              Assets.DROP,
-              height: 80,
-              width: 80,
+            InkWell(
+              onTapDown: (event) {
+                if (forkLiftSwap) {
+                  writeToBLuetooth([0XB5]);
+                } else {
+                  writeToBLuetooth([0XB6]);
+                }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
+              onTapUp: (event) {
+                writeToBLuetooth([0XB7]);
+              },
+              child: Image.asset(
+                Assets.DROP,
+                height: 80,
+                width: 80,
+              ),
             ),
           ],
         )),
@@ -795,7 +1224,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Swap(Lift)",
+                Text("Swap(Swing)",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -815,7 +1244,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Swap(Swing)",
+                Text("Swap(Lift)",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -840,6 +1269,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB8]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XBA]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XBA]);
               },
@@ -862,6 +1294,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                       writeToBLuetooth([0XB6]);
                     }
                   },
+                  onTapCancel: () {
+                    writeToBLuetooth([0XB7]);
+                  },
                   onTapUp: (event) {
                     writeToBLuetooth([0XB7]);
                   },
@@ -879,6 +1314,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                     } else {
                       writeToBLuetooth([0XB5]);
                     }
+                  },
+                  onTapCancel: () {
+                    writeToBLuetooth([0XB7]);
                   },
                   onTapUp: (event) {
                     writeToBLuetooth([0XB7]);
@@ -899,6 +1337,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 } else {
                   writeToBLuetooth([0XB9]);
                 }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XBA]);
               },
               onTapUp: (event) {
                 writeToBLuetooth([0XBA]);
@@ -948,6 +1389,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB5]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
@@ -966,6 +1410,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                 } else {
                   writeToBLuetooth([0XB6]);
                 }
+              },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
               },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
@@ -1015,6 +1462,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB5]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
@@ -1033,6 +1483,9 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   writeToBLuetooth([0XB6]);
                 }
               },
+              onTapCancel: () {
+                writeToBLuetooth([0XB7]);
+              },
               onTapUp: (event) {
                 writeToBLuetooth([0XB7]);
               },
@@ -1046,90 +1499,640 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         )),
       );
     } else if (gameName == SubCategoryData.EXCAVATOR) {
-      return Container(
-        child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Swing",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-            Container(
-              width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorSwingValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorSwingValue = val;
-                  });
-                  writeToBLuetooth([0XBB, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+      return Expanded(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: DeviceUtils.getScreenWidtht(context) * 0.30,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorSwingValue > 0) {
+                          setState(() {
+                            exacavtorSwingValue = exacavtorSwingValue - 10;
+                          });
+                          writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_SWINGSLIDER,
+                              exacavtorSwingValue);
+                        } else if (exacavtorSwingValue <= 0) {
+                          setState(() {
+                            exacavtorSwingValue = 0;
+                          });
+                          writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_SWINGSLIDER,
+                              exacavtorSwingValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorSwingValue > 0) {
+                            setState(() {
+                              exacavtorSwingValue = exacavtorSwingValue - 10;
+                            });
+                            writeToBLuetooth(
+                                [0XBB, exacavtorSwingValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_SWINGSLIDER,
+                                exacavtorSwingValue);
+                          } else if (exacavtorSwingValue <= 0) {
+                            setState(() {
+                              exacavtorSwingValue = 0;
+                            });
+                            writeToBLuetooth(
+                                [0XBB, exacavtorSwingValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_SWINGSLIDER,
+                                exacavtorSwingValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.MINUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                    CustomText("Swing:- ${exacavtorSwingValue.round()}",
+                        TextStyle(color: Colors.black, fontSize: 12)),
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorSwingValue < 180) {
+                          setState(() {
+                            exacavtorSwingValue = exacavtorSwingValue + 10;
+                          });
+                          writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_SWINGSLIDER,
+                              exacavtorSwingValue);
+                        } else if (exacavtorSwingValue >= 180) {
+                          setState(() {
+                            exacavtorSwingValue = 180;
+                          });
+                          writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_SWINGSLIDER,
+                              exacavtorSwingValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorSwingValue < 180) {
+                            setState(() {
+                              exacavtorSwingValue = exacavtorSwingValue + 10;
+                            });
+                            writeToBLuetooth(
+                                [0XBB, exacavtorSwingValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_SWINGSLIDER,
+                                exacavtorSwingValue);
+                          } else if (exacavtorSwingValue >= 180) {
+                            setState(() {
+                              exacavtorSwingValue = 180;
+                            });
+                            writeToBLuetooth(
+                                [0XBB, exacavtorSwingValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_SWINGSLIDER,
+                                exacavtorSwingValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.PLUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Text("Bucket",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-            Container(
-              width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorBucketValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorBucketValue = val;
-                  });
-                  writeToBLuetooth([0XBC, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: exacavtorSwingValue,
+              //     onChanged: (val) {
+              //       setState(() {
+              //         exacavtorSwingValue = val;
+              //       });
+              //       writeToBLuetooth([0XBB, exacavtorSwingValue.toInt()]);
+              //     },
+              //     max: 180,
+              //     divisions: 180,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.yellow,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Container(
+                width: DeviceUtils.getScreenWidtht(context) * 0.30,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorBucketValue > 0) {
+                          setState(() {
+                            exacavtorBucketValue = exacavtorBucketValue - 10;
+                          });
+                          writeToBLuetooth(
+                              [0XBC, exacavtorBucketValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BUCKETSLIDER,
+                              exacavtorBucketValue);
+                        } else if (exacavtorBucketValue <= 0) {
+                          setState(() {
+                            exacavtorBucketValue = 0;
+                          });
+                          writeToBLuetooth(
+                              [0XBC, exacavtorBucketValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BUCKETSLIDER,
+                              exacavtorBucketValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorBucketValue > 0) {
+                            setState(() {
+                              exacavtorBucketValue = exacavtorBucketValue - 10;
+                            });
+                            writeToBLuetooth(
+                                [0XBC, exacavtorBucketValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BUCKETSLIDER,
+                                exacavtorBucketValue);
+                          } else if (exacavtorBucketValue <= 0) {
+                            setState(() {
+                              exacavtorBucketValue = 0;
+                            });
+                            writeToBLuetooth(
+                                [0XBC, exacavtorBucketValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BUCKETSLIDER,
+                                exacavtorBucketValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.MINUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                    CustomText("Bucket:- ${exacavtorBucketValue.round()}",
+                        TextStyle(color: Colors.black, fontSize: 12)),
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorBucketValue < 180) {
+                          setState(() {
+                            exacavtorBucketValue = exacavtorBucketValue + 10;
+                          });
+                          writeToBLuetooth(
+                              [0XBC, exacavtorBucketValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BUCKETSLIDER,
+                              exacavtorBucketValue);
+                        } else if (exacavtorBucketValue >= 180) {
+                          setState(() {
+                            exacavtorBucketValue = 180;
+                          });
+                          writeToBLuetooth(
+                              [0XBC, exacavtorBucketValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BUCKETSLIDER,
+                              exacavtorBucketValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorBucketValue < 180) {
+                            setState(() {
+                              exacavtorBucketValue = exacavtorBucketValue + 10;
+                            });
+                            writeToBLuetooth(
+                                [0XBC, exacavtorBucketValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BUCKETSLIDER,
+                                exacavtorBucketValue);
+                          } else if (exacavtorBucketValue >= 180) {
+                            setState(() {
+                              exacavtorBucketValue = 180;
+                            });
+                            writeToBLuetooth(
+                                [0XBC, exacavtorBucketValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BUCKETSLIDER,
+                                exacavtorBucketValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.PLUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Text("Boon",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-            Container(
-              width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorBoomValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorBoomValue = val;
-                  });
-                  writeToBLuetooth([0XBD, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              // Text("Bucket",
+              //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: exacavtorBucketValue,
+              //     onChanged: (val) {
+              //       setState(() {
+              //         exacavtorBucketValue = val;
+              //       });
+              //       writeToBLuetooth([0XBC, val.toInt()]);
+              //     },
+              //     max: 180,
+              //     divisions: 180,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.yellow,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Container(
+                width: DeviceUtils.getScreenWidtht(context) * 0.30,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorBoomValue > 0) {
+                          setState(() {
+                            exacavtorBoomValue = exacavtorBoomValue - 10;
+                          });
+                          writeToBLuetooth(
+                              [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BOONSLIDER,
+                              exacavtorBoomValue);
+                        } else if (exacavtorBoomValue <= 0) {
+                          setState(() {
+                            exacavtorBoomValue = 0;
+                          });
+                          writeToBLuetooth(
+                              [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BOONSLIDER,
+                              exacavtorBoomValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorBoomValue > 0) {
+                            setState(() {
+                              exacavtorBoomValue = exacavtorBoomValue - 10;
+                            });
+                            writeToBLuetooth(
+                                [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BOONSLIDER,
+                                exacavtorBoomValue);
+                          } else if (exacavtorBoomValue <= 0) {
+                            setState(() {
+                              exacavtorBoomValue = 0;
+                            });
+                            writeToBLuetooth(
+                                [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BOONSLIDER,
+                                exacavtorBoomValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.MINUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                    CustomText("Boon:- ${exacavtorBoomValue.round()}",
+                        TextStyle(color: Colors.black, fontSize: 12)),
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorBoomValue < 180) {
+                          setState(() {
+                            exacavtorBoomValue = exacavtorBoomValue + 10;
+                          });
+                          writeToBLuetooth(
+                              [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BOONSLIDER,
+                              exacavtorBoomValue);
+                        } else if (exacavtorBoomValue >= 180) {
+                          setState(() {
+                            exacavtorBoomValue = 180;
+                          });
+                          writeToBLuetooth(
+                              [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_BOONSLIDER,
+                              exacavtorBoomValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorBoomValue < 180) {
+                            setState(() {
+                              exacavtorBoomValue = exacavtorBoomValue + 10;
+                            });
+                            writeToBLuetooth(
+                                [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BOONSLIDER,
+                                exacavtorBoomValue);
+                          } else if (exacavtorBoomValue >= 180) {
+                            setState(() {
+                              exacavtorBoomValue = 180;
+                            });
+                            writeToBLuetooth(
+                                [0XBD, 180 - exacavtorBoomValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_BOONSLIDER,
+                                exacavtorBoomValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.PLUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Text("Arm",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-            Container(
-              width: DeviceUtils.getScreenWidtht(context) * 0.30,
-              child: Slider(
-                value: exacavtorArmValue,
-                onChanged: (val) {
-                  setState(() {
-                    exacavtorArmValue = val;
-                  });
-                  writeToBLuetooth([0XBE, val.toInt()]);
-                },
-                max: 180,
-                divisions: 180,
-                thumbColor: Colors.grey,
-                activeColor: Colors.yellow,
-                inactiveColor: Colors.grey,
+              // Text("Boon",
+              //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: exacavtorBoomValue,
+              //     onChanged: (val) {
+              //       setState(() {
+              //         exacavtorBoomValue = val;
+              //       });
+              //       writeToBLuetooth([0XBD, val.toInt()]);
+              //     },
+              //     max: 180,
+              //     divisions: 180,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.yellow,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // ),
+              Container(
+                width: DeviceUtils.getScreenWidtht(context) * 0.30,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorArmValue > 0) {
+                          setState(() {
+                            exacavtorArmValue = exacavtorArmValue - 10;
+                          });
+                          writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_ARMSLIDER,
+                              exacavtorArmValue);
+                        } else if (exacavtorArmValue <= 0) {
+                          setState(() {
+                            exacavtorArmValue = 0;
+                          });
+                          writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_ARMSLIDER,
+                              exacavtorArmValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorArmValue > 0) {
+                            setState(() {
+                              exacavtorArmValue = exacavtorArmValue - 10;
+                            });
+                            writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_ARMSLIDER,
+                                exacavtorArmValue);
+                          } else if (exacavtorArmValue <= 0) {
+                            setState(() {
+                              exacavtorArmValue = 0;
+                            });
+                            writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_ARMSLIDER,
+                                exacavtorArmValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.MINUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                    CustomText("Arm:- ${exacavtorArmValue.round()}",
+                        TextStyle(color: Colors.black, fontSize: 12)),
+                    InkWell(
+                      onTap: () {
+                        if (exacavtorArmValue < 180) {
+                          setState(() {
+                            exacavtorArmValue = exacavtorArmValue + 10;
+                          });
+                          writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_ARMSLIDER,
+                              exacavtorArmValue);
+                        } else if (exacavtorArmValue >= 180) {
+                          setState(() {
+                            exacavtorArmValue = 180;
+                          });
+                          writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                          MySharedPreference.setDouble(
+                              MySharedPreference.FREERUN_ARMSLIDER,
+                              exacavtorArmValue);
+                        }
+                      },
+                      onTapDown: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                        longPressTimer = Timer.periodic(
+                            Duration(milliseconds: 100), (timer) {
+                          if (exacavtorArmValue < 180) {
+                            setState(() {
+                              exacavtorArmValue = exacavtorArmValue + 10;
+                            });
+                            writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_ARMSLIDER,
+                                exacavtorArmValue);
+                          } else if (exacavtorArmValue >= 180) {
+                            setState(() {
+                              exacavtorArmValue = 180;
+                            });
+                            writeToBLuetooth([0XBE, exacavtorArmValue.toInt()]);
+                            MySharedPreference.setDouble(
+                                MySharedPreference.FREERUN_ARMSLIDER,
+                                exacavtorArmValue);
+                          }
+                        });
+                      },
+                      onTapUp: (event) {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      onTapCancel: () {
+                        if (longPressTimer != null) {
+                          longPressTimer!.cancel();
+                        }
+                      },
+                      child: Image.asset(
+                        Assets.PLUS,
+                        height: 40,
+                        width: 40,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
-        )),
+              VerticalGap(20),
+
+              // Text("Arm",
+              //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              // Container(
+              //   width: DeviceUtils.getScreenWidtht(context) * 0.30,
+              //   child: Slider(
+              //     value: exacavtorArmValue,
+              //     onChanged: (val) {
+              //       setState(() {
+              //         exacavtorArmValue = val;
+              //       });
+              //       writeToBLuetooth([0XBE, val.toInt()]);
+              //     },
+              //     max: 180,
+              //     divisions: 180,
+              //     thumbColor: Colors.grey,
+              //     activeColor: Colors.yellow,
+              //     inactiveColor: Colors.grey,
+              //   ),
+              // )
+            ],
+          ),
+        ),
       );
     } else if (gameName == CategoryData.ARNY_TANK) {
       return Container(
@@ -1141,40 +2144,46 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Swap(Shoot)",
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic)),
-                Switch(
-                    value: armyTankShootSwap,
-                    activeTrackColor: Colors.lightGreenAccent,
-                    activeColor: Colors.white,
-                    onChanged: (val) {
-                      setState(() {
-                        armyTankShootSwap = val;
-                      });
-                    })
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Swap(Swing)",
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic)),
-                Switch(
-                    value: armyTankSwingSwap,
-                    activeTrackColor: Colors.lightGreenAccent,
-                    activeColor: Colors.white,
-                    onChanged: (val) {
-                      setState(() {
-                        armyTankSwingSwap = val;
-                      });
-                    })
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Swap(Shoot)",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic)),
+                    Switch(
+                        value: armyTankShootSwap,
+                        activeTrackColor: Colors.lightGreenAccent,
+                        activeColor: Colors.white,
+                        onChanged: (val) {
+                          setState(() {
+                            armyTankShootSwap = val;
+                          });
+                        })
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Swap(Swing)",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic)),
+                    Switch(
+                        value: armyTankSwingSwap,
+                        activeTrackColor: Colors.lightGreenAccent,
+                        activeColor: Colors.white,
+                        onChanged: (val) {
+                          setState(() {
+                            armyTankSwingSwap = val;
+                          });
+                        })
+                  ],
+                )
               ],
             ),
             InkWell(
@@ -1298,8 +2307,8 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               width: 200,
               color: Colors.transparent,
               child: SfRadialGauge(
-                enableLoadingAnimation: true,
-                backgroundColor: Colors.transparent,
+                enableLoadingAnimation: false,
+                backgroundColor: Colors.white,
                 axes: <RadialAxis>[
                   RadialAxis(
                     maximum: 180,
@@ -1316,24 +2325,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                         cornerStyle: CornerStyle.bothCurve,
                         color: Colors.black12,
                         thickness: 10),
-                    pointers: [
-                      RangePointer(
-                        value: radarAngle,
-                        cornerStyle: CornerStyle.bothCurve,
-                        width: 10,
-                        sizeUnit: GaugeSizeUnit.logicalPixel,
-                        gradient: SweepGradient(
-                          colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
-                        ),
-                      ),
-                      NeedlePointer(
-                        enableDragging: false,
-                        value: radarAngle,
-                        needleStartWidth: 1,
-                        needleEndWidth: 5,
-                        needleLength: 40,
-                      )
-                    ],
+                    pointers: pointers,
                   )
                 ],
               ),
@@ -1344,6 +2336,36 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
     } else {
       return Container();
     }
+  }
+
+  List<GaugePointer> pointers = [];
+
+  void addNeedleWidget(double value) {
+    final List<Color> gradient = [
+      Colors.red,
+      Colors.red,
+      Colors.green,
+      Colors.green,
+    ];
+    final double fillPercent = (outputObstaceleavoider / 255) *
+        100.toDouble(); // fills 56.23% for container from bottom
+    final double fillStop = (100 - fillPercent) / 100;
+    final List<double> stops = [0.0, fillStop, fillStop, 1.0];
+    setState(() {
+      pointers.add(NeedlePointer(
+        enableDragging: false,
+        value: value,
+        needleStartWidth: 1,
+        needleEndWidth: 1,
+        needleLength: 100,
+        gradient: LinearGradient(
+            stops: stops,
+            colors: gradient,
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter),
+      ));
+    });
+    print("pointers data length=" + pointers.length.toString());
   }
 
   void onUltrasonicValueChange(double val) {
@@ -1365,13 +2387,15 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
       dumpValue = val;
     });
     writeToBLuetooth([0XBB, val.toInt()]);
+    MySharedPreference.setDouble(
+        MySharedPreference.FREERUN_DUMPSLIDER, dumpValue);
   }
 
   Widget getSwitchForObstacleAvoider() {
     return Container(
       child: Row(
         children: [
-          CustomText("Manual", TextStyle(color: Colors.black, fontSize: 12)),
+          CustomText("Automatic", TextStyle(color: Colors.black, fontSize: 12)),
           HorizontalGap(2),
           Switch(
               value: ultrasonicSwitchValue,
@@ -1379,7 +2403,7 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
               activeColor: Colors.white70,
               activeTrackColor: Colors.green),
           HorizontalGap(2),
-          CustomText("Automatic", TextStyle(color: Colors.black, fontSize: 12))
+          CustomText("Manual", TextStyle(color: Colors.black, fontSize: 12))
         ],
       ),
     );
@@ -1474,14 +2498,19 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           proximityTwo = data.first;
         });
       }
-      startSendingLineFollowerCommand();
     } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
       setState(() {
-        if (radarAngle <= 178 && shouldIncrease) {
-          radarAngle = radarAngle + 2;
+        if (radarAngle == 180 || radarAngle == 0) {
+          pointers.removeRange(1, pointers.length);
+        }
+        if (radarAngle <= 175 && shouldIncrease) {
+          radarAngle = radarAngle + 5;
+          addNeedleWidget(radarAngle);
           shouldIncrease = true;
         } else {
-          radarAngle = radarAngle - 2;
+          radarAngle = radarAngle - 5;
+          addNeedleWidget(radarAngle);
+
           if (radarAngle <= 0) {
             shouldIncrease = true;
           } else {
@@ -1511,14 +2540,20 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
           proximityTwo = data.first;
         });
       }
-      startSendingLineFollowerCommand();
     } else if (subCategoryDetail.title == SubCategoryData.RADAR) {
       setState(() {
-        if (radarAngle <= 178 && shouldIncrease) {
-          radarAngle = radarAngle + 2;
+        if (radarAngle == 180 || radarAngle == 0) {
+          pointers.removeRange(1, pointers.length);
+        }
+        if (radarAngle <= 175 && shouldIncrease) {
+          radarAngle = radarAngle + 5;
+          addNeedleWidget(radarAngle);
+
           shouldIncrease = true;
         } else {
-          radarAngle = radarAngle - 2;
+          radarAngle = radarAngle - 5;
+          addNeedleWidget(radarAngle);
+
           if (radarAngle <= 0) {
             shouldIncrease = true;
           } else {
@@ -1531,8 +2566,10 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
   }
 
   void onSelectNonBle() {
-    connectivity =
-        ArduinoSerialConnectivity(onNondBleConnectvity, onrecvNonBleData);
+    if (connectivity == null) {
+      connectivity =
+          ArduinoSerialConnectivity(onNondBleConnectvity, onrecvNonBleData);
+    }
     connectivity!.start(context);
   }
 
@@ -1579,17 +2616,22 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
 
   bool d1 = false;
   bool shouldStopLine = false;
+
   void startSendingLineFollowerCommand() {
-    if (shouldStopLine) {
-      return;
+    if (commandTimer != null) {
+      commandTimer!.cancel();
     }
-    if (!d1) {
-      d1 = true;
-      writeToBLuetooth([0XD1]);
-    } else {
-      d1 = false;
-      writeToBLuetooth([0XD2]);
-    }
+    commandTimer = Timer.periodic(Duration(milliseconds: 600), (timer) {
+      if (!shouldStopLine) {
+        if (!d1) {
+          d1 = true;
+          writeToBLuetooth([0XD1]);
+        } else {
+          d1 = false;
+          writeToBLuetooth([0XD2]);
+        }
+      }
+    });
   }
 
   void startSendingObstacleAvoiderCommandToRecvValues() {
@@ -1638,14 +2680,16 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                                         size: 20,
                                       ),
                                       HorizontalGap(10),
-                                      Text(
-                                        (snapshot.data
-                                                as List<ScanResult>)[index]
-                                            .device
-                                            .name,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.lightGreen),
+                                      Expanded(
+                                        child: Text(
+                                          (snapshot.data
+                                                  as List<ScanResult>)[index]
+                                              .device
+                                              .name,
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.lightGreen),
+                                        ),
                                       ),
                                       HorizontalGap(10),
                                       ElevatedButton(
@@ -1778,24 +2822,22 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         writeToBLuetooth([0XB0]);
       } else {
         //left turn
-        if (!isBackward) {
-          setState(() {
-            outputAvoidoValue = "Backward";
-          });
-          runCommandTimer([0XB1]);
-          isBackward = true;
-        } else {
+        setState(() {
+          outputAvoidoValue = "Backward";
+        });
+        writeToBLuetooth([0XB1]);
+        Future.delayed(Duration(milliseconds: 150), () {
           setState(() {
             outputAvoidoValue = "Left";
           });
-          isBackward = false;
-          runCommandTimer([0XB2]);
-        }
+          writeToBLuetooth([0XB2]);
+        });
       }
     }
   }
 
   bool isBackward = false;
+
   void startEdge() {
     if (obstacleAvoiderThreShold != -1) {
       if (outputObstaceleavoider < obstacleAvoiderThreShold) {
@@ -1806,24 +2848,23 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
         writeToBLuetooth([0XB0]);
       } else {
         //left turn
-        if (!isBackward) {
-          setState(() {
-            outputAvoidoValue = "Backward";
-          });
-          runCommandTimer([0XB1]);
-          isBackward = true;
-        } else {
+
+        setState(() {
+          outputAvoidoValue = "Backward";
+        });
+        writeToBLuetooth([0XB1]);
+        Future.delayed(Duration(milliseconds: 150), () {
           setState(() {
             outputAvoidoValue = "Left";
           });
-          isBackward = false;
-          runCommandTimer([0XB2]);
-        }
+          writeToBLuetooth([0XB2]);
+        });
       }
     }
   }
 
   Timer? commandTimer;
+
   void runCommandTimer(List<int> command) {
     if (commandTimer != null) {
       commandTimer?.cancel();
@@ -1931,6 +2972,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   prox_1_average = (prox_1_white + prox_1_black) / 2;
                 });
                 writeToBLuetooth([0XD3, prox_1_average.toInt()]);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_1_BLACK, prox_1_black);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_1_WHITE, prox_1_white);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_1_AVERAGE, prox_1_average);
               },
               child: CustomText("Set", TextStyle())),
           VerticalGap(4),
@@ -2039,6 +3086,12 @@ class FreeRunScreenState extends BaseClass with SingleTickerProviderStateMixin {
                   prox_2_average = (prox_2_white + prox_2_black) / 2;
                 });
                 writeToBLuetooth([0XD4, prox_2_average.toInt()]);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_2_BLACK, prox_2_black);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_2_WHITE, prox_2_white);
+                MySharedPreference.setDouble(
+                    MySharedPreference.PROXY_2_AVERAGE, prox_2_average);
               },
               child: CustomText("Set", TextStyle())),
           VerticalGap(4),

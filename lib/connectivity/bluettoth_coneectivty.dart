@@ -40,11 +40,14 @@ class BleConnectivity {
       if (writeCharacterstics != null) {
         if (!isWriting) {
           isWriting = true;
-          await writeCharacterstics.write(value).then((value) {
+          await writeCharacterstics
+              .write(value, withoutResponse: true)
+              .then((value) {
             isWriting = false;
           });
         } else {
-          Future.delayed(Duration(milliseconds: 200), () {
+          Future.delayed(Duration(milliseconds: 150), () {
+            isWriting = false;
             writeToBle(value);
           });
         }

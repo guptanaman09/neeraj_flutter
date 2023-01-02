@@ -44,7 +44,7 @@ class MainScreenState extends BaseClass {
     setAppBarVisibility(true,
         backgroundColor: AppColors.secondaryColor,
         appBarTitleCenter: true,
-        appBarTitle: "Welcome",
+        appBarTitle: "Welcome to LearningBIX",
         backButtonVisibility: false);
   }
 
@@ -61,7 +61,7 @@ class MainScreenState extends BaseClass {
         children: [
           Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.zero,
+            padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               MainCategoryDetail detailModel =
                   mainCategoryModel.getMainCategoryModel().elementAt(index);

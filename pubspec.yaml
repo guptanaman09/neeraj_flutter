@@ -132,8 +132,8 @@ flutter:
     - assets/image/SwitchControlled.png
     - assets/image/ClapBased.png
     - assets/image/MobileControlled.png
-
-
+    - assets/image/plus.png
+    - assets/image/minus.png
   fonts:
     - family: Inter
       fonts:

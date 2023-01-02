@@ -44,7 +44,9 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
     textEditingControllerPaswword = TextEditingController();
   }
 
-  void onRecvValue(List<int> data) {}
+  void onRecvValue(List<int> data) {
+    //check here if get the value 1 then only move to the next screen
+  }
   void showToast(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -69,21 +71,21 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
           centerTitle: true,
           leading: true
               ? GestureDetector(
-            onTap: () {
-              try {
-                if (Navigator.canPop(context)) {
-                  Navigator.of(context).pop("result");
-                }
-              } catch (error) {}
-            },
-            child: Container(
-                padding: EdgeInsets.all(Dimensions.size_4),
-                child: Icon(
-                  Icons.keyboard_backspace,
-                  color: AppColors.white,
-                  size: Dimensions.size_28,
-                )),
-          )
+                  onTap: () {
+                    try {
+                      if (Navigator.canPop(context)) {
+                        Navigator.of(context).pop("result");
+                      }
+                    } catch (error) {}
+                  },
+                  child: Container(
+                      padding: EdgeInsets.all(Dimensions.size_4),
+                      child: Icon(
+                        Icons.keyboard_backspace,
+                        color: AppColors.white,
+                        size: Dimensions.size_28,
+                      )),
+                )
               : Container(),
           elevation: 0,
         ),
@@ -224,21 +226,75 @@ class OnlineIOTScreenState extends State<StatefulWidget> {
     } else if (textEditingControllerPaswword.text.isEmpty) {
       showToast("Please enter password");
     } else {
-      //call conection
-      String diffSymbol = "\$";
-      String userPass = textEditingControllerPaswword.text.toString() +
-          diffSymbol +
-          textEditingControllerUserName.text.toString();
-      List<int> data = [];
-      data.add(0XE4);
-      data.addAll(utf8.encode(userPass));
-      connectivity!.sendData(data).then((value) {
-        if (value) {
-          MySharedPreference.setString(
-              MySharedPreference.CONNECTEDWIFINAME, connectivity!.wifiName!);
-          onSkip();
-        }
+      showAlertOkayMessage(
+          "Make sure you entered the correct wifi name and password other wise your device " +
+              connectivity!.wifiName! +
+              " will not able to connect with network." +
+              "\nWifi name=" +
+              textEditingControllerUserName.text +
+              " \nPassword=" +
+              textEditingControllerPaswword.text, () {
+        sendCommand();
       });
+      //call conection
+
     }
+  }
+
+  void sendCommand() {
+    String diffSymbol = "\$";
+    String userPass = textEditingControllerPaswword.text.toString() +
+        diffSymbol +
+        textEditingControllerUserName.text.toString();
+    List<int> data = [];
+    data.add(0XE4);
+    data.addAll(utf8.encode(userPass));
+    connectivity!.sendData(data).then((value) {
+      if (value) {
+        MySharedPreference.setString(
+            MySharedPreference.CONNECTEDWIFINAME, connectivity!.wifiName!);
+        onSkip();
+      }
+    });
+  }
+
+  void showAlertOkayMessage(String message, Function onOkayPressed) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Alert",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+                onOkayPressed();
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "Confirm",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: Container(
+                color: Colors.deepPurple,
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "Change",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+        ],
+      ),
+    );
   }
 }

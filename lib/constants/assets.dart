@@ -89,4 +89,6 @@ class Assets {
       "assets/image/ultrasonic_sensor.png";
   static const String STRUCTURED_BASED_ACTIVITY =
       "assets/image/attachment-1644400222303.png";
+  static const String MINUS = "assets/image/minus.png";
+  static const String PLUS = "assets/image/plus.png";
 }
