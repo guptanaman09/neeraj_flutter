@@ -43,16 +43,16 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSBluetoothAlwaysUsageDescription</key>  
-	    <string>Need BLE permission</string>  
-	    <key>NSBluetoothPeripheralUsageDescription</key>  
-	    <string>Need BLE permission</string>  
-	    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>  
-	    <string>Need Location permission</string>  
-	    <key>NSLocationAlwaysUsageDescription</key>  
-	    <string>Need Location permission</string>  
-	    <key>NSLocationWhenInUseUsageDescription</key>  
-	    <string>Need Location permission</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Need bluetooth permission to connect with the BLE device of our hardware</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Need bluetooth permission to connect with the BLE device of our hardware</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need bluetooth permission to connect with the BLE device of our hardware</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Need bluetooth permission to connect with the BLE device of our hardware</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need bluetooth permission to connect with the BLE device of our hardware</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 </dict>
